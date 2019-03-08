@@ -34,6 +34,24 @@ function setSeoLvTabData(val) {
 
 function seoLvTabFormatting(val) {
   var vertical = val;
+  var notesColumn = "";
+  var columnLimit = 0;
+  if(vertical == "mf") {
+    notesColumn = seoLvTab.getRange(5,21, seoLvTab.getLastRow() -4,1);
+    columnLimit = 23;
+  }
+  else if(vertical == "ss" || "sl") {
+    notesColumn = seoLvTab.getRange(5,17, seoLvTab.getLastRow() -4,1);
+    columnLimit = 19;
+  }
+  notesColumn.setFontWeight("bold");
+  seoLvTab.getRange(5,1,seoLvTab.getLastRow() -4,columnLimit).setBorder(true, true, true, true, true, true, "black",null)
+  seoLvDataValidation(vertical);
+}
+
+
+function setLVHeaderFormatting(val) {
+  var vertical = val;
   seoLvTab.setRowHeights(2, 3, 70);
   seoLvTab.hideRows(1);
   seoLvTab.setFrozenRows(4);
@@ -41,29 +59,19 @@ function seoLvTabFormatting(val) {
   var rowTwoRange = "";
   var rowThreeRange = "";
   var rowFourRange = "";
-  var notesColumn = "";
-  var columnLimit = 0;
   if(vertical == "mf") {
     rowTwoRange = seoLvTab.getRange(2,1,1,29);
     rowThreeRange = seoLvTab.getRange(3,1,1,23);
     rowFourRange = seoLvTab.getRange(4,1,1,23);
-    notesColumn = seoLvTab.getRange(5,21, seoLvTab.getLastRow() -4,1);
-    columnLimit = 23;
   }
   else if(vertical == "ss" || "sl") {
     rowTwoRange = seoLvTab.getRange(2,1,1,25);
     rowThreeRange = seoLvTab.getRange(3,1,1,19);
     rowFourRange = seoLvTab.getRange(4,1,1,19);
-    notesColumn = seoLvTab.getRange(5,17, seoLvTab.getLastRow() -4,1);
-    columnLimit = 19;
   }
   rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20);
   rowThreeRange.setBackgroundRGB(120, 150, 170).setFontColor('white').setHorizontalAlignment("center").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setFontSize(12).setBorder(true, true, true, true, true, true, "white",null);
   rowFourRange.setBackgroundColor("light grey 3").setFontColor('black').setFontSize(10).setHorizontalAlignment("left").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setBorder(true, true, true, true, true, true, "black",null);
-  notesColumn.setFontWeight("bold");
-  seoLvTab.getRange(5,1,seoLvTab.getLastRow() -4,columnLimit).setBorder(true, true, true, true, true, true, "black",null)
-  
-  seoLvDataValidation(vertical);
 }
 
 //sets strategies in seo liquid values tab

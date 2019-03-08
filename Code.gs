@@ -27,6 +27,7 @@ function printHeaders(val) {
     var lvheaderRange = seoLvTab.getRange(1,1,4,25);
     lvheaderRange.setValues(ssSlHeaderArrayValues);
   }
+  setLVHeaderFormatting(vertical);
 }
 
 /*finds range of brand names in project workbook
