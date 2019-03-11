@@ -24,7 +24,12 @@ var strategiesArray =  [
                          ['=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', "", "", "", ""]
                        ]
 
-//
+/*
+  @param vertical
+  This function calls setStrategies which prints strategy links in rangs,
+  also calls printDefaultNotes which prints notes column in SEO Liquid Values Tab,
+  also calls seoLvTabFormatting which bolds notes column, adds data validation, and sets border around range
+*/
 function setSeoLvTabData(val) {
   var vertical = val;
   setStrategies(vertical);
@@ -32,6 +37,10 @@ function setSeoLvTabData(val) {
   seoLvTabFormatting(vertical);
 }
 
+/*
+  @param vertical
+  This function bolds notes column, adds data validation, and sets border around range
+*/
 function seoLvTabFormatting(val) {
   var vertical = val;
   var notesColumn = "";
@@ -49,7 +58,11 @@ function seoLvTabFormatting(val) {
   seoLvDataValidation(vertical);
 }
 
-
+/*
+  @param vertical
+  This formats rows 2-4. Freezes 1st column, hides 1st row, freezes row 1 - 4, sets color
+  and size for first 3 rows, sets appropriates borders
+*/
 function setLVHeaderFormatting(val) {
   var vertical = val;
   seoLvTab.setRowHeights(2, 3, 70);
@@ -74,7 +87,10 @@ function setLVHeaderFormatting(val) {
   rowFourRange.setBackgroundColor("light grey 3").setFontColor('black').setFontSize(10).setHorizontalAlignment("left").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setBorder(true, true, true, true, true, true, "black",null);
 }
 
-//sets strategies in seo liquid values tab
+/*
+  @param vertical
+  sets strategies in seo liquid values tab based on vertical
+*/
 function setStrategies(val) {
   var vertical = val;
   if (vertical == "mf") {
@@ -86,7 +102,15 @@ function setStrategies(val) {
   values.setValues(strategiesArray);
   values.setFontSize(11).setHorizontalAlignment("left").setVerticalAlignment("middle").setBorder(true, true, true, true, true, true, "black",null);
 }
-//prints values in seoliquidvalues tab from project workbook
+/*
+  @param val = vertical
+  @param val1 = searchString
+  @param val3 = result
+  This function prints relevant SEO liquid values contstants in SEO Liquid Values
+  Tab based on headers in tab.
+  MF Prints: Name, address, city, state, zip, floor plans, custom slug, property feature 1
+  SS/SL Print: Name, address, city, state, zip,  custom slug
+*/
 function printSeoLiquidValues(val, val1, val2) {
   var vertical = val2;
   var searchString = val;
@@ -104,6 +128,11 @@ function printSeoLiquidValues(val, val1, val2) {
    }
 }
 
+/*
+  @param val = vertical
+  This function prints defines where the data validation should be generated in the SEO Liquid Values tab
+  based on vertical. It then calls the defineDataValidation which is responsible for actually building the data validation
+*/
 function seoLvDataValidation(val) {
   var vertical = val;
   var gmbColumn = 0;
@@ -124,6 +153,13 @@ function seoLvDataValidation(val) {
   defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn)
 }
 
+/*
+  @param gmbColumn is the column number where the GMB data Validation will be built
+  @param gaColumn is the column number where the GA data Validation will be built
+  @param redirectsColumn is the column number where the redirects data Validation will be built
+  @param prColumn is the column number where the peer review data Validation will be built
+  This function builds and places data validation for the parameters
+*/
 function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn) {
   var acceptedRejectValRange = seoLvTab.getRange(5,3,seoLvTab.getLastRow() -4,1); //Accepted/Rejected range
   var acceptedRejectVal = SpreadsheetApp.newDataValidation().requireValueInList(["Accepted", "Rejected"], true).build(); //Accepted/Rejected validation builder
@@ -137,7 +173,7 @@ function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn) {
   var redirectsVal = SpreadsheetApp.newDataValidation().requireValueInList(["Same Domain","Cross Domain","Secure Naked - Same Domain","Secure - Cross Domain","No Redirects"], true).build(); //redirects validation builder
   var prValRange = seoLvTab.getRange(5,prColumn,seoLvTab.getLastRow() -4,1); //peer review range
   var prVal = SpreadsheetApp.newDataValidation().requireValueInList(["Incomplete","Complete"], true).build(); //peer review validation builder
-  
+  //sets Data validation that was built above
   acceptedRejectValRange.setDataValidation(acceptedRejectVal); // sets accepted rejected validation
   uspsValRange.setDataValidation(uspsVal); // sets usps column validation
   gmbValRange.setDataValidation(gmbVal); // sets gmb column validation
@@ -147,7 +183,12 @@ function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn) {
 }
 
 
-//sets notes column in seo liquid values tab
+
+/*
+  @param val = vertical
+  sets notes column in seo liquid values tab
+  This function is used in the initial set header function called in main()
+*/
 function printDefaultNotes(val) {
   var vertical = val;
   var notesColumn = 0;
