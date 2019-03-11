@@ -5,11 +5,10 @@ var ui = SpreadsheetApp.getUi();
 //Drop Down Menu UImf
 function onOpen() { 
   // When the spreadsheet is first opencdgfced by anyone, set the menu to appear
-  var sheet = [ {name: "Print Headers", functionName: "printHeaders"},
-                {name: "Clear Headers", functionName: "clearHeaders"},
-                {name: "Print Names", functionName: "tagsArray"}
+  var sheet = [ 
+                {name: "Spin Up CSV", functionName: "main"}
               ];
-  SpreadsheetApp.getUi().createMenu('Test Functions').addItem('Print Multi-Family Headers', 'printHeaders').addItem('Print Names', 'tagsArray').addItem('Clear Headers', 'clearHeaders').addToUi();
+  SpreadsheetApp.getUi().createMenu('SpinUpCSV').addItem('Spin Up CSV & SEO Liquid Values', 'main').addToUi();
  }
 
 //clear the sheet named 'spinUpFile'

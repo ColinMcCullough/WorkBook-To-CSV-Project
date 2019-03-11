@@ -12,7 +12,8 @@ var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
 var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: MF");
 
-/*Prints all headers used for every vertical as well as headers for SEO Liquid Values Tab
+/*
+  Prints all headers used for every vertical as well as headers for SEO Liquid Values Tab
   @param vertical
 */
 function printHeaders(val) {
@@ -30,8 +31,9 @@ function printHeaders(val) {
   setLVHeaderFormatting(vertical);
 }
 
-/*finds range of brand names in project workbook
-//@return Returns array of row values matching search value tag
+/*
+  finds range of brand names in project workbook
+  @return Returns array of row values matching search value tag
 */
 function searchRowIndexArray(val, val1, val2, val3, val4)  {
   var searchString = val;
@@ -74,21 +76,10 @@ function searchRowIndexArray(val, val1, val2, val3, val4)  {
   return rowValues;
   }
 }
-/*
-// Searches through an array for a text value match. 
-// @return index position - 2. If text value not found returns -1
-*/
-Array.prototype.findIndex = function(search){
-    for (var i=0; i<this.length; i++) {
-      if (this[i] == search) {
-        return i;
-      }
-    }
-    return -1;
-}
 
-/*function takes a row array and transposes it to a column array
-  //@return Returns array of row matching searchString variable
+
+/*
+  fuction takes a row array and transposes it to a column array
 */
 function transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding) {
   var searchString = searchStrings;
@@ -102,6 +93,17 @@ function transposeArray(searchStrings, vertical, domainType, columnValues, chain
         result[col][row] = rowValue[row][col]; // Rotate
       }
     }
+    setValuesInSpinUpFile(searchString,result,vertical)
+  }
+}
+
+/*
+  @parm searchString 
+  @param result
+  @param vertical
+  function sets column array in spinup tab
+*/
+function setValuesInSpinUpFile(searchString,result,vertical) {
   var printColumnIndex = headerArrayNames.indexOf(searchString) + 1;
   
   if(searchString == "custom_slug") {
@@ -113,9 +115,20 @@ function transposeArray(searchStrings, vertical, domainType, columnValues, chain
   var namePrintRangeFormatted = namePrintRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
   namePrintRangeFormatted.setValues(result);
   printSeoLiquidValues(searchString, result, vertical);
-  }
 }
 
+/*
+// Searches through an array for a text value match. 
+// @return index position - 2. If text value not found returns -1
+*/
+Array.prototype.findIndex = function(search){
+    for (var i=0; i<this.length; i++) {
+      if (this[i] == search) {
+        return i;
+      }
+    }
+    return -1;
+}
 
 function main() {
   clearHeaders();
