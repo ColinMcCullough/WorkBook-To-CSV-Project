@@ -5,14 +5,14 @@ var mfSeoLiquidValuesArray = ["name","","","","street_address_1","city","state",
 //self storage/sl headers for SEO Liquid Values Tab                          
 var ssSlHeaderArrayValues = [
                               ["name","", "", "", "street_address_1", "city", "state", "", "",  "", "custom_slug", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-                              ["V1.0", "SEO Liquid Values (link to strategies)", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", ""],
+                              ["V1.0", "SEO Liquid Values", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", ""],
                               ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State", "Neighborhood", "Neighborhood_2", "Landmark Required for MF", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", "", "", "", "", "", ""],
                               ["", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "comes after near", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", "", "", "", "", "", ""]
                             ]
 //multi-family headers for SEO Liquid Values Tab 
 var mfHeaderArrayValues = [
                             ["name","", "", "", "street_address_1", "city", "state", "", "", "floor_plans", "", "property_feature_1", "", "", "custom_slug", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-                            ["V1.0", "SEO Liquid Values (link to strategies)", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", "", "", ""],
+                            ["V1.0", "SEO Liquid Values", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", "", "", ""],
                             ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State", "Neighborhood", "Neighborhood_2", "Floor Plans", "Landmark Required for MF", "First property feature", "Primary Apartment Amenity", "Primary Community Amenity", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", "", "", "", "", "", ""],
                             ["", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "do not include bedrooms use numerical format (ie 1 & 2)", "comes after near", "comes before apartments (ie Luxury Apartments)", "comes after including or with", "", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", "", "", "", "", "", ""]
                           ]                          
@@ -30,11 +30,15 @@ var strategiesArray =  [
   also calls printDefaultNotes which prints notes column in SEO Liquid Values Tab,
   also calls seoLvTabFormatting which bolds notes column, adds data validation, and sets border around range
 */
-function setSeoLvTabData(val) {
+function setSeoLvTabData(val) { 
   var vertical = val;
   setStrategies(vertical);
   printDefaultNotes(val)
   seoLvTabFormatting(vertical);
+}
+
+function setVerticalAndDomainStrategy(vertical, domainStrategy) {
+  
 }
 
 /*
@@ -63,8 +67,10 @@ function seoLvTabFormatting(val) {
   This formats rows 2-4. Freezes 1st column, hides 1st row, freezes row 1 - 4, sets color
   and size for first 3 rows, sets appropriates borders
 */
-function setLVHeaderFormatting(val) {
+function setLVHeaderFormatting(val,val1) {
   var vertical = val;
+  var domainType = val1;
+  var domainAndVerticalPrint = [["Vertical:",vertical,"Domain:",domainType]];
   seoLvTab.setRowHeights(2, 3, 70);
   seoLvTab.hideRows(1);
   seoLvTab.setFrozenRows(4);
@@ -85,6 +91,7 @@ function setLVHeaderFormatting(val) {
   rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20);
   rowThreeRange.setBackgroundRGB(120, 150, 170).setFontColor('white').setHorizontalAlignment("center").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setFontSize(12).setBorder(true, true, true, true, true, true, "white",null);
   rowFourRange.setBackgroundColor("light grey 3").setFontColor('black').setFontSize(10).setHorizontalAlignment("left").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setBorder(true, true, true, true, true, true, "black",null);
+  seoLvTab.getRange(2,4,1,4).setValues(domainAndVerticalPrint);
 }
 
 /*
@@ -122,9 +129,15 @@ function printSeoLiquidValues(val, val1, val2) {
     var seoColumnIndex = ssSlSeoLiquidValuesArray.indexOf(searchString) + 1;
   }
   if(seoColumnIndex != 0) {
-      var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, propertySheet.getLastColumn() - 3, 1);
-      var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      seoValuesRangeFormatted.setValues(result);
+      if(searchString != "custom_slug") {
+        var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, propertySheet.getLastColumn() - 3, 1);
+        var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+        seoValuesRangeFormatted.setValues(result);
+      } else {
+        var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, spinUpTab.getLastRow() - 1, 1);
+        var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+        seoValuesRangeFormatted.setValues(result);
+      }
    }
 }
 

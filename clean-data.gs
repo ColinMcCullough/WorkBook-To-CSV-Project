@@ -10,7 +10,7 @@ function cleanData(val,val1,val2,val3,val4) {
   for (var i = 0; i < numRows; i++) {
     for (var j = 0; j < numCols; j++) {
       var x = rowValues[i][j];
-      var y = x.trim();
+      var y = x.toString().trim();
       if(searchString == "email") {
         y = cleanEmail(y);
       }
@@ -42,7 +42,9 @@ function cleanData(val,val1,val2,val3,val4) {
 function cleanEmail(val) {
   var y = val;
   if(y.indexOf("@") != -1) {
-    y = y.replace(/\n/g, " " ).split(" ", 1).toString().trim();
+    //y = y.replace(/\n/g, " " ).split(" ", 1).toString().trim();
+    y = y.toString().match(/\b([^\s]+@[^\s]+)\b/);
+    Logger.log(y);
   } else {
     y = "";
   }

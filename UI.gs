@@ -4,7 +4,7 @@ var ui = SpreadsheetApp.getUi();
 
 //Drop Down Menu UImf
 function onOpen() { 
-  // When the spreadsheet is first opencdgfced by anyone, set the menu to appear
+  // When the spreadsheet is first opened by anyone, set the menu to appear
   var sheet = [ 
                 {name: "Spin Up CSV", functionName: "main"}
               ];

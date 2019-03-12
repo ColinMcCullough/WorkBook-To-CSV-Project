@@ -10,13 +10,13 @@ var headerObjectNames = [
   ];
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: MF");
+var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SL");
 
 /*
   Prints all headers used for every vertical as well as headers for SEO Liquid Values Tab
   @param vertical
 */
-function printHeaders(val) {
+function printHeaders(val,domainType) {
   var vertical = val;
   var headerRange = spinUpTab.getRange("A1:BR1");
   headerRange.setValues(headerNames);
@@ -28,7 +28,7 @@ function printHeaders(val) {
     var lvheaderRange = seoLvTab.getRange(1,1,4,25);
     lvheaderRange.setValues(ssSlHeaderArrayValues);
   }
-  setLVHeaderFormatting(vertical);
+    setLVHeaderFormatting(vertical,domainType);
 }
 
 /*
@@ -43,7 +43,7 @@ function searchRowIndexArray(val, val1, val2, val3, val4)  {
   var columnValues = val3;
   var chainBranding = val4;
   var spinupLastRow = spinUpTab.getLastRow();
-  if(searchString == "" || searchString == "neighborhood" || searchString == "apartment_amenity_1" || searchString == "community_amenity_1" || searchString == "landmark_1_name" && vertical == "mf") { //SEO Liquid Values that be populated by team after keyword research
+  if(searchString == "" || searchString == "neighborhood" || searchString == "apartment_amenity_1" || searchString == "community_amenity_1" && vertical == "mf" || searchString == "landmark_1_name" && vertical == "mf") { //SEO Liquid Values that be populated by team after keyword research
     rowValues = null;
   }
   else if(searchString == "corporate" || searchString == "status" || searchString == "no_deploy" || searchString == "secure_domain" || searchString == "spinup_web_theme") {
@@ -93,17 +93,6 @@ function transposeArray(searchStrings, vertical, domainType, columnValues, chain
         result[col][row] = rowValue[row][col]; // Rotate
       }
     }
-    setValuesInSpinUpFile(searchString,result,vertical)
-  }
-}
-
-/*
-  @parm searchString 
-  @param result
-  @param vertical
-  function sets column array in spinup tab
-*/
-function setValuesInSpinUpFile(searchString,result,vertical) {
   var printColumnIndex = headerArrayNames.indexOf(searchString) + 1;
   
   if(searchString == "custom_slug") {
@@ -115,7 +104,18 @@ function setValuesInSpinUpFile(searchString,result,vertical) {
   var namePrintRangeFormatted = namePrintRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
   namePrintRangeFormatted.setValues(result);
   printSeoLiquidValues(searchString, result, vertical);
+  }
 }
+
+/*
+  @parm searchString 
+  @param result
+  @param vertical
+  function sets column array in spinup tab
+*/
+//function setValuesInSpinUpFile(searchString,result,vertical) {
+  
+//}
 
 /*
 // Searches through an array for a text value match. 
@@ -138,7 +138,7 @@ function main() {
   var chainBranding = prompt[2];
   var headerArrayLength = headerObjectNames.length;
   var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
-  printHeaders(vertical);
+  printHeaders(vertical,domainType);
   for(var i = 0; i <= headerArrayLength - 1; i++) {
     var searchStrings = headerArrayNames[i];
     transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
