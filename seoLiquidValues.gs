@@ -5,34 +5,32 @@ var mfSeoLiquidValuesArray = ["name","","","","street_address_1","city","state",
 //self storage/sl headers for SEO Liquid Values Tab                          
 var ssSlHeaderArrayValues = [
                               ["name","", "", "", "street_address_1", "city", "state", "", "",  "", "custom_slug", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-                              ["V1.0", "SEO Liquid Values", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", ""],
-                              ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State", "Neighborhood", "Neighborhood_2", "Landmark Required for MF", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", "", "", "", "", "", ""],
-                              ["", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "comes after near", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", "", "", "", "", "", ""]
+                              ["V1.0", "SEO Liquid Values", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit","MF Community A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1798205500","Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1581508741","55+ Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=320995540","SS Facility A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=649440825","SL Community A")',""],
+                              ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State", "Neighborhood", "Neighborhood_2", "Landmark Required for MF", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=205657231","MF Community B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=780478088", "Apartments & Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=2023923072", "Senior Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=286369603", "SS Facility A (Landmark Only)")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1742592240", "SL Community B")',""],
+                              ["", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "comes after near", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")',""]
                             ]
 //multi-family headers for SEO Liquid Values Tab 
 var mfHeaderArrayValues = [
                             ["name","", "", "", "street_address_1", "city", "state", "", "", "floor_plans", "", "property_feature_1", "", "", "custom_slug", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-                            ["V1.0", "SEO Liquid Values", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", "", "", ""],
-                            ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State", "Neighborhood", "Neighborhood_2", "Floor Plans", "Landmark Required for MF", "First property feature", "Primary Apartment Amenity", "Primary Community Amenity", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", "", "", "", "", "", ""],
-                            ["", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "do not include bedrooms use numerical format (ie 1 & 2)", "comes after near", "comes before apartments (ie Luxury Apartments)", "comes after including or with", "", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", "", "", "", "", "", ""]
+                            ["V1.0", "SEO Liquid Values", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit","MF Community A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1798205500","Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1581508741","55+ Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=320995540","SS Facility A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=649440825","SL Community A")', ""],
+                            ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State", "Neighborhood", "Neighborhood_2", "Floor Plans", "Landmark Required for MF", "First property feature", "Primary Apartment Amenity", "Primary Community Amenity", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=205657231","MF Community B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=780478088", "Apartments & Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=2023923072", "Senior Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=286369603", "SS Facility A (Landmark Only)")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1742592240", "SL Community B")', ""],
+                            ["", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "do not include bedrooms use numerical format (ie 1 & 2)", "comes after near", "comes before apartments (ie Luxury Apartments)", "comes after including or with", "", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")', ""]
                           ]                          
 //array of strategies
 var strategiesArray =  [
                          ['=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit","MF Community A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1798205500","Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1581508741","55+ Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=320995540","SS Facility A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=649440825","SL Community A")'], 
                          ['=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=205657231","MF Community B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=780478088", "Apartments & Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=2023923072", "Senior Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=286369603", "SS Facility A (Landmark Only)")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1742592240", "SL Community B")'], 
-                         ['=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")'], 
-                         ['=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', "", "", "", ""]
+                         ['=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")'], 
+                         [, "", "", "", ""]
                        ]
 
 /*
   @param vertical
-  This function calls setStrategies which prints strategy links in rangs,
   also calls printDefaultNotes which prints notes column in SEO Liquid Values Tab,
   also calls seoLvTabFormatting which bolds notes column, adds data validation, and sets border around range
 */
 function setSeoLvTabData(val) { 
   var vertical = val;
-  setStrategies(vertical);
   printDefaultNotes(val)
   seoLvTabFormatting(vertical);
 }
@@ -78,37 +76,27 @@ function setLVHeaderFormatting(val,val1) {
   var rowTwoRange = "";
   var rowThreeRange = "";
   var rowFourRange = "";
+  var strategiesRange = "";
   if(vertical == "mf") {
-    rowTwoRange = seoLvTab.getRange(2,1,1,29);
+    rowTwoRange = seoLvTab.getRange(2,1,1,23);
     rowThreeRange = seoLvTab.getRange(3,1,1,23);
     rowFourRange = seoLvTab.getRange(4,1,1,23);
+    strategiesRange = seoLvTab.getRange(2,24,3,5);
   }
   else if(vertical == "ss" || "sl") {
-    rowTwoRange = seoLvTab.getRange(2,1,1,25);
+    rowTwoRange = seoLvTab.getRange(2,1,1,19);
     rowThreeRange = seoLvTab.getRange(3,1,1,19);
     rowFourRange = seoLvTab.getRange(4,1,1,19);
+    strategiesRange = seoLvTab.getRange(2,20,3,5);
   }
   rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20);
   rowThreeRange.setBackgroundRGB(120, 150, 170).setFontColor('white').setHorizontalAlignment("center").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setFontSize(12).setBorder(true, true, true, true, true, true, "white",null);
   rowFourRange.setBackgroundColor("light grey 3").setFontColor('black').setFontSize(10).setHorizontalAlignment("left").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setBorder(true, true, true, true, true, true, "black",null);
+  strategiesRange.setFontSize(11).setHorizontalAlignment("left").setVerticalAlignment("middle").setBorder(true, true, true, true, true, true, "black",null);
   seoLvTab.getRange(2,4,1,4).setValues(domainAndVerticalPrint);
 }
 
-/*
-  @param vertical
-  sets strategies in seo liquid values tab based on vertical
-*/
-function setStrategies(val) {
-  var vertical = val;
-  if (vertical == "mf") {
-    var values = seoLvTab.getRange(5,25,4,5);
-  }
-  else if (vertical == "sl" || vertical == "ss") {
-    var values = seoLvTab.getRange(5,21,4,5);
-  }
-  values.setValues(strategiesArray);
-  values.setFontSize(11).setHorizontalAlignment("left").setVerticalAlignment("middle").setBorder(true, true, true, true, true, true, "black",null);
-}
+
 /*
   @param val = vertical
   @param val1 = searchString
