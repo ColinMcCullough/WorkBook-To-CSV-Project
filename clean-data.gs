@@ -66,7 +66,11 @@ function createCustomSlug(val, val1, val2) {
 
 function cleanSocialLinks(val) {
   var y = val;
-  y = y.replace(/https:\/\/www.|http:\/\/www.|https:\/\/|http:\/\/|www.|facebook.com\/|twitter.com\/|yelp.com\/biz|yelp.com\/|instagram.com\/|pinterest.com\/|youtube.com\/user\/|youtube.com\/|linkedin.com\/in\/|linkedin.com\/company\/|linkedin.com\/|\/ /gi, "" ).split("/", 1).toString().trim();
+  if(y.substr(y.length - 1) == "/") { //checks if last character in url is trailing slash
+    y = y.substr(0, y.length - 1);
+  }
+  y = y.split("/").pop();
+  //y = y.replace(/https:\/\/www.|http:\/\/www.|https:\/\/|http:\/\/|www.|facebook.com\/|twitter.com\/|yelp.com\/biz|yelp.com\/|instagram.com\/|pinterest.com\/|youtube.com\/user\/|youtube.com\/|linkedin.com\/in\/|linkedin.com\/company\/|linkedin.com\/|\/ /gi, "" ).split("/", 1).toString().trim();
   return y;
 }
 

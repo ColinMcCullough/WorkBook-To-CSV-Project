@@ -132,18 +132,20 @@ Array.prototype.findIndex = function(search){
 
 function main() {
   clearHeaders();
-  var prompt = runPrompt();
-  var vertical = prompt[0];
-  var domainType = prompt[1];
-  var chainBranding = prompt[2];
-  var headerArrayLength = headerObjectNames.length;
-  var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
-  printHeaders(vertical,domainType);
-  for(var i = 0; i <= headerArrayLength - 1; i++) {
-    var searchStrings = headerArrayNames[i];
-    transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
+  var prompt = runPrompts();
+  if(prompt[0] != null && prompt[1] != null && prompt[2] != null) {
+    var vertical = prompt[0];
+    var domainType = prompt[1];
+    var chainBranding = prompt[2];
+    var headerArrayLength = headerObjectNames.length;
+    var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
+    printHeaders(vertical,domainType);
+    for(var i = 0; i <= headerArrayLength - 1; i++) {
+      var searchStrings = headerArrayNames[i];
+      transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
+    }
+    setSeoLvTabData(vertical);
   }
-  setSeoLvTabData(vertical);
 }
 
 
