@@ -10,7 +10,7 @@ var headerObjectNames = [
   ];
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: MF");
+var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SL");
 
 /*
   Prints all headers used for every vertical as well as headers for SEO Liquid Values Tab
@@ -108,15 +108,6 @@ function transposeArray(searchStrings, vertical, domainType, columnValues, chain
   }
 }
 
-/*
-  @parm searchString 
-  @param result
-  @param vertical
-  function sets column array in spinup tab
-*/
-//function setValuesInSpinUpFile(searchString,result,vertical) {
-  
-//}
 
 /*
 // Searches through an array for a text value match. 

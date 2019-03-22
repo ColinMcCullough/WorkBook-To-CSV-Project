@@ -212,8 +212,8 @@ function getCurrentWebsiteArray() {
   var searchResult = columnValues.findIndex("current_website");
   if(searchResult != -1) {
     searchResult += 2;
-    var lastColumn = propertySheet.getLastColumn();
-    var currentWebsiteArray = propertySheet.getRange(searchResult, 4, 1, lastColumn - 3).getValues();
+    var numofItems = seoLvTab.getLastRow() - 4;
+    var currentWebsiteArray = propertySheet.getRange(searchResult, 4, 1, numofItems).getValues();
     return currentWebsiteArray;
   }
 }
