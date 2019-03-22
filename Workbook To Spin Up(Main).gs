@@ -17,6 +17,7 @@ var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Pro
   @param vertical
 */
 function printHeaders(val,domainType) {
+  var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
   var vertical = val;
   var headerRange = spinUpTab.getRange("A1:BR1");
   headerRange.setValues(headerNames);
@@ -28,7 +29,7 @@ function printHeaders(val,domainType) {
     var lvheaderRange = seoLvTab.getRange(1,1,4,25);
     lvheaderRange.setValues(ssSlHeaderArrayValues);
   }
-    setLVHeaderFormatting(vertical,domainType);
+    setLVHeaderFormatting(vertical,domainType,seoLvTab);
 }
 
 /*

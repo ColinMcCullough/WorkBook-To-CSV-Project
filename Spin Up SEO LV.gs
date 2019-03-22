@@ -55,35 +55,36 @@ function seoLvTabFormatting(val) {
   This formats rows 2-4. Freezes 1st column, hides 1st row, freezes row 1 - 4, sets color
   and size for first 3 rows, sets appropriates borders
 */
-function setLVHeaderFormatting(val,val1) {
+function setLVHeaderFormatting(val,val1,val2) {
+  var tabToFormat = val2
   var vertical = val;
   var domainType = val1;
   var domainAndVerticalPrint = [["Vertical:",vertical,"Domain:",domainType]];
-  seoLvTab.setRowHeights(2, 3, 70);
-  seoLvTab.hideRows(1);
-  seoLvTab.setFrozenRows(4);
-  seoLvTab.setFrozenColumns(1);
+  tabToFormat.setRowHeights(2, 3, 70);
+  tabToFormat.hideRows(1);
+  tabToFormat.setFrozenRows(4);
+  tabToFormat.setFrozenColumns(1);
   var rowTwoRange = "";
   var rowThreeRange = "";
   var rowFourRange = "";
   var strategiesRange = "";
   if(vertical == "mf") {
-    rowTwoRange = seoLvTab.getRange(2,1,1,23);
-    rowThreeRange = seoLvTab.getRange(3,1,1,23);
-    rowFourRange = seoLvTab.getRange(4,1,1,23);
-    strategiesRange = seoLvTab.getRange(2,24,3,5);
+    rowTwoRange = tabToFormat.getRange(2,1,1,23);
+    rowThreeRange = tabToFormat.getRange(3,1,1,23);
+    rowFourRange = tabToFormat.getRange(4,1,1,23);
+    strategiesRange = tabToFormat.getRange(2,24,3,5);
   }
   else if(vertical == "ss" || "sl") {
-    rowTwoRange = seoLvTab.getRange(2,1,1,19);
-    rowThreeRange = seoLvTab.getRange(3,1,1,19);
-    rowFourRange = seoLvTab.getRange(4,1,1,19);
-    strategiesRange = seoLvTab.getRange(2,20,3,5);
+    rowTwoRange = tabToFormat.getRange(2,1,1,19);
+    rowThreeRange = tabToFormat.getRange(3,1,1,19);
+    rowFourRange = tabToFormat.getRange(4,1,1,19);
+    strategiesRange = tabToFormat.getRange(2,20,3,5);
   }
   rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20);
   rowThreeRange.setBackgroundRGB(120, 150, 170).setFontColor('white').setHorizontalAlignment("center").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setFontSize(12).setBorder(true, true, true, true, true, true, "white",null);
   rowFourRange.setBackgroundColor("light grey 3").setFontColor('black').setFontSize(10).setHorizontalAlignment("left").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setBorder(true, true, true, true, true, true, "black",null);
   strategiesRange.setFontSize(11).setHorizontalAlignment("left").setVerticalAlignment("middle").setBorder(true, true, true, true, true, true, "black",null);
-  seoLvTab.getRange(2,4,1,4).setValues(domainAndVerticalPrint);
+  tabToFormat.getRange(2,4,1,4).setValues(domainAndVerticalPrint);
 }
 
 

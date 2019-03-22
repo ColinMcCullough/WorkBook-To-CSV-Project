@@ -23,23 +23,24 @@ var brandBadEntry = "Bad Entry, please cick ok and enter: Yes or No";
 function onOpen() { 
   // When the spreadsheet is first opened by anyone, set the menu to appear
   var sheet = [ 
-                {name: "Spin Up CSV", functionName: "main"}
+                {name: "Spin Up CSV", functionName: "main"},{name: "Liquid > SpinUp", functionName: "liquidToSpinUp"}
               ];
   SpreadsheetApp.getUi().createMenu('SpinUpCSV').addItem('Spin Up CSV & SEO Liquid Values', 'main').addToUi();
+  SpreadsheetApp.getUi().createMenu('Liquid > SpinUp').addItem('Send SEO Liquid To SpinUp', 'liquidToSpinUp').addToUi();
  }
 
 //clear the sheet named 'spinUpFile' and 'SEO Liquid Values'
-function clearHeaders() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var spinUpTab = ss.getSheetByName('spinUpFile');
-  
+function clearHeaders() {  
   spinUpTab.clear("A1:BR100");
   seoLvTab.clear("A1:BR100");
   var range = seoLvTab.getRange("A1:AC100");
   range.clearDataValidations();
 }
 
-
+/**
+  Runs a single prompt for client vertical or domain strategy or brand name strategy based on string parameters passed in
+  @return returns string response user enters, returns null if user selects cancel button
+*/
 function runPrompt(introPrompt, introSpecifics, choice1, choice2, choice3, badEntryResponse) {
   var response = ui.prompt(introPrompt, introSpecifics, ui.ButtonSet.OK_CANCEL);
   if(response.getSelectedButton() == ui.Button.OK) {
@@ -61,6 +62,10 @@ function runPrompt(introPrompt, introSpecifics, choice1, choice2, choice3, badEn
   return userChoice;
 }
 
+/**
+  Runs 3 prompts for client vertical, domain strategy, and brand name strategy
+  @return array of 3 responses to prompts, returns null if user selects cancel button
+*/
 function runPrompts() {
   var vertical = null;
   var domainStrategy = null;
