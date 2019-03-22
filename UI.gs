@@ -1,3 +1,12 @@
+function onOpen() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var menuItems = [
+    {name: "Workbook >> CSV", functionName: "main"},
+    {name: "Insert LiquidValues in SpinUp", functionName: "liquidToSpinUp"},
+    {name: "Send LiquidValues to WF", functionName: "sendRedirectsAndLiquidValues"}
+    ];
+  spreadsheet.addMenu('CheckList Review', menuItems);
+}
 //Global Variables
 var ui = SpreadsheetApp.getUi();
 
@@ -19,16 +28,6 @@ var brandPromptPromptInstruct = "Options: Yes, No";
 var brandChoice1 = "yes"; var brandChoice2 = "no";
 var brandBadEntry = "Bad Entry, please cick ok and enter: Yes or No";
 
-//Drop Down Menu
-function onOpen() { 
-  // When the spreadsheet is first opened by anyone, set the menu to appear
-  var sheet = [ 
-                {name: "Spin Up CSV", functionName: "main"},{name: "Liquid > SpinUp", functionName: "liquidToSpinUp"}
-              ];
-  SpreadsheetApp.getUi().createMenu('SpinUpCSV').addItem('Spin Up CSV & SEO Liquid Values', 'main').addToUi();
-  SpreadsheetApp.getUi().createMenu('Liquid > SpinUp').addItem('Send SEO Liquid To SpinUp', 'liquidToSpinUp').addToUi();
- }
-
 //clear the sheet named 'spinUpFile' and 'SEO Liquid Values'
 function clearHeaders() {  
   spinUpTab.clear("A1:BR100");
@@ -36,6 +35,8 @@ function clearHeaders() {
   var range = seoLvTab.getRange("A1:AC100");
   range.clearDataValidations();
 }
+
+
 
 /**
   Runs a single prompt for client vertical or domain strategy or brand name strategy based on string parameters passed in
