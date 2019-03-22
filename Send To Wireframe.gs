@@ -40,13 +40,16 @@ function setLiquidValues(val, val1, val2, val3) {
   var values = val1;
   var sheetID = val2;
   var domainType = val3;
-  var wfSeoLiquidTab = SpreadsheetApp.openById(sheetID).getSheetByName('SEO Liquid Values(v1)');
-  hideWfLiquidValuesTab(sheetID);
+  var wfSeoLiquidTab;
   if(hasNewLiquidValuesTab(sheetID) == true) {
+    hideWfLiquidValuesTab(sheetID);
+    wfSeoLiquidTab = SpreadsheetApp.openById(sheetID).getSheetByName('SEO Liquid Values(v1)');
     wfSeoLiquidTab.getRange(wfSeoLiquidTab.getLastRow()+1, 1,values.length,values[0].length).setValues(values);
   } else {
+    hideWfLiquidValuesTab(sheetID);
     createNewWFLiquidValuesTab(sheetID)
     generateWFLiquidValueHeaders(vertical,sheetID,domainType);
+    wfSeoLiquidTab = SpreadsheetApp.openById(sheetID).getSheetByName('SEO Liquid Values(v1)');
     var rowStart = wfSeoLiquidTab.getLastRow()+1;
     wfSeoLiquidTab.getRange(rowStart, 1,values.length,values[0].length).setValues(values);
   } 
@@ -97,7 +100,6 @@ function hideWfLiquidValuesTab(sheetID) {
 //creates new seo liquid valuestab and sets up header
 function createNewWFLiquidValuesTab(sheetID) {
   var wireframe = SpreadsheetApp.openById(sheetID);
-  var liquidHeaderValues = 
   wireframe.insertSheet("SEO Liquid Values(v1)");
 }
 //checks if receiving wireframe has the new seo tab

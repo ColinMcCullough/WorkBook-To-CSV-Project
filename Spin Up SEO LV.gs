@@ -80,7 +80,7 @@ function setLVHeaderFormatting(val,val1,val2) {
     rowFourRange = tabToFormat.getRange(4,1,1,19);
     strategiesRange = tabToFormat.getRange(2,20,3,5);
   }
-  rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20);
+  rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20).setWrapStrategy(SpreadsheetApp.WrapStrategy.OVERFLOW);
   rowThreeRange.setBackgroundRGB(120, 150, 170).setFontColor('white').setHorizontalAlignment("center").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setFontSize(12).setBorder(true, true, true, true, true, true, "white",null);
   rowFourRange.setBackgroundColor("light grey 3").setFontColor('black').setFontSize(10).setHorizontalAlignment("left").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setBorder(true, true, true, true, true, true, "black",null);
   strategiesRange.setFontSize(11).setHorizontalAlignment("left").setVerticalAlignment("middle").setBorder(true, true, true, true, true, true, "black",null);
