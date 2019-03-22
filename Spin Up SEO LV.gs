@@ -196,7 +196,24 @@ function printDefaultNotes(val) {
   } else {
     notesColumn = 17;
   }
-  var fillDefaultArrayValues = fillArray("Existing Site:" + "\nNeighborhood:" + "\nLandmark:" + "\nAmenity:", seoLvTab.getLastRow() -4);
+  var newArry = [];
+  var currentWebsites = getCurrentWebsiteArray();
+  for(i = 0; i < currentWebsites[0].length;i++) {
+    newArry.push(["Existing Site: " + currentWebsites[0][i] + "\nNeighborhood:" + "\nLandmark:" + "\nAmenity:"]);
+  } 
+  Logger.log(newArry);
+  
   var notesRange = seoLvTab.getRange(5,notesColumn,seoLvTab.getLastRow() -4,1);
-  notesRange.setValues(fillDefaultArrayValues);
+  notesRange.setValues(newArry);
+}
+
+function getCurrentWebsiteArray() {
+  var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues();
+  var searchResult = columnValues.findIndex("current_website");
+  if(searchResult != -1) {
+    searchResult += 2;
+    var lastColumn = propertySheet.getLastColumn();
+    var currentWebsiteArray = propertySheet.getRange(searchResult, 4, 1, lastColumn - 3).getValues();
+    return currentWebsiteArray;
+  }
 }
