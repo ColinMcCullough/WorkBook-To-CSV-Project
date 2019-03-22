@@ -181,8 +181,6 @@ function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToF
   prValRange.setDataValidation(prVal); // sets redirects column validation
 }
 
-
-
 /*
   @param val = vertical
   sets notes column in seo liquid values tab

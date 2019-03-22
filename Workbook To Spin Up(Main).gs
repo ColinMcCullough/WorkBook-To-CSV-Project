@@ -10,7 +10,7 @@ var headerObjectNames = [
   ];
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SL");
+var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SS");
 
 /*
   Prints all headers used for every vertical as well as headers for SEO Liquid Values Tab
