@@ -22,32 +22,35 @@ var mfHeaderArrayValues = [
   also calls printDefaultNotes which prints notes column in SEO Liquid Values Tab,
   also calls seoLvTabFormatting which bolds notes column, adds data validation, and sets border around range
 */
-function setSeoLvTabData(val) { 
+function setSeoLvTabData(val,val1) { 
+  var tabToFormat = val1;
   var vertical = val;
   printDefaultNotes(val)
-  seoLvTabFormatting(vertical);
+  seoLvTabFormatting(vertical,tabToFormat);
 }
 
 
 /*
   @param vertical
+  @param tabToFormat
   This function bolds notes column, adds data validation, and sets border around range
 */
-function seoLvTabFormatting(val) {
+function seoLvTabFormatting(val,val1) {
+  var tabToFormat = val1
   var vertical = val;
   var notesColumn = "";
   var columnLimit = 0;
   if(vertical == "mf") {
-    notesColumn = seoLvTab.getRange(5,21, seoLvTab.getLastRow() -4,1);
+    notesColumn = tabToFormat.getRange(5,21, tabToFormat.getLastRow() -4,1);
     columnLimit = 23;
   }
   else if(vertical == "ss" || "sl") {
-    notesColumn = seoLvTab.getRange(5,17, seoLvTab.getLastRow() -4,1);
+    notesColumn = tabToFormat.getRange(5,17, tabToFormat.getLastRow() -4,1);
     columnLimit = 19;
   }
   notesColumn.setFontWeight("bold");
-  seoLvTab.getRange(5,1,seoLvTab.getLastRow() -4,columnLimit).setBorder(true, true, true, true, true, true, "black",null)
-  seoLvDataValidation(vertical);
+  tabToFormat.getRange(5,1,tabToFormat.getLastRow() -4,columnLimit).setBorder(true, true, true, true, true, true, "black",null)
+  seoLvDataValidation(vertical,tabToFormat);
 }
 
 /*
@@ -61,6 +64,7 @@ function setLVHeaderFormatting(val,val1,val2) {
   var domainType = val1;
   var domainAndVerticalPrint = [["Vertical:",vertical,"Domain:",domainType]];
   tabToFormat.setRowHeights(2, 3, 70);
+  tabToFormat.setColumnWidth(2, 227); tabToFormat.setColumnWidths(4, 3, 114); 
   tabToFormat.hideRows(1);
   tabToFormat.setFrozenRows(4);
   tabToFormat.setFrozenColumns(1);
@@ -73,12 +77,14 @@ function setLVHeaderFormatting(val,val1,val2) {
     rowThreeRange = tabToFormat.getRange(3,1,1,23);
     rowFourRange = tabToFormat.getRange(4,1,1,23);
     strategiesRange = tabToFormat.getRange(2,24,3,5);
+    tabToFormat.setColumnWidth(21, 262); tabToFormat.setColumnWidth(23, 227); tabToFormat.setColumnWidths(24, 5, 150); // sets column widths
   }
   else if(vertical == "ss" || "sl") {
     rowTwoRange = tabToFormat.getRange(2,1,1,19);
     rowThreeRange = tabToFormat.getRange(3,1,1,19);
     rowFourRange = tabToFormat.getRange(4,1,1,19);
     strategiesRange = tabToFormat.getRange(2,20,3,5);
+    tabToFormat.setColumnWidth(17, 262); tabToFormat.setColumnWidth(19, 227); // sets column widths
   }
   rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20).setWrapStrategy(SpreadsheetApp.WrapStrategy.OVERFLOW);
   rowThreeRange.setBackgroundRGB(120, 150, 170).setFontColor('white').setHorizontalAlignment("center").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setFontSize(12).setBorder(true, true, true, true, true, true, "white",null);
@@ -125,7 +131,8 @@ function printSeoLiquidValues(val, val1, val2) {
   This function prints defines where the data validation should be generated in the SEO Liquid Values tab
   based on vertical. It then calls the defineDataValidation which is responsible for actually building the data validation
 */
-function seoLvDataValidation(val) {
+function seoLvDataValidation(val, val1) {
+  var tabToFormat = val1
   var vertical = val;
   var gmbColumn = 0;
   var gaColumn = 0;
@@ -142,7 +149,7 @@ function seoLvDataValidation(val) {
     redirectsColumn = 16;
     prColumn = 18;
   }
-  defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn)
+  defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToFormat)
 }
 
 /*
@@ -152,18 +159,18 @@ function seoLvDataValidation(val) {
   @param prColumn is the column number where the peer review data Validation will be built
   This function builds and places data validation for the parameters
 */
-function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn) {
-  var acceptedRejectValRange = seoLvTab.getRange(5,3,seoLvTab.getLastRow() -4,1); //Accepted/Rejected range
+function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToFormat) {
+  var acceptedRejectValRange = tabToFormat.getRange(5,3,tabToFormat.getLastRow() -4,1); //Accepted/Rejected range
   var acceptedRejectVal = SpreadsheetApp.newDataValidation().requireValueInList(["Accepted", "Rejected"], true).build(); //Accepted/Rejected validation builder
-  var uspsValRange = seoLvTab.getRange(5,4,seoLvTab.getLastRow() -4,1); //usps range
+  var uspsValRange = tabToFormat.getRange(5,4,tabToFormat.getLastRow() -4,1); //usps range
   var uspsVal = SpreadsheetApp.newDataValidation().requireValueInList(["Yes", "No"], true).build(); //usps validation builder
-  var gmbValRange = seoLvTab.getRange(5,gmbColumn,seoLvTab.getLastRow() -4,1); //gmb range
+  var gmbValRange = tabToFormat.getRange(5,gmbColumn,tabToFormat.getLastRow() -4,1); //gmb range
   var gmbVal = SpreadsheetApp.newDataValidation().requireValueInList(["Requested","Accessed","Create New","Unverified","N/A LP"], true).build(); //gmb validation builder
-  var gaValRange = seoLvTab.getRange(5,gaColumn,seoLvTab.getLastRow() -4,1); //ga range
+  var gaValRange = tabToFormat.getRange(5,gaColumn,tabToFormat.getLastRow() -4,1); //ga range
   var gaVal = SpreadsheetApp.newDataValidation().requireValueInList(["Requested","Accessed","Create New"], true).build(); //ga validation builder
-  var redirectsValRange = seoLvTab.getRange(5,redirectsColumn,seoLvTab.getLastRow() -4,1); //redirects range
+  var redirectsValRange = tabToFormat.getRange(5,redirectsColumn,tabToFormat.getLastRow() -4,1); //redirects range
   var redirectsVal = SpreadsheetApp.newDataValidation().requireValueInList(["Same Domain","Cross Domain","Secure Naked - Same Domain","Secure - Cross Domain","No Redirects"], true).build(); //redirects validation builder
-  var prValRange = seoLvTab.getRange(5,prColumn,seoLvTab.getLastRow() -4,1); //peer review range
+  var prValRange = tabToFormat.getRange(5,prColumn,tabToFormat.getLastRow() -4,1); //peer review range
   var prVal = SpreadsheetApp.newDataValidation().requireValueInList(["Incomplete","Complete"], true).build(); //peer review validation builder
   //sets Data validation that was built above
   acceptedRejectValRange.setDataValidation(acceptedRejectVal); // sets accepted rejected validation

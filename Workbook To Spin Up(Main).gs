@@ -132,6 +132,7 @@ Array.prototype.findIndex = function(search){
 }
 
 function main() {
+  var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
   clearHeaders();
   var prompt = runPrompts();
   if(prompt[0] != null && prompt[1] != null && prompt[2] != null) {
@@ -145,7 +146,7 @@ function main() {
       var searchStrings = headerArrayNames[i];
       transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
     }
-    setSeoLvTabData(vertical);
+    setSeoLvTabData(vertical,seoLvTab);
   }
 }
 

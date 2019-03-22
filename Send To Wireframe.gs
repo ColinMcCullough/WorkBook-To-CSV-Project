@@ -1,15 +1,20 @@
 //sets headers in place within newly generated seo liquid values tab of wireframe
 function generateWFLiquidValueHeaders(vertical,sheetID,domainType) {
   var wireframeLVTab = SpreadsheetApp.openById(sheetID).getSheetByName("SEO Liquid Values(v1)");
+  var lvheaderRange;
+  
   if (vertical == "mf") {
-    var lvheaderRange = wireframeLVTab.getRange(1,1,4,29);
+    lvheaderRange = wireframeLVTab.getRange(1,1,4,29);
     lvheaderRange.setValues(mfHeaderArrayValues);
   }
   else if (vertical == "ss" || vertical == "sl") {
-    var lvheaderRange = wireframeLVTab.getRange(1,1,4,25);
+    lvheaderRange = wireframeLVTab.getRange(1,1,4,25);
     lvheaderRange.setValues(ssSlHeaderArrayValues);
   }
     setLVHeaderFormatting(vertical,domainType,wireframeLVTab);
+    var protection = lvheaderRange.protect().setDescription('SEO Liquid Values Headers'); // creates protected range
+    var authEditors = ["colin.mccullough@getg5.com", "pat.kane@getg5.com"]; //adds authorized users to range
+    protection.addEditors(authEditors); //adds authorized users to protected range
 }
 
 /**
@@ -53,6 +58,7 @@ function setLiquidValues(val, val1, val2, val3) {
     var rowStart = wfSeoLiquidTab.getLastRow()+1;
     wfSeoLiquidTab.getRange(rowStart, 1,values.length,values[0].length).setValues(values);
   } 
+  seoLvTabFormatting(vertical,wfSeoLiquidTab)
 }
 
 function getRedirects() {
