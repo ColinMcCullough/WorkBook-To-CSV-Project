@@ -10,7 +10,7 @@ var headerObjectNames = [
   ];
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SS");
+var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: MF");
 
 /*
   Prints all headers used for every vertical as well as headers for SEO Liquid Values Tab
@@ -22,11 +22,11 @@ function printHeaders(val,domainType) {
   var headerRange = spinUpTab.getRange("A1:BR1");
   headerRange.setValues(headerNames);
   if (vertical == "mf") {
-    var lvheaderRange = seoLvTab.getRange(1,1,4,29);
+    var lvheaderRange = seoLvTab.getRange(1,1,4,30);
     lvheaderRange.setValues(mfHeaderArrayValues);
   }
   else if (vertical == "ss" || vertical == "sl") {
-    var lvheaderRange = seoLvTab.getRange(1,1,4,25);
+    var lvheaderRange = seoLvTab.getRange(1,1,4,26);
     lvheaderRange.setValues(ssSlHeaderArrayValues);
   }
     setLVHeaderFormatting(vertical,domainType,seoLvTab);
@@ -55,9 +55,9 @@ function searchRowIndexArray(val, val1, val2, val3, val4)  {
     var searchResult = columnValues.findIndex(searchString); //Row Index - 2
       if (searchResult != -1) {
         //searchResult + 2 is row index.
-        searchResult = searchResult + 2;
+        searchResult = searchResult + 2;     
         var lastColumn = propertySheet.getLastColumn();
-        var rowRange = propertySheet.getRange(searchResult, column + 3, 1, lastColumn - 3);
+        var rowRange = propertySheet.getRange(searchResult, 4, 1, lastColumn - 3);
         var rowRangeValues = rowRange.getValues();
         var rowValues = cleanData(rowRange,rowRangeValues,searchString,chainBranding,domainType);
       }
@@ -132,14 +132,14 @@ function main() {
     var chainBranding = prompt[2];
     var headerArrayLength = headerObjectNames.length;
     var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
-    printHeaders(vertical,domainType);
-    for(var i = 0; i <= headerArrayLength - 1; i++) {
-      var searchStrings = headerArrayNames[i];
-      transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
+    var errors = checkErrors(columnValues)
+    if(errors != null) {
+      printHeaders(vertical,domainType);
+      for(var i = 0; i <= headerArrayLength - 1; i++) {
+        var searchStrings = headerArrayNames[i];
+        transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
+      }
+      setSeoLvTabData(vertical,seoLvTab);
     }
-    setSeoLvTabData(vertical,seoLvTab);
   }
 }
-
-
-

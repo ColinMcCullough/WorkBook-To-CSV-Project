@@ -29,8 +29,11 @@ function cleanData(val,val1,val2,val3,val4) {
       else if(searchString == "floor_plans") {
         y = cleanFloorPlans(y);
       }
-      else if(searchString == "landmark_1_name") {
-        y = cleanLandmark(y);
+      else if(searchString == "landmark_1_name" || searchString == "nearby_healthcare_1") {
+        y = findFirstValue(y);
+      }
+      else if(searchString == "nearby_restaurants" || searchString == "nearby_shopping" || searchString == "nearby_employers" || searchString == "nearby_schools") {
+        y = cleanLists(y);
       }
       newArray.push(y); 
     }
@@ -114,14 +117,42 @@ function cleanFloorPlans(val) {
   return y;
 }
 
-function cleanLandmark(val) {
+//extracts string from index 0 until it reaches a comma or line break
+function findFirstValue(val) {
   var y = val;
   if(y != "") {
-    y = y.split(",", 1)
+    y = y.split(/[\n,]/, 1);
   } else {
     y = "";
   }
   return y;
+}
+
+function cleanLists(val) {
+  var y = val;
+  if(y != "" && hasLineBreakComma(y) == false) {
+    y = y.replace(/(\r\n|\n|\r)/gm,",").replace(/,+/g,',').toString().trim();
+  } 
+  else if (y != "" && hasLineBreakComma(y) == true) {
+    y = y.replace(/(\r\n|\n|\r)/gm," ").toString().trim();
+  }
+  else {
+    y = "";
+  }
+  Logger.log(y)  
+  return y;
+}
+// returns true if last character on line is a ","
+function hasLineBreakComma(y) {
+  var indexPosition = y.indexOf("\n")-1;
+  var character = y.charAt(indexPosition);
+  var lineBreakComma;
+  if (character == ",") {
+    lineBreakComma = true;
+  } else {
+    lineBreakComma = false;
+  }
+  return lineBreakComma;
 }
 
 function defaultValuePrint(val, val1, val2) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static

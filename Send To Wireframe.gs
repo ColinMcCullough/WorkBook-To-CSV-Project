@@ -4,11 +4,11 @@ function generateWFLiquidValueHeaders(vertical,sheetID,domainType) {
   var lvheaderRange;
   
   if (vertical == "mf") {
-    lvheaderRange = wireframeLVTab.getRange(1,1,4,29);
+    lvheaderRange = wireframeLVTab.getRange(1,1,4,30);
     lvheaderRange.setValues(mfHeaderArrayValues);
   }
   else if (vertical == "ss" || vertical == "sl") {
-    lvheaderRange = wireframeLVTab.getRange(1,1,4,25);
+    lvheaderRange = wireframeLVTab.getRange(1,1,4,26);
     lvheaderRange.setValues(ssSlHeaderArrayValues);
   }
     setLVHeaderFormatting(vertical,domainType,wireframeLVTab);
@@ -28,11 +28,11 @@ function getLiquidValues(vertical) {
     seoLiquidValues = null;
   } else {
     if(vertical == "mf") {
-      lastColumn = 23;
+      lastColumn = 24;
       seoLiquidValues = seoLvTab.getRange(5,1,seoLvTab.getLastRow() -4,lastColumn).getValues();
     }
     else if(vertical == "ss" || vertical == "sl" ) {
-      lastColumn = 19;
+      lastColumn = 20;
       seoLiquidValues = seoLvTab.getRange(5,1,seoLvTab.getLastRow() -4,lastColumn).getValues();
     }
   }
