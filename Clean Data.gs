@@ -29,7 +29,7 @@ function cleanData(val,val1,val2,val3,val4) {
       else if(searchString == "floor_plans") {
         y = cleanFloorPlans(y);
       }
-      else if(searchString == "landmark_1_name" || searchString == "nearby_healthcare_1") {
+      else if(searchString == "landmark_1_name" || searchString == "nearby_healthcare_1" || searchString == "nearby_gasoline" || searchString == "nearby_roadway_1" || searchString == "nearby_roadway_2" || searchString == "community_amenity_1") {
         y = findFirstValue(y);
       }
       else if(searchString == "nearby_restaurants" || searchString == "nearby_shopping" || searchString == "nearby_employers" || searchString == "nearby_schools") {
@@ -73,7 +73,6 @@ function cleanSocialLinks(val) {
     y = y.substr(0, y.length - 1);
   }
   y = y.split("/").pop();
-  //y = y.replace(/https:\/\/www.|http:\/\/www.|https:\/\/|http:\/\/|www.|facebook.com\/|twitter.com\/|yelp.com\/biz|yelp.com\/|instagram.com\/|pinterest.com\/|youtube.com\/user\/|youtube.com\/|linkedin.com\/in\/|linkedin.com\/company\/|linkedin.com\/|\/ /gi, "" ).split("/", 1).toString().trim();
   return y;
 }
 
@@ -121,7 +120,7 @@ function cleanFloorPlans(val) {
 function findFirstValue(val) {
   var y = val;
   if(y != "") {
-    y = y.split(/[\n,]/, 1);
+    y = y.split(/[\n,;(]/, 1).toString().trim();
   } else {
     y = "";
   }
@@ -131,7 +130,7 @@ function findFirstValue(val) {
 function cleanLists(val) {
   var y = val;
   if(y != "" && hasLineBreakComma(y) == false) {
-    y = y.replace(/(\r\n|\n|\r)/gm,",").replace(/,+/g,',').toString().trim();
+    y = y.replace(/(\r\n|\n|\r)/gm,",").replace(/\;|,+/g,',').toString().trim();
   } 
   else if (y != "" && hasLineBreakComma(y) == true) {
     y = y.replace(/(\r\n|\n|\r)/gm," ").toString().trim();
