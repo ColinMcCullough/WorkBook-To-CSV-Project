@@ -1,9 +1,24 @@
-function cleanData(val,val1,val2,val3,val4) {
-  var rowRange = val;
-  var rowValues = val1;
-  var searchString = val2;
-  var chainBranding = val3;
-  var domainType = val4;
+  // need to import a couple of things if using as library
+  // the rest are added to the prototypes
+var Set = cEs6Shim.Set;
+var Map = cEs6Shim.Map;
+
+var stateMap = new Map([
+                        ["Alabama","AL"],["Alaska","AK"],["Arizona","AZ"],["Arkansas","AR"],["California","CA"],["Colorado","CO"],["Connecticut","CT"],
+                        ["Delaware","DE"],["Florida","FL"],["Georgia","GA"],["Hawaii","HI"],["Idaho","ID"],["Illinois","IL"],["Indiana","IN"],["Iowa","IA"],
+                        ["Kansas","KS"],["Kentucky","KY"],["Louisiana","LA"],["Maine","ME"],["Maryland","MD"],["Massachusetts","MA"],["Michigan","MI"],["Minnesota","MN"],
+                        ["Mississippi","MS"],["Missouri","MO"],["Montana","MT"],["Nebraska","NE"],["Nevada","NV"],["New Hampshire","NH"],["New Jersey","NJ"],["New Mexico","NM"],
+                        ["New York","NY"],["North Carolina","NC"],["North Dakota","ND"],["Ohio","OH"],["Oklahoma","OK"],["Oregon","OR"],["Pennsylvania","PA"],["Rhode Island","RI"],
+                        ["South Carolina","SC"],["South Dakota","SD"],["Tennessee","TN"],["Texas","TX"],["Utah","UT"],["Vermont","VT"],["Virginia","VA"],["Washington","WA"],
+                        ["West Virginia","WV"],["Wisconsin","WI"],["Wyoming","WY"],["Alberta","AB"],["British Columbia","BC"],["Manitoba","MB"],["New Brunswick","NB"],
+                        ["Newfoundland And Labrador","NL"],["Nova Scotia","NS"],["Northwest Territories","NT"],["Nunavut","NU"],["Ontario","ON"],["Prince Edward Island","PE"],
+                        ["Quebec","QC"],["Saskatchewan","SK"],["Yukon","YT"],
+                       ]); 
+
+var tester = stateMap.get("AL");
+
+
+function cleanData(rowRange,rowValues,searchString,chainBranding,domainType) {
   var newArray = []
   var numRows = rowRange.getNumRows();
   var numCols = rowRange.getNumColumns();
@@ -28,6 +43,9 @@ function cleanData(val,val1,val2,val3,val4) {
       }
       else if(searchString == "floor_plans") {
         y = cleanFloorPlans(y);
+      }
+      else if(searchString == "state") {
+        y = mapState(y);
       }
       else if(searchString == "landmark_1_name" || searchString == "nearby_healthcare_1" || searchString == "nearby_gasoline" || searchString == "nearby_roadway_1" || searchString == "nearby_roadway_2" || searchString == "community_amenity_1") {
         y = findFirstValue(y);
@@ -127,6 +145,12 @@ function findFirstValue(val) {
   return y;
 }
 
+//maps state to abbreviation required in CMS
+function mapState(val) {
+  var y = stateMap.get(val);
+  return y; 
+}
+
 function cleanLists(val) {
   var y = val;
   if(y != "" && hasLineBreakComma(y) == false) {
@@ -166,7 +190,7 @@ function defaultValuePrint(val, val1, val2) { //this function is used in the sea
     fillColumnArray.setValues(fillDefaultArrayValues);
   }
   else if (search == "status") {
-    var fillDefaultArrayValues = fillArray("pending", getColumnLength);  
+    var fillDefaultArrayValues = fillArray("Pending", getColumnLength);  
     fillColumnArray.setValues(fillDefaultArrayValues);
   }
   else if (search == "no_deploy") {
