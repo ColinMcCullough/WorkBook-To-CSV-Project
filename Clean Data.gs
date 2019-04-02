@@ -15,8 +15,6 @@ var stateMap = new Map([
                         ["Quebec","QC"],["Saskatchewan","SK"],["Yukon","YT"],
                        ]); 
 
-var tester = stateMap.get("AL");
-
 
 function cleanData(rowRange,rowValues,searchString,chainBranding,domainType) {
   var newArray = []
@@ -77,11 +75,12 @@ function createCustomSlug(val, val1, val2) {
   var chainBranding = val1;
   var y = val2;
   if(domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug
-    y = y.toString().toLowerCase().replace(/[^a-zA-Z ]/g, '').trim().replace(/ /g, '-');
+    y = y.replace(/[^A-Za-z0-9|" "]/g, '').substr(y.indexOf(' ')+1).toString().toLowerCase().trim().replace(/ /g, '-');
   }
   if(domainType == "single" && chainBranding == "no") {  // this will pass in the brand name to clean for a slug
     y = y.toString().toLowerCase().trim().replace(/ /g, '-');
   }
+  Logger.log(y);
   return y;
 }
 

@@ -183,6 +183,25 @@ function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToF
   gaValRange.setDataValidation(gaVal); // sets ga column validation
   redirectsValRange.setDataValidation(redirectsVal); // sets redirects column validation
   prValRange.setDataValidation(prVal); // sets redirects column validation
+  defineConditionalFormatting(acceptedRejectValRange,uspsValRange,gmbValRange,gaValRange,redirectsValRange,prValRange,tabToFormat); //created conditional formatting
+}
+
+function defineConditionalFormatting(acceptedRejectValRange,uspsValRange,gmbValRange,gaValRange,redirectsValRange,prValRange,tabToFormat) {
+  var brandNameRuleAccepted = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Accepted").setBackground("#b7e1cd").setRanges([acceptedRejectValRange]).build();
+  var brandNameRuleAcceptedRejected = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Rejected").setBackground("#f4c7c3").setRanges([acceptedRejectValRange]).build();
+  var uspsVerified = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Yes").setBackground("#b7e1cd").setRanges([uspsValRange]).build();
+  var uspsNotVerified = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("No").setBackground("#f4c7c3").setRanges([uspsValRange]).build();
+  var gmbAccessed = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Accessed").setBackground("#b7e1cd").setRanges([gmbValRange]).build();
+  var gmbRequested = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Requested").setBackground("#fce8b2").setRanges([gmbValRange]).build();
+  var gmbCreateNew = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Create New").setBackground("#d9d9d9").setRanges([gmbValRange]).build();
+  var gaAccessed = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Accessed").setBackground("#b7e1cd").setRanges([gaValRange]).build();
+  var gaRequested = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Requested").setBackground("#fce8b2").setRanges([gaValRange]).build();
+  var gaCreateNew = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Create New").setBackground("#d9d9d9").setRanges([gaValRange]).build();
+  var prComplete = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Complete").setBackground("#b7e1cd").setRanges([prValRange]).build();
+  var prIncomplete = SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo("Incomplete").setBackground("#f4c7c3").setRanges([prValRange]).build();
+  var rules = tabToFormat.getConditionalFormatRules();
+  rules.push(brandNameRuleAccepted,brandNameRuleAcceptedRejected,uspsVerified,uspsNotVerified,gmbAccessed,gmbRequested,gmbCreateNew,gaAccessed,gaRequested,gaCreateNew,prComplete,prIncomplete);
+  tabToFormat.setConditionalFormatRules(rules);
 }
 
 /*
@@ -193,20 +212,25 @@ function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToF
 function printDefaultNotes(val) {
   var vertical = val;
   var notesColumn = 0;
+  var prColumn = 0;
   if(vertical == "mf") {
     notesColumn = 22;
+    prColumn = 23;
   } else {
     notesColumn = 18;
+    prColumn = 19;
   }
-  var newArry = [];
+  var notesArry = [];
+  var prArry = [];
   var currentWebsites = getCurrentWebsiteArray();
   for(i = 0; i < currentWebsites[0].length;i++) {
-    newArry.push(["Existing Site: " + currentWebsites[0][i] + "\nNeighborhood:" + "\nLandmark:" + "\nAmenity:"]);
+    notesArry.push(["Existing Site: " + currentWebsites[0][i] + "\nNeighborhood:" + "\nLandmark:" + "\nAmenity:"]);
+    prArry.push(["Incomplete"]);
   } 
-  Logger.log(newArry);
-  
   var notesRange = seoLvTab.getRange(5,notesColumn,seoLvTab.getLastRow() -4,1);
-  notesRange.setValues(newArry);
+  var prRange = seoLvTab.getRange(5,prColumn,seoLvTab.getLastRow() -4,1);
+  notesRange.setValues(notesArry);
+  prRange.setValues(prArry);
 }
 
 function getCurrentWebsiteArray() {
