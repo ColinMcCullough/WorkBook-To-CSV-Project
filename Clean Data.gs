@@ -1,21 +1,15 @@
-  // need to import a couple of things if using as library
-  // the rest are added to the prototypes
-var Set = cEs6Shim.Set;
-var Map = cEs6Shim.Map;
-
-var stateMap = new Map([
-                        ["Alabama","AL"],["Alaska","AK"],["Arizona","AZ"],["Arkansas","AR"],["California","CA"],["Colorado","CO"],["Connecticut","CT"],
-                        ["Delaware","DE"],["Florida","FL"],["Georgia","GA"],["Hawaii","HI"],["Idaho","ID"],["Illinois","IL"],["Indiana","IN"],["Iowa","IA"],
-                        ["Kansas","KS"],["Kentucky","KY"],["Louisiana","LA"],["Maine","ME"],["Maryland","MD"],["Massachusetts","MA"],["Michigan","MI"],["Minnesota","MN"],
-                        ["Mississippi","MS"],["Missouri","MO"],["Montana","MT"],["Nebraska","NE"],["Nevada","NV"],["New Hampshire","NH"],["New Jersey","NJ"],["New Mexico","NM"],
-                        ["New York","NY"],["North Carolina","NC"],["North Dakota","ND"],["Ohio","OH"],["Oklahoma","OK"],["Oregon","OR"],["Pennsylvania","PA"],["Rhode Island","RI"],
-                        ["South Carolina","SC"],["South Dakota","SD"],["Tennessee","TN"],["Texas","TX"],["Utah","UT"],["Vermont","VT"],["Virginia","VA"],["Washington","WA"],
-                        ["West Virginia","WV"],["Wisconsin","WI"],["Wyoming","WY"],["Alberta","AB"],["British Columbia","BC"],["Manitoba","MB"],["New Brunswick","NB"],
-                        ["Newfoundland And Labrador","NL"],["Nova Scotia","NS"],["Northwest Territories","NT"],["Nunavut","NU"],["Ontario","ON"],["Prince Edward Island","PE"],
-                        ["Quebec","QC"],["Saskatchewan","SK"],["Yukon","YT"],
-                       ]); 
-
-
+var stateMap =  { 
+                  "Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT",
+                  "Delaware":"DE","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA",
+                  "Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN",
+                  "Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM",
+                  "New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI",
+                  "South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA",
+                  "West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY","Alberta":"AB","British Columbia":"BC","Manitoba":"MB","New Brunswick":"NB",
+                  "Newfoundland And Labrador":"NL","Nova Scotia":"NS","Northwest Territories":"NT","Nunavut":"NU","Ontario":"ON","Prince Edward Island":"PE",
+                  "Quebec":"QC","Saskatchewan":"SK","Yukon":"YT"
+                };
+ 
 function cleanData(rowRange,rowValues,searchString,chainBranding,domainType) {
   var newArray = []
   var numRows = rowRange.getNumRows();
@@ -146,7 +140,7 @@ function findFirstValue(val) {
 
 //maps state to abbreviation required in CMS
 function mapState(val) {
-  var y = stateMap.get(val);
+  var y = stateMap["Alabama"];
   return y; 
 }
 

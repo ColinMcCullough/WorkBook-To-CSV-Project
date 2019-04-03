@@ -7,7 +7,7 @@ var headerNames = [
 
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SS");
+var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: MF");
 
 
 /*
