@@ -79,34 +79,38 @@ function transposeArray(searchStrings, vertical, domainType, columnValues, chain
   var rowValue = searchRowIndexArray(searchStrings, vertical, domainType, columnValues, chainBranding);
   var result = [];
   
-  if (rowValue != null) {
+  if (rowValue != null) { //ensures there are values to transpose
     for (var col = 0; col < rowValue[0].length; col++) { // Loop over array cols
       result[col] = [];
       for (var row = 0; row < rowValue.length; row++) { // Loop over array rows
         result[col][row] = rowValue[row][col]; // Rotate
       }
     }
-  var printColumnIndex = headerArrayNames.indexOf(searchString) + 1;
-  
-  if(searchString == "custom_slug") {
-    var namePrintRange = spinUpTab.getRange(2, printColumnIndex, spinUpTab.getLastRow() -1, 1);
-
   } else {
-    var namePrintRange = spinUpTab.getRange(2, printColumnIndex, propertySheet.getLastColumn() -3, 1);
-  }  
-  var namePrintRangeFormatted = namePrintRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+    result = null; 
+  }
+  return result;
+}
+
+//get Print Ranges
+function getPrintRanges(searchString,vertical, result) {
+  if(result != null) {
+    var printColumnIndex = headerArrayNames.indexOf(searchString) + 1;
     
-  namePrintRangeFormatted.setValues(result);
-  printSeoLiquidValues(searchString, result, vertical);
+    if(searchString == "custom_slug") {
+      var namePrintRange = spinUpTab.getRange(2, printColumnIndex, spinUpTab.getLastRow() -1, 1);
+      
+    } else {
+      var namePrintRange = spinUpTab.getRange(2, printColumnIndex, propertySheet.getLastColumn() -3, 1);
+    }  
+    var namePrintRangeFormatted = namePrintRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+    
+    namePrintRangeFormatted.setValues(result);
+    printSeoLiquidValues(searchString, result, vertical);
   }
 }
+
 /*
-//get Print Ranges
-function getPrintRanges() {
- //need to use this to de-couple transpose array function
-}
-
-
 //sets values in SEO Liquid Values Tab and Spin Up File
 function setValues() {
  //need to use this to de-couple transpose array function
@@ -135,14 +139,14 @@ function main() {
     var domainType = prompt[1];
     var chainBranding = prompt[2];
     var headerArrayLength = headerArrayNames.length;
-    Logger.log(headerArrayLength);
     var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
     var errors = checkErrors(columnValues)
     if(errors != null) {
       printHeaders(vertical,domainType);
       for(var i = 0; i <= headerArrayLength - 1; i++) {
         var searchStrings = headerArrayNames[i];
-        transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
+        var result = transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
+        getPrintRanges(searchStrings,vertical, result);
       }
       setSeoLvTabData(vertical,seoLvTab);
     }
