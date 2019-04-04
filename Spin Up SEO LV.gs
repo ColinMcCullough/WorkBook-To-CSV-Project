@@ -18,7 +18,8 @@ var mfHeaderArrayValues = [
                           ]  
 
 function testIndex() {
-  var index = ssSlHeaderArrayValues[0].indexOf("rec_brand_name") + 1;
+  var headerRange = seoLvTab.getRange(1,1,1,seoLvTab.getLastColumn()).getValues();
+  var index = headerRange[0].indexOf("property_feature_1") + 1;
   Logger.log(index);
 }
 
@@ -46,7 +47,7 @@ function seoLvTabFormatting(vertical,tabToFormat) {
   var columnLimit = headerRange[0].indexOf("pr_notes") + 1;
   notesColumn.setFontWeight("bold");
   tabToFormat.getRange(5,1,tabToFormat.getLastRow() -4,columnLimit).setBorder(true, true, true, true, true, true, "black",null)
-  seoLvDataValidation(vertical,tabToFormat);
+  seoLvDataValidation(headerRange,tabToFormat);
 }
 
 /*
@@ -127,23 +128,15 @@ function printSeoLiquidValues(val, val1, val2) {
   This function prints defines where the data validation should be generated in the SEO Liquid Values tab
   based on vertical. It then calls the defineDataValidation which is responsible for actually building the data validation
 */
-function seoLvDataValidation(vertical, tabToFormat) {
-  var gmbColumn = 0;
-  var gaColumn = 0;
-  var redirectsColumn = 0;
-  var prColumn = 0;
-  if(vertical == "mf") {
-    gmbColumn = 19;
-    gaColumn = 20;
-    redirectsColumn = 21;
-    prColumn = 23;
-  } else {
-    gmbColumn = 15;
-    gaColumn = 16;
-    redirectsColumn = 17;
-    prColumn = 19;
-  }
-  defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToFormat)
+function seoLvDataValidation(headerRange, tabToFormat) {
+  var gmbColumn = headerRange[0].indexOf("gmb") + 1;
+  var gaColumn = headerRange[0].indexOf("ga") + 1;
+  var redirectsColumn = headerRange[0].indexOf("redirects") + 1;
+  var prColumn = headerRange[0].indexOf("pr") + 1;
+  var accOrRejecCol = headerRange[0].indexOf("acc_rej") + 1;
+  var uspsCol = headerRange[0].indexOf("usps") + 1;
+  var propFeatCol = headerRange[0].indexOf("property_feature_1") + 1;
+  defineDataValidation(uspsCol,accOrRejecCol,gmbColumn,gaColumn,redirectsColumn,prColumn,propFeatCol,tabToFormat,headerRange)
 }
 
 /*
@@ -153,10 +146,10 @@ function seoLvDataValidation(vertical, tabToFormat) {
   @param prColumn is the column number where the peer review data Validation will be built
   This function builds and places data validation for the parameters
 */
-function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToFormat) {
-  var acceptedRejectValRange = tabToFormat.getRange(5,3,tabToFormat.getLastRow() -4,1); //Accepted/Rejected range
+function defineDataValidation(uspsCol,accOrRejecCol,gmbColumn,gaColumn,redirectsColumn,prColumn,propFeatCol,tabToFormat,headerRange) {
+  var acceptedRejectValRange = tabToFormat.getRange(5,accOrRejecCol,tabToFormat.getLastRow() -4,1); //Accepted/Rejected range
   var acceptedRejectVal = SpreadsheetApp.newDataValidation().requireValueInList(["Accepted", "Rejected"], true).build(); //Accepted/Rejected validation builder
-  var uspsValRange = tabToFormat.getRange(5,4,tabToFormat.getLastRow() -4,1); //usps range
+  var uspsValRange = tabToFormat.getRange(5,uspsCol,tabToFormat.getLastRow() -4,1); //usps range
   var uspsVal = SpreadsheetApp.newDataValidation().requireValueInList(["Yes", "No"], true).build(); //usps validation builder
   var gmbValRange = tabToFormat.getRange(5,gmbColumn,tabToFormat.getLastRow() -4,1); //gmb range
   var gmbVal = SpreadsheetApp.newDataValidation().requireValueInList(["Requested","Accessed","Create New","Unverified","N/A LP"], true).build(); //gmb validation builder
@@ -166,6 +159,11 @@ function defineDataValidation(gmbColumn,gaColumn,redirectsColumn,prColumn,tabToF
   var redirectsVal = SpreadsheetApp.newDataValidation().requireValueInList(["Same Domain","Cross Domain","Secure Naked - Same Domain","Secure - Cross Domain","No Redirects"], true).build(); //redirects validation builder
   var prValRange = tabToFormat.getRange(5,prColumn,tabToFormat.getLastRow() -4,1); //peer review range
   var prVal = SpreadsheetApp.newDataValidation().requireValueInList(["Incomplete","Complete"], true).build(); //peer review validation builder
+  if(propFeatCol != 0) {
+    var propFeatureRange = tabToFormat.getRange(5,propFeatCol,tabToFormat.getLastRow() -4,1); //peer review range
+    var propFeatureVal = SpreadsheetApp.newDataValidation().requireValueInList(["Luxury","Affordable","Modern","Gated","Furnished","Garden Style","High Rise","New","Upgraded"], true).build(); //first prop feature builder
+    propFeatureRange.setDataValidation(propFeatureVal);
+  }
   //sets Data validation that was built above
   acceptedRejectValRange.setDataValidation(acceptedRejectVal); // sets accepted rejected validation
   uspsValRange.setDataValidation(uspsVal); // sets usps column validation
