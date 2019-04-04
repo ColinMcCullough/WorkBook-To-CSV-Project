@@ -10,7 +10,6 @@ function checkErrors(columnValues) {
       numBlanks += 1;
     }
   }
-  Logger.log("blanks: " + numBlanks);
   if(numBlanks > 0) {
     ui.alert("Error: \nYou either have values in a columns past the last location in use OR missing names in Project Workbook." + "\nAdd names to all locations in row " + searchResult + "and clear all columns past last location in use.");
     return null;

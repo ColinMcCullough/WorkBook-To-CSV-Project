@@ -1,24 +1,25 @@
 //Global Variables
-var ssSlSeoLiquidValuesArray = ["name","","","","street_address_1","city","state","postal_code","","","","custom_slug"];
+var ssSlSeoLiquidValuesArray = ["name","rec_brand_name","acc_rej","usps","street_address_1","city","state","postal_code","neighborhood","neighborhood_2","landmark","custom_slug"];
 var mfSeoLiquidValuesArray = ["name","","","","street_address_1","city","state","postal_code","","","floor_plans","","property_feature_1","","","custom_slug"];
 
 //self storage/sl headers for SEO Liquid Values Tab                          
 var ssSlHeaderArrayValues = [
-                              ["name","", "", "", "street_address_1", "city", "state","postal_code", "", "",  "", "custom_slug", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+                              ["name","rec_brand_name", "acc_rej", "usps", "street_address_1", "city", "state","postal_code", "neighborhood", "neighborhood_2",  "landmark", "custom_slug", "population", "strategy", "gmb", "ga", "redirects", "notes", "pr", "pr_notes", "", "", "", "", "", ""],
                               ["V1.0", "SEO Liquid Values", "", "", "", "", "", "","", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit","MF Community A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1798205500","Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1581508741","55+ Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=320995540","SS Facility A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=649440825","SL Community A")',""],
                               ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State","Zip", "Neighborhood", "Neighborhood_2", "Landmark Required for MF", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=205657231","MF Community B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=780478088", "Apartments & Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=2023923072", "Senior Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=286369603", "SS Facility A (Landmark Only)")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1742592240", "SL Community B")',""],
                               ["", "", "", "", "", "", "","", "comes before City", "comes after City needs near in etc.", "comes after near", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")',""]
                             ]
 //multi-family headers for SEO Liquid Values Tab 
 var mfHeaderArrayValues = [
-                            ["name","", "", "", "street_address_1", "city", "state","postal_code", "", "", "floor_plans", "", "property_feature_1", "", "", "custom_slug", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+                            ["name","rec_brand_name", "acc_rej", "usps", "street_address_1", "city", "state","postal_code", "neighborhood", "neighborhood_2", "floor_plans", "landmark", "property_feature_1", "apart_amen", "comm_amen", "custom_slug", "population", "strategy", "gmb", "ga", "redirects", "notes", "pr", "pr_notes", "", "", "", "", "", ""],
                             ["V1.0", "SEO Liquid Values", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit","MF Community A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1798205500","Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1581508741","55+ Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=320995540","SS Facility A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=649440825","SL Community A")', ""],
                             ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State","Zip", "Neighborhood", "Neighborhood_2", "Floor Plans", "Landmark Required for MF", "First property feature", "Primary Apartment Amenity", "Primary Community Amenity", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=205657231","MF Community B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=780478088", "Apartments & Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=2023923072", "Senior Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=286369603", "SS Facility A (Landmark Only)")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1742592240", "SL Community B")', ""],
                             ["", "", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "do not include bedrooms use numerical format (ie 1 & 2)", "comes after near", "comes before apartments (ie Luxury Apartments)", "comes after including or with", "", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")', ""]
                           ]  
 
-function testLength() {
-  Logger.log(headerArrayNames.length);
+function testIndex() {
+  var index = ssSlHeaderArrayValues[0].indexOf("rec_brand_name") + 1;
+  Logger.log(index);
 }
 
 /*
@@ -39,19 +40,10 @@ function setSeoLvTabData(val,val1) {
   @param tabToFormat
   This function bolds notes column, adds data validation, and sets border around range
 */
-function seoLvTabFormatting(val,val1) {
-  var tabToFormat = val1
-  var vertical = val;
-  var notesColumn = "";
-  var columnLimit = 0;
-  if(vertical == "mf") {
-    notesColumn = tabToFormat.getRange(5,22, tabToFormat.getLastRow() -4,1);
-    columnLimit = 24;
-  }
-  else if(vertical == "ss" || "sl") {
-    notesColumn = tabToFormat.getRange(5,18, tabToFormat.getLastRow() -4,1);
-    columnLimit = 20;
-  }
+function seoLvTabFormatting(vertical,tabToFormat) {
+  var headerRange = tabToFormat.getRange(1,1,1,tabToFormat.getLastColumn()).getValues();
+  var notesColumn = tabToFormat.getRange(5,headerRange[0].indexOf("notes") + 1, tabToFormat.getLastRow() -4,1);
+  var columnLimit = headerRange[0].indexOf("pr_notes") + 1;
   notesColumn.setFontWeight("bold");
   tabToFormat.getRange(5,1,tabToFormat.getLastRow() -4,columnLimit).setBorder(true, true, true, true, true, true, "black",null)
   seoLvDataValidation(vertical,tabToFormat);
@@ -135,9 +127,7 @@ function printSeoLiquidValues(val, val1, val2) {
   This function prints defines where the data validation should be generated in the SEO Liquid Values tab
   based on vertical. It then calls the defineDataValidation which is responsible for actually building the data validation
 */
-function seoLvDataValidation(val, val1) {
-  var tabToFormat = val1
-  var vertical = val;
+function seoLvDataValidation(vertical, tabToFormat) {
   var gmbColumn = 0;
   var gaColumn = 0;
   var redirectsColumn = 0;

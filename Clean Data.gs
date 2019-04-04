@@ -18,68 +18,62 @@ function cleanData(rowRange,rowValues,searchString,chainBranding,domainType) {
     for (var j = 0; j < numCols; j++) {
       var x = rowValues[i][j];
       var y = x.toString().trim();
-      if(searchString == "email") {
-        y = cleanEmail(y);
-      }
-      else if(searchString == "custom_slug") {
-        y = createCustomSlug(domainType, chainBranding, y);
-      }
-      else if(searchString == "twitter_username" || searchString == "facebook_username" || searchString == "yelp_username" || searchString == "pinterest_username" || searchString == "instagram_username" || searchString == "youtube_username" || searchString == "linkedin_username") {
-        y = cleanSocialLinks(y, searchString);
-      }
-      else if(searchString == "local_phone_number" || searchString == "display_phone_number") {
-        y = cleanPhoneNumber(y);
-      }
-      else if(searchString == "naked_domain") {
-        y = cleanDomain(y,domainType);
-      }
-      else if(searchString == "floor_plans") {
-        y = cleanFloorPlans(y);
-      }
-      else if(searchString == "state") {
-        y = mapState(y);
-      }
-      else if(searchString == "landmark_1_name" || searchString == "nearby_healthcare_1" || searchString == "nearby_gasoline" || searchString == "nearby_roadway_1" || searchString == "nearby_roadway_2" || searchString == "community_amenity_1") {
-        y = findFirstValue(y);
-      }
-      else if(searchString == "nearby_restaurants" || searchString == "nearby_shopping" || searchString == "nearby_employers" || searchString == "nearby_schools") {
-        y = cleanLists(y);
+      switch(searchString) {
+        case "email":
+          y = cleanEmail(y);
+          break;
+        case "custom_slug":
+          y = createCustomSlug(domainType, chainBranding, y);
+          break;
+        case "twitter_username": case "facebook_username": case "yelp_username": case "pinterest_username": case "instagram_username": case "youtube_username": case "linkedin_username":
+          y = cleanSocialLinks(y, searchString);
+          break;
+        case "local_phone_number": case "display_phone_number":
+          y = cleanPhoneNumber(y);
+          break;
+        case "naked_domain":
+          y = cleanDomain(y,domainType);
+          break;
+        case "floor_plans":
+          y = cleanFloorPlans(y);
+          break;
+        case "state":
+          y = mapState(y);
+          break;
+        case "landmark_1_name": case "nearby_healthcare_1": case "nearby_gasoline": case "nearby_roadway_1": case "nearby_roadway_2": case "community_amenity_1":
+          y = findFirstValue(y);
+          break;
+        case "nearby_restaurants": case "nearby_shopping": case "nearby_employers": case "nearby_schools":
+          y = cleanLists(y);
+          break;
       }
       newArray.push(y); 
     }
   }
-  Logger.log([newArray]);
   return [newArray];
 }
 
-function cleanEmail(val) {
-  var y = val;
+function cleanEmail(y) {
   if(y.indexOf("@") != -1) {
     //y = y.replace(/\n/g, " " ).split(" ", 1).toString().trim();
     y = y.toString().match(/\b([^\s]+@[^\s]+)\b/);
-    Logger.log(y);
   } else {
     y = "";
   }
   return y;
 }
 
-function createCustomSlug(val, val1, val2) {
-  var domainType = val;
-  var chainBranding = val1;
-  var y = val2;
+function createCustomSlug(domainType, chainBranding, y) {
   if(domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug
     y = y.replace(/[^A-Za-z0-9|" "]/g, '').substr(y.indexOf(' ')+1).toString().toLowerCase().trim().replace(/ /g, '-');
   }
   if(domainType == "single" && chainBranding == "no") {  // this will pass in the brand name to clean for a slug
     y = y.toString().toLowerCase().trim().replace(/ /g, '-');
   }
-  Logger.log(y);
   return y;
 }
 
-function cleanSocialLinks(val) {
-  var y = val;
+function cleanSocialLinks(y) {
   if(y.substr(y.length - 1) == "/") { //checks if last character in url is trailing slash
     y = y.substr(0, y.length - 1);
   }
@@ -89,7 +83,6 @@ function cleanSocialLinks(val) {
 
 function cleanPhoneNumber(val) {
   var y = val;
-
   y = y.replace(/[^0-9\.]+/g, '').replace(/\./g, '').toString().trim();
   if(y == "") {
     return y;
@@ -144,26 +137,30 @@ function mapState(val) {
   return y; 
 }
 
-function cleanLists(val) {
-  var y = val;
+//this function needs work
+function cleanLists(val1) {
+  var y = val1.replace(/[^\w\s|\,\;]/gi, '').trim(); 
   if(y != "" && hasLineBreakComma(y) == false) {
-    y = y.replace(/(\r\n|\n|\r)/gm,",").replace(/\;|,+/g,',').toString().trim();
+    y = y.replace(/(\r\n|\n|\r)/gm,", ").replace(/\;|,+/g,',').toString().trim();
+    y = y.replace(/\s\s+/g, ' ');
   } 
   else if (y != "" && hasLineBreakComma(y) == true) {
-    y = y.replace(/(\r\n|\n|\r)/gm," ").toString().trim();
+    y = y.replace(/(\r\n|\n|\r)/gm," ").replace(/\s\s+/g, ' ').toString().trim();
+    y = y.replace(/\s\s+/g, ' ');
   }
   else {
     y = "";
   }
-  Logger.log(y)  
+  y = y.replace(/\s\,+/g,',');
   return y;
 }
-// returns true if last character on line is a ","
+// returns true if last character on line is a "," or ";"
 function hasLineBreakComma(y) {
   var indexPosition = y.indexOf("\n")-1;
   var character = y.charAt(indexPosition);
+  var character2 = y.charAt(indexPosition -1);
   var lineBreakComma;
-  if (character == ",") {
+  if (character == /\,|\;/g || character2 == /\,|\;/g) {
     lineBreakComma = true;
   } else {
     lineBreakComma = false;

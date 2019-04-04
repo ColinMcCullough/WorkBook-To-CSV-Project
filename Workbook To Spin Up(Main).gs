@@ -7,7 +7,7 @@ var headerNames = [
 
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: MF");
+var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SL");
 
 
 /*
@@ -35,39 +35,46 @@ function printHeaders(vertical,domainType) {
   @return Returns array of row values matching search value tag
 */
 function searchRowIndexArray(searchString, vertical, domainType, columnValues, chainBranding)  {
+  var rowValues;
   var spinupLastRow = spinUpTab.getLastRow();
   if(searchString == "" || searchString == "neighborhood" || searchString == "apartment_amenity_1" || searchString == "community_amenity_1" && vertical == "mf" || searchString == "landmark_1_name" && vertical == "mf") { //SEO Liquid Values that be populated by team after keyword research
     rowValues = null;
   }
-  else if(searchString == "corporate" || searchString == "status" || searchString == "no_deploy" || searchString == "secure_domain" || searchString == "spinup_web_theme") {
+  else if(searchString == "corporate" || searchString == "status" || searchString == "no_deploy" || searchString == "secure_domain" || searchString == "spinup_web_theme") { //default values
     defaultValuePrint(searchString, vertical, domainType);
     rowValues = null;
   }
   else {
-    var searchResult = columnValues.findIndex(searchString); //Row Index - 2
-      if (searchResult != -1) {
-        //searchResult + 2 is row index.
-        searchResult = searchResult + 2;     
-        var lastColumn = propertySheet.getLastColumn();
-        var rowRange = propertySheet.getRange(searchResult, 4, 1, lastColumn - 3);
-        var rowRangeValues = rowRange.getValues();
-        var rowValues = cleanData(rowRange,rowRangeValues,searchString,chainBranding,domainType);
-      }
-      else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug
-        var columnRange = spinUpTab.getRange(2, 4, spinupLastRow - 1, 1);
-        var columnRangeValues = columnRange.getValues();
-        var rowValues = cleanData(columnRange,columnRangeValues,searchString,chainBranding,domainType);
-      }
-      else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "no") { // this will pass in the brand name to clean for a slug
-        var rowRange = spinUpTab.getRange(2, 1, spinupLastRow - 1, 1);
-        var columnRangeValues = rowRange.getValues();
-        var rowValues = cleanData(rowRange,columnRangeValues,searchString,chainBranding,domainType);
-      }
-      else {
-        rowValues = null;
-      }
+    rowValues = getRowValues(searchString, vertical, domainType, columnValues, chainBranding ,spinupLastRow);
   return rowValues;
   }
+}
+
+//helper method for searchRowIndexArray to get values of rows not using default values or rows that should be skipped
+function getRowValues(searchString, vertical, domainType, columnValues, chainBranding, spinupLastRow) {
+  var searchResult = columnValues.findIndex(searchString); //Row Index - 2
+  if (searchResult != -1) {
+    //searchResult + 2 is row index.
+    searchResult = searchResult + 2;     
+    var lastColumn = propertySheet.getLastColumn();
+    var rowRange = propertySheet.getRange(searchResult, 4, 1, lastColumn - 3);
+    var rowRangeValues = rowRange.getValues();
+    var rowValues = cleanData(rowRange,rowRangeValues,searchString,chainBranding,domainType);
+  }
+  else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug
+    var columnRange = spinUpTab.getRange(2, 4, spinupLastRow - 1, 1);
+    var columnRangeValues = columnRange.getValues();
+    var rowValues = cleanData(columnRange,columnRangeValues,searchString,chainBranding,domainType);
+  }
+  else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "no") { // this will pass in the brand name to clean for a slug
+    var rowRange = spinUpTab.getRange(2, 1, spinupLastRow - 1, 1);
+    var columnRangeValues = rowRange.getValues();
+    var rowValues = cleanData(rowRange,columnRangeValues,searchString,chainBranding,domainType);
+  }
+  else {
+    rowValues = null;
+  }
+  return rowValues;
 }
 
 
@@ -110,12 +117,6 @@ function getPrintRanges(searchString,vertical, result) {
   }
 }
 
-/*
-//sets values in SEO Liquid Values Tab and Spin Up File
-function setValues() {
- //need to use this to de-couple transpose array function
-}
-*/
 
 /*
  Searches through an array for a text value match. 
