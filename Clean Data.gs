@@ -133,7 +133,7 @@ function findFirstValue(val) {
 
 //maps state to abbreviation required in CMS
 function mapState(val) {
-  var y = stateMap["Alabama"];
+  var y = stateMap[val];
   return y; 
 }
 

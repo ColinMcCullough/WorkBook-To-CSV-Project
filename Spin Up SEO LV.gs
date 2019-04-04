@@ -31,7 +31,7 @@ function testIndex() {
 function setSeoLvTabData(val,val1) { 
   var tabToFormat = val1;
   var vertical = val;
-  printDefaultNotes(val)
+  printDefaultNotes(tabToFormat);
   seoLvTabFormatting(vertical,tabToFormat);
 }
 
@@ -55,34 +55,20 @@ function seoLvTabFormatting(vertical,tabToFormat) {
   This formats rows 2-4. Freezes 1st column, hides 1st row, freezes row 1 - 4, sets color
   and size for first 3 rows, sets appropriates borders
 */
-function setLVHeaderFormatting(val,val1,val2) {
-  var tabToFormat = val2
-  var vertical = val;
-  var domainType = val1;
+function setLVHeaderFormatting(vertical,domainType,tabToFormat) {
   var domainAndVerticalPrint = [["Vertical:",vertical,"Domain:",domainType]];
-  tabToFormat.setRowHeights(2, 3, 70);
-  tabToFormat.setColumnWidth(2, 227); tabToFormat.setColumnWidths(4, 3, 114); 
-  tabToFormat.hideRows(1);
-  tabToFormat.setFrozenRows(4);
-  tabToFormat.setFrozenColumns(1);
-  var rowTwoRange = "";
-  var rowThreeRange = "";
-  var rowFourRange = "";
-  var strategiesRange = "";
-  if(vertical == "mf") {
-    rowTwoRange = tabToFormat.getRange(2,1,1,24);
-    rowThreeRange = tabToFormat.getRange(3,1,1,24);
-    rowFourRange = tabToFormat.getRange(4,1,1,24);
-    strategiesRange = tabToFormat.getRange(2,25,3,5);
-    tabToFormat.setColumnWidth(22, 262); tabToFormat.setColumnWidth(24, 227); tabToFormat.setColumnWidths(25, 5, 150); // sets column widths
-  }
-  else if(vertical == "ss" || "sl") {
-    rowTwoRange = tabToFormat.getRange(2,1,1,20);
-    rowThreeRange = tabToFormat.getRange(3,1,1,20);
-    rowFourRange = tabToFormat.getRange(4,1,1,20);
-    strategiesRange = tabToFormat.getRange(2,21,3,5);
-    tabToFormat.setColumnWidth(18, 262); tabToFormat.setColumnWidth(20, 227); // sets column widths
-  }
+  var headerRange = tabToFormat.getRange(1,1,1,tabToFormat.getLastColumn()).getValues(); //header values of liquid values tab 
+  var rowTwoRange = tabToFormat.getRange(2,1,1,headerRange[0].indexOf("pr_notes") + 1);
+  var rowThreeRange = tabToFormat.getRange(3,1,1,headerRange[0].indexOf("pr_notes") + 1);
+  var rowFourRange = tabToFormat.getRange(4,1,1,headerRange[0].indexOf("pr_notes") + 1);
+  var strategiesRange = tabToFormat.getRange(2,headerRange[0].indexOf("pr_notes") + 2,3,5);
+  
+  tabToFormat.setRowHeights(2, 3, 70);   tabToFormat.setColumnWidths(1, 2, 227);   tabToFormat.setColumnWidths(4, 3, 114);
+  tabToFormat.hideRows(1);               tabToFormat.setFrozenRows(4);         tabToFormat.setFrozenColumns(1);
+  tabToFormat.setColumnWidth(headerRange[0].indexOf("notes") + 1, 262);      // sets column width for notes       
+  tabToFormat.setColumnWidth(headerRange[0].indexOf("pr_notes") + 1,262);    // sets column width for pr notes           
+  tabToFormat.setColumnWidths(headerRange[0].indexOf("pr_notes") + 2, 5, 150); // sets column widths for strategies
+  tabToFormat.setColumnWidths(headerRange[0].indexOf("strategy") + 1, 4, 160); // sets column widths for strategies
   rowTwoRange.setBackgroundRGB(11, 34, 63).setFontColor('white').setFontWeight("bold").setHorizontalAlignment("left").setFontSize(20).setWrapStrategy(SpreadsheetApp.WrapStrategy.OVERFLOW);
   rowThreeRange.setBackgroundRGB(120, 150, 170).setFontColor('white').setHorizontalAlignment("center").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setFontSize(12).setBorder(true, true, true, true, true, true, "white",null);
   rowFourRange.setBackgroundColor("light grey 3").setFontColor('black').setFontSize(10).setHorizontalAlignment("left").setVerticalAlignment("middle").setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP).setBorder(true, true, true, true, true, true, "black",null);
@@ -197,17 +183,10 @@ function defineConditionalFormatting(acceptedRejectValRange,uspsValRange,gmbValR
   sets notes column in seo liquid values tab
   This function is used in the initial set header function called in main()
 */
-function printDefaultNotes(val) {
-  var vertical = val;
-  var notesColumn = 0;
-  var prColumn = 0;
-  if(vertical == "mf") {
-    notesColumn = 22;
-    prColumn = 23;
-  } else {
-    notesColumn = 18;
-    prColumn = 19;
-  }
+function printDefaultNotes(tabToFormat) {
+  var headerRange = tabToFormat.getRange(1,1,1,tabToFormat.getLastColumn()).getValues(); //header values of liquid values tab 
+  var notesColumn = headerRange[0].indexOf("notes") + 1;
+  var prColumn = headerRange[0].indexOf("pr") + 1;
   var notesArry = [];
   var prArry = [];
   var currentWebsites = getCurrentWebsiteArray();
