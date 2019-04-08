@@ -202,7 +202,8 @@ function printDefaultNotes(tabToFormat) {
 
 function getCurrentWebsiteArray() {
   var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues();
-  var searchResult = columnValues.findIndex("current_website");
+  var flatColVal = [].concat.apply([], columnValues);
+  var searchResult = flatColVal.indexOf("current_website");
   if(searchResult != -1) {
     searchResult += 2;
     var numofItems = seoLvTab.getLastRow() - 4;

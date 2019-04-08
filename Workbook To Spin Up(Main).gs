@@ -7,7 +7,7 @@ var headerNames = [
 
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: SL");
+var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("1. Property Info: MF");
 
 
 /*
@@ -34,7 +34,7 @@ function printHeaders(vertical,domainType) {
   finds range of brand names in project workbook
   @return Returns array of row values matching search value tag
 */
-function searchRowIndexArray(searchString, vertical, domainType, columnValues, chainBranding)  {
+function searchRowIndexArray(searchString, vertical, domainType, flatColumnValues, chainBranding)  {
   var rowValues;
   var spinupLastRow = spinUpTab.getLastRow();
   if(searchString == "" || searchString == "neighborhood" || searchString == "apartment_amenity_1" || searchString == "community_amenity_1" && vertical == "mf" || searchString == "landmark_1_name" && vertical == "mf") { //SEO Liquid Values that be populated by team after keyword research
@@ -45,14 +45,14 @@ function searchRowIndexArray(searchString, vertical, domainType, columnValues, c
     rowValues = null;
   }
   else {
-    rowValues = getRowValues(searchString, vertical, domainType, columnValues, chainBranding ,spinupLastRow);
+    rowValues = getRowValues(searchString, vertical, domainType, flatColumnValues, chainBranding ,spinupLastRow);
   return rowValues;
   }
 }
 
 //helper method for searchRowIndexArray to get values of rows not using default values or rows that should be skipped
-function getRowValues(searchString, vertical, domainType, columnValues, chainBranding, spinupLastRow) {
-  var searchResult = columnValues.findIndex(searchString); //Row Index - 2
+function getRowValues(searchString, vertical, domainType, flatColumnValues, chainBranding, spinupLastRow) {
+  var searchResult = flatColumnValues.indexOf(searchString); //Row Index - 2
   if (searchResult != -1) {
     //searchResult + 2 is row index.
     searchResult = searchResult + 2;     
@@ -81,18 +81,23 @@ function getRowValues(searchString, vertical, domainType, columnValues, chainBra
 /*
   fuction takes a row array and transposes it to a column array
 */
-function transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding) {
+function transposeArray(searchStrings, vertical, domainType, flatColumnValues, chainBranding) {
   var searchString = searchStrings;
-  var rowValue = searchRowIndexArray(searchStrings, vertical, domainType, columnValues, chainBranding);
-  var result = [];
+  var rowValue = searchRowIndexArray(searchStrings, vertical, domainType, flatColumnValues, chainBranding);
+  var result;
   
   if (rowValue != null) { //ensures there are values to transpose
+    result = rowValue[0].map(function(elem) {return [elem];});
+    
+    /*  
     for (var col = 0; col < rowValue[0].length; col++) { // Loop over array cols
       result[col] = [];
       for (var row = 0; row < rowValue.length; row++) { // Loop over array rows
         result[col][row] = rowValue[row][col]; // Rotate
       }
     }
+    */
+    
   } else {
     result = null; 
   }
@@ -141,12 +146,13 @@ function main() {
     var chainBranding = prompt[2];
     var headerArrayLength = headerArrayNames.length;
     var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
-    var errors = checkErrors(columnValues)
+    var flattenColumnval = [].concat.apply([], columnValues);
+    var errors = checkErrors(flattenColumnval)
     if(errors != null) {
       printHeaders(vertical,domainType);
       for(var i = 0; i <= headerArrayLength - 1; i++) {
         var searchStrings = headerArrayNames[i];
-        var result = transposeArray(searchStrings, vertical, domainType, columnValues, chainBranding);
+        var result = transposeArray(searchStrings, vertical, domainType, flattenColumnval, chainBranding);
         getPrintRanges(searchStrings,vertical, result);
       }
       setSeoLvTabData(vertical,seoLvTab);

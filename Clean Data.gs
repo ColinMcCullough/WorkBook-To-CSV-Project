@@ -65,10 +65,10 @@ function cleanEmail(y) {
 
 function createCustomSlug(domainType, chainBranding, y) {
   if(domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug
-    y = y.replace(/[^A-Za-z0-9|" "]/g, '').substr(y.indexOf(' ')+1).toString().toLowerCase().trim().replace(/ /g, '-');
+    y = y.replace(/[^A-Za-z0-9|" "]/g, '').substr(y.indexOf(' ')+1).toString().toLowerCase().trim().replace(/\s\s+|\s/g, '-');
   }
   if(domainType == "single" && chainBranding == "no") {  // this will pass in the brand name to clean for a slug
-    y = y.toString().toLowerCase().trim().replace(/ /g, '-');
+    y = y.toString().toLowerCase().trim().replace(/\s\s+|\s/g, '-');
   }
   return y;
 }
@@ -106,16 +106,29 @@ function cleanDomain(val, val1) {
   }
   return y;
 }
-
+//does not take into condideration decimal numbers
 function cleanFloorPlans(val) {
   var y = val;
-  y = y.replace(/[^0-9\.]+/g,"").toString().trim();
+  var hasStudio;
+  if(y.indexOf("studio") != -1 || y.indexOf("Studio") != -1) {
+    hasStudio = true;
+  } else {
+    hasStudio = false;
+  }
+  y = y.replace(/\../g,"");
+  y = y.replace(/[^0-9]+/g,"").toString().trim();
   if(y == "") {
     return y;
   } else {
-    var x = y.substr(-1);
-    y = y.slice(0, -1).split("").join(", ");
-    y = y + " & " + x;
+    if(y.length > 1) {
+      var x = y.substr(-1);
+      y = y.slice(0, -1).split("").join(", ");
+      if(hasStudio == true) {
+        y = "Studio, " + y + " & " + x;
+      }  else {
+        y = y + " & " + x;
+      }
+    }
   }
   return y;
 }
