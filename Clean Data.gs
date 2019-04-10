@@ -74,6 +74,9 @@ function createCustomSlug(domainType, chainBranding, y) {
 }
 
 function cleanSocialLinks(y) {
+  if(y.indexOf("?") != -1) {
+    y = y.substr(0, y.indexOf("?"));
+  }
   if(y.substr(y.length - 1) == "/") { //checks if last character in url is trailing slash
     y = y.substr(0, y.length - 1);
   }

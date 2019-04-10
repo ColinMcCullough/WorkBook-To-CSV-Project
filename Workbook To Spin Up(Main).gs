@@ -1,5 +1,16 @@
 //Global Variables  
-var headerArrayNames = ["name","internal_branded_name","corporate","street_address_1","city","state","postal_code","country","neighborhood","neighborhood_2","email","office_hours_note","status","status_note","no_deploy","secure_domain","custom_slug","twitter_username","facebook_username","yelp_username","pinterest_username","instagram_username","youtube_username","google_cid","linkedin_username","local_phone_number","display_phone_number","gtm_codes","spinup_web_theme","spinup_strategy","naked_domain","off_platform_link","business_description","location_listing_category_id","secondary_listing_categories","pay_online_url","license_number","nearby_schools","nearby_school_1","nearby_school_2","nearby_employers","nearby_employer_1","nearby_employer_2","nearby_employer_3","apartment_amenity_1","apartment_amenity_2","apartment_amenity_3","nearby_restaurants","nearby_shopping","landmark_1_name","landmark_2_name","landmark_3_name","floor_plans","community_amenity_1","community_amenity_2","community_amenity_3","care_level_1","care_level_2","care_level_3","care_level_4","care_level_5","care_level_6","nearby_healthcare_1","nearby_roadway_1","nearby_roadway_2","nearby_gasoline","property_feature_1","property_feature_2","property_feature_3","property_feature_4"];
+var headerArrayNames = ["name","internal_branded_name","corporate","street_address_1","city","state","postal_code","country","neighborhood",
+                        "neighborhood_2","email","office_hours_note","status","status_note","no_deploy","secure_domain","custom_slug",
+                        "twitter_username","facebook_username","yelp_username","pinterest_username","instagram_username","youtube_username",
+                        "google_cid","linkedin_username","local_phone_number","display_phone_number","gtm_codes","spinup_web_theme",
+                        "spinup_strategy","naked_domain","off_platform_link","business_description","location_listing_category_id",
+                        "secondary_listing_categories","pay_online_url","license_number","nearby_schools","nearby_school_1","nearby_school_2",
+                        "nearby_employers","nearby_employer_1","nearby_employer_2","nearby_employer_3","apartment_amenity_1","apartment_amenity_2",
+                        "apartment_amenity_3","nearby_restaurants","nearby_shopping","landmark_1_name","landmark_2_name","landmark_3_name",
+                        "floor_plans","community_amenity_1","community_amenity_2","community_amenity_3","care_level_1","care_level_2",
+                        "care_level_3","care_level_4","care_level_5","care_level_6","nearby_healthcare_1","nearby_roadway_1","nearby_roadway_2",
+                        "nearby_gasoline","property_feature_1","property_feature_2","property_feature_3","property_feature_4"
+                       ];
 
 var headerNames = [
                      ["name","internal_branded_name","corporate","street_address_1","city","state","postal_code","country","neighborhood","neighborhood_2","email","office_hours_note","status","status_note","no_deploy","secure_domain","custom_slug","twitter_username","facebook_username","yelp_username","pinterest_username","instagram_username","youtube_username","google_cid","linkedin_username","local_phone_number","display_phone_number","gtm_codes","spinup_web_theme","spinup_strategy","naked_domain","off_platform_link","business_description","location_listing_category_id","secondary_listing_categories","pay_online_url","license_number","nearby_schools","nearby_school_1","nearby_school_2","nearby_employers","nearby_employer_1","nearby_employer_2","nearby_employer_3","apartment_amenity_1","apartment_amenity_2","apartment_amenity_3","nearby_restaurants","nearby_shopping","landmark_1_name","landmark_2_name","landmark_3_name","floor_plans","community_amenity_1","community_amenity_2","community_amenity_3","care_level_1","care_level_2","care_level_3","care_level_4","care_level_5","care_level_6","nearby_healthcare_1","nearby_roadway_1","nearby_roadway_2","nearby_gasoline","property_feature_1","property_feature_2","property_feature_3","property_feature_4"]
@@ -122,23 +133,8 @@ function getPrintRanges(searchString,vertical, result) {
   }
 }
 
-
-/*
- Searches through an array for a text value match. 
- @return index position - 2. If text value not found returns -1
-*/
-Array.prototype.findIndex = function(search){
-    for (var i=0; i<this.length; i++) {
-      if (this[i] == search) {
-        return i;
-      }
-    }
-    return -1;
-}
-
 function main() {
   var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-  clearHeaders();
   var prompt = runPrompts();
   if(prompt[0] != null && prompt[1] != null && prompt[2] != null) {
     var vertical = prompt[0];
@@ -147,8 +143,9 @@ function main() {
     var headerArrayLength = headerArrayNames.length;
     var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
     var flattenColumnval = [].concat.apply([], columnValues);
-    var errors = checkErrors(flattenColumnval)
+    var errors = checkErrors(flattenColumnval,domainType);
     if(errors != null) {
+      clearHeaders();
       printHeaders(vertical,domainType);
       for(var i = 0; i <= headerArrayLength - 1; i++) {
         var searchStrings = headerArrayNames[i];
