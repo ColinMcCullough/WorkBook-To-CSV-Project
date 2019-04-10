@@ -16,9 +16,7 @@ function checkErrors(flatColumnArry,domainType) {
       return null;
     }
   }  
-  else {
-    return "good";
-  }
+  return "good";
 }
 
 function numOfBlanks(arryVal,arrylen) {

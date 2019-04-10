@@ -105,7 +105,7 @@ function cleanDomain(val, val1) {
     y = "";
     return y;
   } else {
-  y = y.replace(/https:\/\/www.|https:\/\/|http:\/\/www.|http:\/\/|www\./gi, "" ).split("/", 1).toString().trim();
+  y = y.replace(/https:\/\/www.|https:\/\/|http:\/\/www.|http:\/\/|www\./gi, "" ).split("/", 1).toString().toLowerCase().trim();
   }
   return y;
 }
