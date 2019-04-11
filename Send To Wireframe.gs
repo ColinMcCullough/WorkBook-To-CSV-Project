@@ -99,7 +99,7 @@ function sendRedirectsAndLiquidValues() {
   if(sheetID != null) {
     var vertical = seoLvTab.getRange("E2").getValue();
     var domainType = seoLvTab.getRange("G2").getValue();
-    var redirectValues = getRedirects();
+    //var redirectValues = getRedirects();
     var liquidValues = getLiquidValues(vertical,headerRange);
     if(/*redirectValues != null && */liquidValues != null) {
       //setRedirects(sheetID, redirectValues);
