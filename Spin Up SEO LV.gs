@@ -31,7 +31,7 @@ function testIndex() {
 function setSeoLvTabData(val,val1) { 
   var tabToFormat = val1;
   var vertical = val;
-  printDefaultNotes(tabToFormat);
+  printDefaultNotes(tabToFormat,vertical);
   seoLvTabFormatting(vertical,tabToFormat);
 }
 
@@ -183,27 +183,35 @@ function defineConditionalFormatting(acceptedRejectValRange,uspsValRange,gmbValR
   sets notes column in seo liquid values tab
   This function is used in the initial set header function called in main()
 */
-function printDefaultNotes(tabToFormat) {
+function printDefaultNotes(tabToFormat,vertical) {
   var headerRange = tabToFormat.getRange(1,1,1,tabToFormat.getLastColumn()).getValues(); //header values of liquid values tab 
   var notesColumn = headerRange[0].indexOf("notes") + 1;
   var prColumn = headerRange[0].indexOf("pr") + 1;
   var notesArry = [];
   var prArry = [];
-  var currentWebsites = getCurrentWebsiteArray();
-  for(i = 0; i < currentWebsites[0].length;i++) {
-    notesArry.push(["Existing Site: " + currentWebsites[0][i] + "\nNeighborhood:" + "\nLandmark:" + "\nAmenity:"]);
-    prArry.push(["Incomplete"]);
-  } 
-  var notesRange = seoLvTab.getRange(5,notesColumn,seoLvTab.getLastRow() -4,1);
-  var prRange = seoLvTab.getRange(5,prColumn,seoLvTab.getLastRow() -4,1);
-  notesRange.setValues(notesArry);
-  prRange.setValues(prArry);
+  var currentWebsites = getNotesDataArray("current_website");
+  var negativeKeywords = getNotesDataArray("negative_keywords");
+  var primaryType = getNotesDataArray("primary_type");
+  fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords,primaryType);
+  seoLvTab.getRange(5,notesColumn,seoLvTab.getLastRow() -4,1).setValues(notesArry);
+  seoLvTab.getRange(5,prColumn,seoLvTab.getLastRow() -4,1).setValues(prArry);
 }
 
-function getCurrentWebsiteArray() {
+//helper function to full notes column called from printDefaultNotes function
+function fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords,primaryType) {
+  for(i = 0; i < currentWebsites[0].length;i++) {
+    var negKey = function(x) {if(x != "") return "\nNegative Keywords: " + x; else return "";} //gets negative keywords if available, otherwise leaves empty
+    var vertVal = function(v,y) {if(v == "mf") return "\nLandmark: \nAmenity: \nPrimaryType: " + y ; else return "";}  //fills var with multi family keyword research headers if vertical == mf
+    notesArry.push(["Existing Site: " + currentWebsites[0][i] + negKey(negativeKeywords[0][i]) + "\nNeighborhood: " + vertVal(vertical,primaryType[0][i])]);
+    prArry.push(["Incomplete"]);
+  } 
+}
+
+//helper function to get values from workbook used in notes column
+function getNotesDataArray(val) {
   var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues();
   var flatColVal = [].concat.apply([], columnValues);
-  var searchResult = flatColVal.indexOf("current_website");
+  var searchResult = flatColVal.indexOf(val);
   if(searchResult != -1) {
     searchResult += 2;
     var numofItems = seoLvTab.getLastRow() - 4;
