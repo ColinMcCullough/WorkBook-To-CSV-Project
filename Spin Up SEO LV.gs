@@ -140,7 +140,7 @@ function defineDataValidation(uspsCol,accOrRejecCol,gmbColumn,gaColumn,redirects
   var gmbValRange = tabToFormat.getRange(5,gmbColumn,tabToFormat.getLastRow() -4,1); //gmb range
   var gmbVal = SpreadsheetApp.newDataValidation().requireValueInList(["Requested","Accessed","Create New","Unverified","N/A LP"], true).build(); //gmb validation builder
   var gaValRange = tabToFormat.getRange(5,gaColumn,tabToFormat.getLastRow() -4,1); //ga range
-  var gaVal = SpreadsheetApp.newDataValidation().requireValueInList(["Requested","Accessed","Create New"], true).build(); //ga validation builder
+  var gaVal = SpreadsheetApp.newDataValidation().requireValueInList(["Requested","Accessed","Create New","Use Current Domain"], true).build(); //ga validation builder
   var redirectsValRange = tabToFormat.getRange(5,redirectsColumn,tabToFormat.getLastRow() -4,1); //redirects range
   var redirectsVal = SpreadsheetApp.newDataValidation().requireValueInList(["Same Domain","Cross Domain","Secure Naked - Same Domain","Secure - Cross Domain","No Redirects"], true).build(); //redirects validation builder
   var prValRange = tabToFormat.getRange(5,prColumn,tabToFormat.getLastRow() -4,1); //peer review range

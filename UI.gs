@@ -1,9 +1,9 @@
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActive();
   var menuItems = [
-    {name: "Workbook >> CSV", functionName: "main"},
-    {name: "Insert LiquidValues in SpinUp", functionName: "liquidToSpinUp"},
-    {name: "Send LiquidValues to WF", functionName: "sendRedirectsAndLiquidValues"}
+    {name: "1. Workbook >> CSV", functionName: "main"},
+    {name: "2. Insert LiquidValues in SpinUp", functionName: "liquidToSpinUp"},
+    {name: "3. Send LiquidValues to WF", functionName: "sendRedirectsAndLiquidValues"}
     ];
   spreadsheet.addMenu('CheckList Review', menuItems);
 }
