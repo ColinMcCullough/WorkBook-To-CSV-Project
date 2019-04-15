@@ -2,7 +2,6 @@
 function generateWFLiquidValueHeaders(vertical,sheetID,domainType) {
   var wireframeLVTab = SpreadsheetApp.openById(sheetID).getSheetByName("SEO Liquid Values(v1)");
   var lvheaderRange;
-  
   if (vertical == "mf") {
     lvheaderRange = wireframeLVTab.getRange(1,1,4,mfHeaderArrayValues[0].length);
     lvheaderRange.setValues(mfHeaderArrayValues);
@@ -33,12 +32,22 @@ function getLiquidValues(vertical,headerRange) {
 }
 
 
-function setLiquidValues(vertical, values, sheetID, domainType) {
+//returns Strategy Formulas
+function getFormulas (headerRange) {
+  
+  Logger.log(strategies);
+}
+
+
+function setLiquidValues(vertical, values, sheetID, domainType, strategies) {
   var wfSeoLiquidTab;
   if(hasNewLiquidValuesTab(sheetID) == true) {
     hideWfLiquidValuesTab(sheetID);
     wfSeoLiquidTab = SpreadsheetApp.openById(sheetID).getSheetByName('SEO Liquid Values(v1)');
-    wfSeoLiquidTab.getRange(wfSeoLiquidTab.getLastRow()+1, 1,values.length,values[0].length).setValues(values);
+    var lastRow = wfSeoLiquidTab.getLastRow()+1;
+    wfSeoLiquidTab.getRange(lastRow, 1,values.length,values[0].length).setValues(values);
+    var headers = wfSeoLiquidTab.getRange(1,1,1,wfSeoLiquidTab.getLastColumn()).getValues();
+    wfSeoLiquidTab.getRange(lastRow,headers[0].indexOf('strategy')+1,wfSeoLiquidTab.getLastRow() - (lastRow - 1),1).setFormulasR1C1(strategies);
   } else {
     hideWfLiquidValuesTab(sheetID);
     createNewWFLiquidValuesTab(sheetID)
@@ -46,6 +55,8 @@ function setLiquidValues(vertical, values, sheetID, domainType) {
     wfSeoLiquidTab = SpreadsheetApp.openById(sheetID).getSheetByName('SEO Liquid Values(v1)');
     var rowStart = wfSeoLiquidTab.getLastRow()+1;
     wfSeoLiquidTab.getRange(rowStart, 1,values.length,values[0].length).setValues(values);
+    var headers = wfSeoLiquidTab.getRange(1,1,1,wfSeoLiquidTab.getLastColumn()).getValues();
+    wfSeoLiquidTab.getRange(rowStart,headers[0].indexOf('strategy')+1,wfSeoLiquidTab.getLastRow() - (rowStart - 1),1).setFormulasR1C1(strategies);
   } 
   seoLvTabFormatting(vertical,wfSeoLiquidTab)
 }
@@ -97,13 +108,15 @@ function sendRedirectsAndLiquidValues() {
   Logger.log(headerRange[0].indexOf('pr_notes')+1);
   var sheetID = sheetKeyPrompt();
   if(sheetID != null) {
-    var vertical = seoLvTab.getRange("E2").getValue();
-    var domainType = seoLvTab.getRange("G2").getValue();
+    var verticalAndDomain = seoLvTab.getRange(2,headerRange[0].indexOf('street_address_1')+1,1,3).getValues();
+    var vertical = verticalAndDomain[0][0];
+    var domainType = verticalAndDomain[0][2];
     //var redirectValues = getRedirects();
     var liquidValues = getLiquidValues(vertical,headerRange);
+    var strategies = seoLvTab.getRange(5,headerRange[0].indexOf('strategy')+1,seoLvTab.getLastRow()-4,1).getFormulasR1C1();
     if(/*redirectValues != null && */liquidValues != null) {
       //setRedirects(sheetID, redirectValues);
-      setLiquidValues(vertical,liquidValues,sheetID,domainType);
+      setLiquidValues(vertical,liquidValues,sheetID,domainType,strategies);
     }
   }
 }
