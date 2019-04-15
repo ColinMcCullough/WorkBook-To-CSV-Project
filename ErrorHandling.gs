@@ -46,9 +46,9 @@ function numOfBlanks(arryVal,arrylen) {
   var i = 0;
   while(i < arrylen && numBlanks == 0) {
     if(arryVal[0][i] == "") {
-      numBlanks += 1;
-      i++;
+      numBlanks += 1; 
     }
+    i++;
   }
   return numBlanks;
 }
