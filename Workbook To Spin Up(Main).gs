@@ -143,7 +143,7 @@ function main() {
     var headerArrayLength = headerArrayNames.length;
     var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
     var flattenColumnval = [].concat.apply([], columnValues);
-    var errors = checkErrors(flattenColumnval,domainType);
+    var errors = checkErrors(flattenColumnval,domainType,vertical);
     if(errors != null) {
       clearHeaders();
       printHeaders(vertical,domainType);

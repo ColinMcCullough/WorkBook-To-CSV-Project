@@ -200,10 +200,20 @@ function printDefaultNotes(tabToFormat,vertical) {
 //helper function to full notes column called from printDefaultNotes function
 function fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords,primaryType) {
   for(i = 0; i < currentWebsites[0].length;i++) {
-    var negKey = function(x) {if(x != "") return "\nNegative Keywords: " + x; else return "";} //gets negative keywords if available, otherwise leaves empty
-    var vertVal = function(v,y) {if(v == "mf") return "\nLandmark: \nAmenity: \nPrimaryType: " + y ; else return "";}  //fills var with multi family keyword research headers if vertical == mf
-    notesArry.push(["Existing Site: " + currentWebsites[0][i] + negKey(negativeKeywords[0][i]) + "\nNeighborhood: " + vertVal(vertical,primaryType[0][i])]);
+    var existSite = function(x) {if(x != "") return x; if(x == "") return "None in workbook"};
+    var negKey = function(x) {if(x != "") return "\nNegative Keywords: " + x; else return ""}; //gets negative keywords if available, otherwise leaves empty   
+    if(vertical == "mf") {
+      var vertVal = function(v,y) {if(v == "mf") return "\nLandmark: \nAmenity: \nPrimaryType: " + y ; else return ""};  //fills var with multi family keyword research headers if vertical == mf
+      notesArry.push(["Existing Site: " + existSite(currentWebsites[0][i]) + negKey(negativeKeywords[0][i]) + "\nNeighborhood: " + vertVal(vertical,primaryType[0][i])]);
+    } else {
+      notesArry.push(["Existing Site: " + existSite(currentWebsites[0][i]) + negKey(negativeKeywords[0][i]) + "\nNeighborhood: "]);
+    }
+    
+    
+    
+    //notesArry.push(["Existing Site: " + existingSite + negativeKey + "\nNeighborhood: " + verticalValue]);
     prArry.push(["Incomplete"]);
+    Logger.log(notesArry);
   } 
 }
 

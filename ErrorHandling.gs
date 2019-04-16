@@ -1,5 +1,5 @@
 var tags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email"];
-
+var mfTags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","property_feature_1","primary_type","floor_plans"];
 /*
  *Checks for errors before running the main function fully
  *Checks for Missing Tags, Missing location names, values to the right of the last location column
@@ -7,10 +7,15 @@ var tags = ["current_website","naked_domain","name","street_address_1","city","s
  @param Domain type for the project (multi or single)
  @return Returns null if there are errors and "good" if there are no errors
 */ 
-function checkErrors(flatColumnArry,domainType) {
-  var missingTags = tags.diff(flatColumnArry);
+function checkErrors(flatColumnArry,domainType,vertical) {
+  var missingTags;
+  if(vertical == "mf") {
+    missingTags = mfTags.diff(flatColumnArry);
+  } else {
+    missingTags = tags.diff(flatColumnArry);
+  }
   if(missingTags.length > 0) {
-    ui.alert("You are missing the following tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
+    ui.alert("You are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
     return null;
   }
   var nameIndex = flatColumnArry.indexOf("name") + 2;
