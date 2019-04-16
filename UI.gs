@@ -1,12 +1,19 @@
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActive();
   var menuItems = [
-    {name: "1. Workbook >> CSV", functionName: "main"},
-    {name: "2. Insert LiquidValues in SpinUp", functionName: "liquidToSpinUp"},
-    {name: "3. Send LiquidValues to WF", functionName: "sendRedirectsAndLiquidValues"}
-    ];
+                    {name: "1. Workbook >> CSV", functionName: "main"},
+                    {name: "2. Insert LiquidValues in SpinUp", functionName: "liquidToSpinUp"},
+                    {name: "3. Send LiquidValues to WF", functionName: "sendRedirectsAndLiquidValues"}
+                  ];
+  var redirectItems = [
+                        {name: "Clean Up & Format URLs", functionName: "cleanUpAndFormatUrls"},
+                        {name:"Test Redirects", functionName: "testRedirects"},
+                        {name:"Clear Data", functionName: "clearData"} 
+                      ];
   spreadsheet.addMenu('CheckList Review', menuItems);
+  spreadsheet.addMenu('Redirect Scripts', redirectItems);
 }
+
 //Global Variables
 var ui = SpreadsheetApp.getUi();
 
