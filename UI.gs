@@ -1,4 +1,5 @@
 function onOpen() {
+/*
   var spreadsheet = SpreadsheetApp.getActive();
   var menuItems = [
                     {name: "1. Workbook >> CSV", functionName: "main"},
@@ -10,13 +11,21 @@ function onOpen() {
                         {name:"Test Redirects", functionName: "testRedirects"},
                         {name:"Clear Data", functionName: "clearData"} 
                       ];
+  var sidebar = [{name: "Test Sidebar", functionName: "showSidebar"}]                    
+                      
   spreadsheet.addMenu('CheckList Review', menuItems);
   spreadsheet.addMenu('Redirect Scripts', redirectItems);
+  spreadsheet.addMenu('Test Sidebar', sidebar);
+  */
+  SpreadsheetApp.getUi()
+      .createAddonMenu()
+      .addItem('Open App', 'showSidebar')
+      .addToUi();
 }
 
 //Global Variables
 var ui = SpreadsheetApp.getUi();
-
+var SIDEBAR_TITLE = 'G5 SEO Implementation Scripts';
 //vertical prompt variables
 var verticalPrompt = "Enter Client Vertical";
 var verticalPromptInstruct = "Options: MF, SS, SL";
@@ -86,4 +95,15 @@ function runPrompts() {
     }
   }
   return [vertical, domainStrategy, chainBranding];
+}
+
+/**
+ * Opens a sidebar. The sidebar structure is described in the Sidebar.html
+ * project file.
+ */
+function showSidebar() {
+  var ui = HtmlService.createTemplateFromFile('Sidebar')
+      .evaluate()
+      .setTitle(SIDEBAR_TITLE);
+  SpreadsheetApp.getUi().showSidebar(ui);
 }

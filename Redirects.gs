@@ -7,7 +7,7 @@
 */
                
 function cleanUpAndFormatUrls() {
-  var sheet = SpreadsheetApp.getActiveSheet();
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
   var rows = sheet.getLastRow();
   var firstColumn = sheet.getRange(1, 3, rows, 1).getValues();
   firstColumn = firstColumn.map(function (e) {return e[0]})
@@ -75,7 +75,7 @@ function cleanUpAndFormatUrls() {
   var fillDownRange = ss.getRange(2, 4, lr-1);
   ss.getRange("D2").copyTo(fillDownRange);  
 
-};
+}
 
 
 
@@ -120,7 +120,7 @@ function location(url, user, pwd) {
 function testRedirects () {
     
 //Fills Column D to populate status code
-  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
   ss.getRange("F2").setFormula('=if(ISBLANK(C2),"",statuscode(C2))');       
 
   var lr = ss.getLastRow();
@@ -128,13 +128,13 @@ function testRedirects () {
   ss.getRange("F2").copyTo(fillDownRange);  
   
 //Fills Column G (Redirecting To URL)
-  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
     ss.getRange("G3:G").setFormula('=If(C3:C="","",if(OR(F3:F=302,F3:F=301),location(C3:C),"Is not redirecting"))');
 };
 
 
-function clearData () {
-  var ss = SpreadsheetApp.getActiveSheet();
+function clearData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
   ss.getRange('a2:G').clearContent();
 };
                
