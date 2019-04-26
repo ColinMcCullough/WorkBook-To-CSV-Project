@@ -31,14 +31,6 @@ function getLiquidValues(vertical,headerRange) {
   return seoLiquidValues;
 }
 
-
-//returns Strategy Formulas
-function getFormulas (headerRange) {
-  
-  Logger.log(strategies);
-}
-
-
 function setLiquidValues(vertical, values, sheetID, domainType, strategies) {
   var wfSeoLiquidTab;
   if(hasNewLiquidValuesTab(sheetID) == true) {
@@ -105,7 +97,7 @@ function hasNewLiquidValuesTab(sheetID) {
 
 function sendRedirectsAndLiquidValues() {
   var headerRange = seoLvTab.getRange(1,1,1,seoLvTab.getLastColumn()).getValues();
-  Logger.log(headerRange[0].indexOf('pr_notes')+1);
+  //Logger.log(headerRange[0].indexOf('pr_notes')+1);
   var sheetID = sheetKeyPrompt();
   if(sheetID != null) {
     var verticalAndDomain = seoLvTab.getRange(2,headerRange[0].indexOf('street_address_1')+1,1,3).getValues();

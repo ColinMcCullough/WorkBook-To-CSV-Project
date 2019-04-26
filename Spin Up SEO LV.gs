@@ -17,11 +17,6 @@ var mfHeaderArrayValues = [
                             ["", "", "", "", "", "", "", "", "comes before City", "comes after City needs near in etc.", "do not include bedrooms use numerical format (ie 1 & 2)", "comes after near", "comes before apartments (ie Luxury Apartments)", "comes after including or with", "", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")', ""]
                           ]  
 
-function testIndex() {
-  var headerRange = seoLvTab.getRange(1,1,1,seoLvTab.getLastColumn()).getValues();
-  var index = headerRange[0].indexOf("property_feature_1") + 1;
-  Logger.log(index);
-}
 
 /*
   @param vertical
@@ -208,12 +203,7 @@ function fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords
     } else {
       notesArry.push(["Existing Site: " + existSite(currentWebsites[0][i]) + negKey(negativeKeywords[0][i]) + "\nNeighborhood: "]);
     }
-    
-    
-    
-    //notesArry.push(["Existing Site: " + existingSite + negativeKey + "\nNeighborhood: " + verticalValue]);
     prArry.push(["Incomplete"]);
-    Logger.log(notesArry);
   } 
 }
 

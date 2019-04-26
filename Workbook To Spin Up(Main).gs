@@ -45,7 +45,7 @@ function printHeaders(vertical,domainType) {
   finds range of brand names in project workbook
   @return Returns array of row values matching search value tag
 */
-function searchRowIndexArray(searchString, vertical, domainType, flatColumnValues, chainBranding)  {
+function searchRowIndexArray(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding)  {
   var rowValues;
   var spinupLastRow = spinUpTab.getLastRow();
   if(searchString == "" || searchString == "neighborhood" || searchString == "apartment_amenity_1" || searchString == "community_amenity_1" && vertical == "mf" || searchString == "landmark_1_name" && vertical == "mf") { //SEO Liquid Values that be populated by team after keyword research
@@ -56,20 +56,22 @@ function searchRowIndexArray(searchString, vertical, domainType, flatColumnValue
     rowValues = null;
   }
   else {
-    rowValues = getRowValues(searchString, vertical, domainType, flatColumnValues, chainBranding ,spinupLastRow);
+    rowValues = getRowValues(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding ,spinupLastRow);
   return rowValues;
   }
 }
 
 //helper method for searchRowIndexArray to get values of rows not using default values or rows that should be skipped
-function getRowValues(searchString, vertical, domainType, flatColumnValues, chainBranding, spinupLastRow) {
+function getRowValues(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding, spinupLastRow) {
   var searchResult = flatColumnValues.indexOf(searchString); //Row Index - 2
   if (searchResult != -1) {
     //searchResult + 2 is row index.
     searchResult = searchResult + 2;     
     var lastColumn = propertySheet.getLastColumn();
     var rowRange = propertySheet.getRange(searchResult, 4, 1, lastColumn - 3);
-    var rowRangeValues = rowRange.getValues();
+    var rowRangeValues = [];
+    rowRangeValues.push(getRowValByTag(propertySheetValues,searchString));
+
     var rowValues = cleanData(rowRange,rowRangeValues,searchString,chainBranding,domainType);
   }
   else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug
@@ -92,9 +94,9 @@ function getRowValues(searchString, vertical, domainType, flatColumnValues, chai
 /*
   fuction takes a row array and transposes it to a column array
 */
-function transposeArray(searchStrings, vertical, domainType, flatColumnValues, chainBranding) {
-  var searchString = searchStrings;
-  var rowValue = searchRowIndexArray(searchStrings, vertical, domainType, flatColumnValues, chainBranding);
+function transposeArray(propertySheetValues,searchStrings, vertical, domainType, flatColumnValues, chainBranding) {
+
+  var rowValue = searchRowIndexArray(propertySheetValues,searchStrings, vertical, domainType, flatColumnValues, chainBranding);
   var result;
   
   if (rowValue != null) { //ensures there are values to transpose
@@ -133,6 +135,9 @@ function getPrintRanges(searchString,vertical, result) {
   }
 }
 
+/*
+//This function runs the workbook >> Csv functionality
+*/
 function main() {
   var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
   var prompt = runPrompts();
@@ -140,16 +145,16 @@ function main() {
     var vertical = prompt[0];
     var domainType = prompt[1];
     var chainBranding = prompt[2];
+    var propertySheetValues = propertySheet.getRange(2, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); //everything in the propertyInfoSheet(added for text) 
     var headerArrayLength = headerArrayNames.length;
-    var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues(); //column range in propertyInfoSheet
-    var flattenColumnval = [].concat.apply([], columnValues);
-    var errors = checkErrors(flattenColumnval,domainType,vertical);
+    var flattenColumnval = getColumnOneVal(propertySheetValues);
+    var errors = checkErrors(propertySheetValues,flattenColumnval,domainType,vertical);
     if(errors != null) {
       clearHeaders();
       printHeaders(vertical,domainType);
       for(var i = 0; i <= headerArrayLength - 1; i++) {
         var searchStrings = headerArrayNames[i];
-        var result = transposeArray(searchStrings, vertical, domainType, flattenColumnval, chainBranding);
+        var result = transposeArray(propertySheetValues,searchStrings, vertical, domainType, flattenColumnval, chainBranding);
         getPrintRanges(searchStrings,vertical, result);
       }
       setSeoLvTabData(vertical,seoLvTab);

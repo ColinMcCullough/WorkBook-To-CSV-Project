@@ -87,8 +87,8 @@ function cleanSocialLinks(y) {
 function cleanPhoneNumber(val) {
   var y = val;
   y = y.replace(/[^0-9\.]+/g, '').replace(/\./g, '').toString().trim();
-  if(y == "") {
-    return y;
+  if(y == "" || y.length < 10) {
+    return "";
   } else {
     var areaCode = y.substr(0, 3);
     var first3 = y.substr(3, 3);
