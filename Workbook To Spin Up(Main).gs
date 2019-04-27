@@ -67,22 +67,21 @@ function getRowValues(propertySheetValues,searchString, vertical, domainType, fl
   if (searchResult != -1) {
     //searchResult + 2 is row index.
     searchResult = searchResult + 2;     
-    var lastColumn = propertySheet.getLastColumn();
-    var rowRange = propertySheet.getRange(searchResult, 4, 1, lastColumn - 3);
     var rowRangeValues = [];
     rowRangeValues.push(getRowValByTag(propertySheetValues,searchString));
-
-    var rowValues = cleanData(rowRange,rowRangeValues,searchString,chainBranding,domainType);
+    var rowValues = cleanData(rowRangeValues,searchString,chainBranding,domainType);
   }
-  else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug
-    var columnRange = spinUpTab.getRange(2, 4, spinupLastRow - 1, 1);
-    var columnRangeValues = columnRange.getValues();
-    var rowValues = cleanData(columnRange,columnRangeValues,searchString,chainBranding,domainType);
+  else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "yes") { //this will pass in the address range and values to clean for a slug    
+    var columnRangeValues = [];
+    columnRangeValues.push(getRowValByTag(propertySheetValues,"street_address_1"));
+    var result = columnRangeValues[0].map(function(elem) {return [elem];})
+    var rowValues = cleanData(result,searchString,chainBranding,domainType);
   }
   else if(searchString == "custom_slug" && domainType == "single" && chainBranding == "no") { // this will pass in the brand name to clean for a slug
-    var rowRange = spinUpTab.getRange(2, 1, spinupLastRow - 1, 1);
-    var columnRangeValues = rowRange.getValues();
-    var rowValues = cleanData(rowRange,columnRangeValues,searchString,chainBranding,domainType);
+    var columnRangeValues = [];
+    columnRangeValues.push(getRowValByTag(propertySheetValues,"name"));
+    var result = columnRangeValues[0].map(function(elem) {return [elem];})
+    var rowValues = cleanData(result,searchString,chainBranding,domainType);
   }
   else {
     rowValues = null;

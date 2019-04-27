@@ -10,10 +10,10 @@ var stateMap =  {
                   "Quebec":"QC","Saskatchewan":"SK","Yukon":"YT"
                 };
  
-function cleanData(rowRange,rowValues,searchString,chainBranding,domainType) {
+function cleanData(rowValues,searchString,chainBranding,domainType) {
   var newArray = []
-  var numRows = rowRange.getNumRows();
-  var numCols = rowRange.getNumColumns();
+  var numRows = rowValues.length;
+  var numCols = rowValues[0].length;
   for (var i = 0; i < numRows; i++) {
     for (var j = 0; j < numCols; j++) {
       var x = rowValues[i][j];
