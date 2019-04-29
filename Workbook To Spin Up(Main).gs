@@ -47,22 +47,23 @@ function printHeaders(vertical,domainType) {
 */
 function searchRowIndexArray(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding)  {
   var rowValues;
-  var spinupLastRow = spinUpTab.getLastRow();
+  //var spinupLastRow = spinUpTab.getLastRow();
   if(searchString == "" || searchString == "neighborhood" || searchString == "apartment_amenity_1" || searchString == "community_amenity_1" && vertical == "mf" || searchString == "landmark_1_name" && vertical == "mf") { //SEO Liquid Values that be populated by team after keyword research
     rowValues = null;
   }
   else if(searchString == "corporate" || searchString == "status" || searchString == "no_deploy" || searchString == "secure_domain" || searchString == "spinup_web_theme") { //default values
-    defaultValuePrint(searchString, vertical, domainType);
+    var numDefaultVal = getRowValByTag(propertySheetValues,"name").length;
+    defaultValuePrint(numDefaultVal, searchString, vertical, domainType);
     rowValues = null;
   }
   else {
-    rowValues = getRowValues(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding ,spinupLastRow);
+    rowValues = getRowValues(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding);
   return rowValues;
   }
 }
 
 //helper method for searchRowIndexArray to get values of rows not using default values or rows that should be skipped
-function getRowValues(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding, spinupLastRow) {
+function getRowValues(propertySheetValues,searchString, vertical, domainType, flatColumnValues, chainBranding) {
   var searchResult = flatColumnValues.indexOf(searchString); //Row Index - 2
   if (searchResult != -1) {
     //searchResult + 2 is row index.
@@ -117,20 +118,15 @@ function transposeArray(propertySheetValues,searchStrings, vertical, domainType,
 }
 
 //get Print Ranges
-function getPrintRanges(searchString,vertical, result) {
+function getPrintRanges(numLocations,searchString,vertical,result) {
   if(result != null) {
     var printColumnIndex = headerArrayNames.indexOf(searchString) + 1;
-    
-    if(searchString == "custom_slug") {
-      var namePrintRange = spinUpTab.getRange(2, printColumnIndex, spinUpTab.getLastRow() -1, 1);
-      
-    } else {
-      var namePrintRange = spinUpTab.getRange(2, printColumnIndex, propertySheet.getLastColumn() -3, 1);
-    }  
-    var namePrintRangeFormatted = namePrintRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-    
-    namePrintRangeFormatted.setValues(result);
-    printSeoLiquidValues(searchString, result, vertical);
+    var namePrintRange = spinUpTab.getRange(2, printColumnIndex, numLocations, 1);
+    if(searchString == "postal_code") {
+      namePrintRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);  
+    } 
+    namePrintRange.setValues(result);
+    printSeoLiquidValues(numLocations,searchString, result, vertical);
   }
 }
 
@@ -151,11 +147,13 @@ function main() {
     if(errors != null) {
       clearHeaders();
       printHeaders(vertical,domainType);
+      var numLocations = getRowValByTag(propertySheetValues,"name").length;
       for(var i = 0; i <= headerArrayLength - 1; i++) {
         var searchStrings = headerArrayNames[i];
         var result = transposeArray(propertySheetValues,searchStrings, vertical, domainType, flattenColumnval, chainBranding);
-        getPrintRanges(searchStrings,vertical, result);
+        getPrintRanges(numLocations, searchStrings,vertical, result);
       }
+      spinUpTab.getRange(2, 1, numLocations, headerArrayNames.length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
       setSeoLvTabData(vertical,seoLvTab);
     }
   }

@@ -81,10 +81,7 @@ function setLVHeaderFormatting(vertical,domainType,tabToFormat) {
   MF Prints: Name, address, city, state, zip, floor plans, custom slug, property feature 1
   SS/SL Print: Name, address, city, state, zip,  custom slug
 */
-function printSeoLiquidValues(val, val1, val2) {
-  var vertical = val2;
-  var searchString = val;
-  var result = val1
+function printSeoLiquidValues(numLocations,searchString, result, vertical) {
   var seoColumnIndex = 0;
   if(vertical == "mf") {
     var seoColumnIndex = mfSeoLiquidValuesArray.indexOf(searchString) + 1;
@@ -92,15 +89,14 @@ function printSeoLiquidValues(val, val1, val2) {
     var seoColumnIndex = ssSlSeoLiquidValuesArray.indexOf(searchString) + 1;
   }
   if(seoColumnIndex != 0) {
-      if(searchString != "custom_slug") {
-        var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, propertySheet.getLastColumn() - 3, 1);
-        var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-        seoValuesRangeFormatted.setValues(result);
-      } else {
-        var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, spinUpTab.getLastRow() - 1, 1);
-        var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-        seoValuesRangeFormatted.setValues(result);
-      }
+      var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, numLocations, 1);
+      //if(searchString != "custom_slug") {
+     //   var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, propertySheet.getLastColumn() - 3, 1);
+    //  } else {
+    //    var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, spinUpTab.getLastRow() - 1, 1);        
+    //  }
+      var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+      seoValuesRangeFormatted.setValues(result);
    }
 }
 

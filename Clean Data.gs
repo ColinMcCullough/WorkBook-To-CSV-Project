@@ -184,31 +184,27 @@ function hasLineBreakComma(y) {
   return lineBreakComma;
 }
 
-function defaultValuePrint(val, val1, val2) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static
-  var search = val;
-  var vertical = val1;
-  var domainType = val2;
+function defaultValuePrint(numLocations,search, vertical, domainType) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static
   var printColumnIndex = headerArrayNames.indexOf(search) + 1;
   var fillColumnArray = spinUpTab.getRange(2, printColumnIndex, spinUpTab.getLastRow()-1, 1);
-  var getColumnLength = fillColumnArray.getValues().length;
   if (search == "corporate") {
-    var fillDefaultArrayValues = fillArray("false", getColumnLength);  
+    var fillDefaultArrayValues = fillArray("false", numLocations);  
     fillColumnArray.setValues(fillDefaultArrayValues);
   }
   else if (search == "status") {
-    var fillDefaultArrayValues = fillArray("Pending", getColumnLength);  
+    var fillDefaultArrayValues = fillArray("Pending", numLocations);  
     fillColumnArray.setValues(fillDefaultArrayValues);
   }
   else if (search == "no_deploy") {
-    var fillDefaultArrayValues = fillArray("false", getColumnLength);  
+    var fillDefaultArrayValues = fillArray("false", numLocations);  
     fillColumnArray.setValues(fillDefaultArrayValues);
   }
   else if (search == "secure_domain" && domainType == "multi") {
-    var fillDefaultArrayValues = fillArray("true", getColumnLength);  
+    var fillDefaultArrayValues = fillArray("true", numLocations);  
     fillColumnArray.setValues(fillDefaultArrayValues);
   }
   else if (search == "spinup_web_theme") {
-    var fillDefaultArrayValues = fillArray("default", getColumnLength);  
+    var fillDefaultArrayValues = fillArray("default", numLocations);  
     fillColumnArray.setValues(fillDefaultArrayValues);
   }
 }
