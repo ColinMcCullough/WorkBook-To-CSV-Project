@@ -33,6 +33,8 @@ function getColumnOneVal(propertySheetValues) {
   return propertySheetValues.map(function(v){ return v[0] });
 }
 
+
+
 /*
 //@param entire workbook values
 //@param index(not row number) of tag in first column.
@@ -42,6 +44,45 @@ function getARow(propertySheetValues,rowIndex) {
   var result = [];
   for(var i = 3; i < propertySheetValues[0].length; i++){
     result.push(propertySheetValues[rowIndex][i]);
+  }
+  return result;
+}
+/* 
+//@param seo lv tab values
+//@param tag to find col values of
+//@return col values in seo lv tag relevant to tage
+*/
+
+
+function getColValByTag(seoLVSheetValues,tag) {
+  //var seoLVSheetValues = seoLvTab.getRange(1, 1, seoLvTab.getLastRow(),seoLvTab.getLastColumn()).getValues(); //everything in the seolvsheet(added for text)
+  var headerRow = getHeaderRow(seoLVSheetValues);
+  var colIndex = getColIndex(headerRow,tag);
+  if(colIndex > -1) {
+      var colValue = getColumnVal(seoLVSheetValues,colIndex);
+      var result = colValue.map(function(elem) {return [elem];});
+      return result;
+    } else {
+      return null;
+    }     
+}
+
+function getHeaderRow(seoLVSheetValues) {
+  var result = [];
+  for(var i = 0; i < seoLVSheetValues[0].length; i++){
+    result.push(seoLVSheetValues[0][i]);
+  }
+  return result;
+}
+
+function getColIndex(headerRow,tag) {
+  return headerRow.indexOf(tag);
+}
+
+function getColumnVal(seoLVSheetValues,colIndex) {
+  var result = [];
+  for(var i = 4; i < seoLVSheetValues.length; i++){
+    result.push(seoLVSheetValues[i][colIndex]);
   }
   return result;
 }

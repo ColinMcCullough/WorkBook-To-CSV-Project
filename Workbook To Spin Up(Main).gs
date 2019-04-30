@@ -154,7 +154,8 @@ function main() {
         getPrintRanges(numLocations, searchStrings,vertical, result);
       }
       spinUpTab.getRange(2, 1, numLocations, headerArrayNames.length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      setSeoLvTabData(vertical,seoLvTab);
+      seoLvTab.getRange(5, 1, numLocations, mfHeaderArrayValues[0].length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+      setSeoLvTabData(propertySheetValues,numLocations,vertical,seoLvTab);
     }
   }
 }

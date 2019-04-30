@@ -1,5 +1,3 @@
-
-               
 /*
 1. Deletes duplicate rows in active spreadsheet 
 2. Deletes image files

@@ -186,7 +186,7 @@ function hasLineBreakComma(y) {
 
 function defaultValuePrint(numLocations,search, vertical, domainType) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static
   var printColumnIndex = headerArrayNames.indexOf(search) + 1;
-  var fillColumnArray = spinUpTab.getRange(2, printColumnIndex, spinUpTab.getLastRow()-1, 1);
+  var fillColumnArray = spinUpTab.getRange(2, printColumnIndex, numLocations, 1);
   if (search == "corporate") {
     var fillDefaultArrayValues = fillArray("false", numLocations);  
     fillColumnArray.setValues(fillDefaultArrayValues);

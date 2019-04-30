@@ -1,6 +1,4 @@
 //Global Variables
-var ssSlSeoLiquidValuesArray = ["name","rec_brand_name","acc_rej","usps","street_address_1","city","state","postal_code","neighborhood","neighborhood_2","landmark","custom_slug"];
-var mfSeoLiquidValuesArray = ["name","","","","street_address_1","city","state","postal_code","","","floor_plans","","property_feature_1","","","custom_slug"];
 
 //self storage/sl headers for SEO Liquid Values Tab                          
 var ssSlHeaderArrayValues = [
@@ -23,10 +21,8 @@ var mfHeaderArrayValues = [
   also calls printDefaultNotes which prints notes column in SEO Liquid Values Tab,
   also calls seoLvTabFormatting which bolds notes column, adds data validation, and sets border around range
 */
-function setSeoLvTabData(val,val1) { 
-  var tabToFormat = val1;
-  var vertical = val;
-  printDefaultNotes(tabToFormat,vertical);
+function setSeoLvTabData(propertySheetValues,numLocations,vertical,tabToFormat) { 
+  printDefaultNotes(numLocations,propertySheetValues,tabToFormat,vertical);
   seoLvTabFormatting(vertical,tabToFormat);
 }
 
@@ -84,19 +80,17 @@ function setLVHeaderFormatting(vertical,domainType,tabToFormat) {
 function printSeoLiquidValues(numLocations,searchString, result, vertical) {
   var seoColumnIndex = 0;
   if(vertical == "mf") {
-    var seoColumnIndex = mfSeoLiquidValuesArray.indexOf(searchString) + 1;
+    var seoColumnIndex = mfHeaderArrayValues[0].indexOf(searchString) + 1; //test
   } else {
-    var seoColumnIndex = ssSlSeoLiquidValuesArray.indexOf(searchString) + 1;
+    var seoColumnIndex = ssSlHeaderArrayValues[0].indexOf(searchString) + 1; //test
   }
   if(seoColumnIndex != 0) {
       var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, numLocations, 1);
-      //if(searchString != "custom_slug") {
-     //   var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, propertySheet.getLastColumn() - 3, 1);
-    //  } else {
-    //    var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, spinUpTab.getLastRow() - 1, 1);        
-    //  }
-      var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      seoValuesRangeFormatted.setValues(result);
+      if(searchString != "postal_code") {
+          seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+      }
+      //var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+      seoValuesRange.setValues(result);
    }
 }
 
@@ -174,18 +168,28 @@ function defineConditionalFormatting(acceptedRejectValRange,uspsValRange,gmbValR
   sets notes column in seo liquid values tab
   This function is used in the initial set header function called in main()
 */
-function printDefaultNotes(tabToFormat,vertical) {
-  var headerRange = tabToFormat.getRange(1,1,1,tabToFormat.getLastColumn()).getValues(); //header values of liquid values tab 
-  var notesColumn = headerRange[0].indexOf("notes") + 1;
-  var prColumn = headerRange[0].indexOf("pr") + 1;
+function printDefaultNotes(numLocations,propertySheetValues,tabToFormat,vertical) {
+  //var headerRange = tabToFormat.getRange(1,1,1,tabToFormat.getLastColumn()).getValues(); //header values of liquid values tab
+  var notesColumn;
+  var prColumn;
+  if(vertical == "mf") {
+    notesColumn = mfHeaderArrayValues[0].indexOf("notes") + 1; //test
+    prColumn = mfHeaderArrayValues[0].indexOf("pr") + 1; //test
+  } else {
+    notesColumn = ssSlHeaderArrayValues[0].indexOf("notes") + 1; //test
+    prColumn = ssSlHeaderArrayValues[0].indexOf("pr") + 1; //test
+  }
   var notesArry = [];
   var prArry = [];
-  var currentWebsites = getNotesDataArray("current_website");
-  var negativeKeywords = getNotesDataArray("negative_keywords");
-  var primaryType = getNotesDataArray("primary_type");
+  var currentWebsites = []; 
+  currentWebsites.push(getRowValByTag(propertySheetValues,"current_website"));
+  var negativeKeywords = []; 
+  negativeKeywords.push(getRowValByTag(propertySheetValues,"negative_keywords")); 
+  var primaryType = []; 
+  primaryType.push(getRowValByTag(propertySheetValues,"primary_type")); 
   fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords,primaryType);
-  seoLvTab.getRange(5,notesColumn,seoLvTab.getLastRow() -4,1).setValues(notesArry);
-  seoLvTab.getRange(5,prColumn,seoLvTab.getLastRow() -4,1).setValues(prArry);
+  seoLvTab.getRange(5,notesColumn,numLocations,1).setValues(notesArry);
+  seoLvTab.getRange(5,prColumn,numLocations,1).setValues(prArry);
 }
 
 //helper function to full notes column called from printDefaultNotes function
@@ -202,7 +206,7 @@ function fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords
     prArry.push(["Incomplete"]);
   } 
 }
-
+/*
 //helper function to get values from workbook used in notes column
 function getNotesDataArray(val) {
   var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues();
@@ -212,6 +216,8 @@ function getNotesDataArray(val) {
     searchResult += 2;
     var numofItems = seoLvTab.getLastRow() - 4;
     var currentWebsiteArray = propertySheet.getRange(searchResult, 4, 1, numofItems).getValues();
+
     return currentWebsiteArray;
   }
 }
+*/
