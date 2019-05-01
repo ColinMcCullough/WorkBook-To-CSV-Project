@@ -19,14 +19,15 @@ function generateWFLiquidValueHeaders(vertical,sheetID,domainType) {
 /**
   @return 2D array of liquid values in seo liquid values tab of SEO Implementation Toolset
 */
-function getLiquidValues(vertical,headerRange) {
+function getLiquidValues(seoLVSheetValues,vertical,headerRange) {
   var lastColumn;
   var seoLiquidValues;
-  if(seoLvTab.getLastRow() < 5) {
+  var len = seoLVSheetValues.length;
+  if(seoLVSheetValues.length < 5) {
     ui.alert('There are no liquid values to copy over.');
     seoLiquidValues = null;
   } else {
-    seoLiquidValues = seoLvTab.getRange(5,1,seoLvTab.getLastRow() -4,headerRange[0].indexOf('pr_notes')+1).getValues();
+    seoLiquidValues = seoLvTab.getRange(5,1,seoLVSheetValues.length -4,headerRange[0].indexOf('pr_notes')+1).getValues();
   }
   return seoLiquidValues;
 }
@@ -96,19 +97,26 @@ function hasNewLiquidValuesTab(sheetID) {
 }
 
 function sendRedirectsAndLiquidValues() {
-  var headerRange = seoLvTab.getRange(1,1,1,seoLvTab.getLastColumn()).getValues();
+  var seoLVSheetValues = seoLvTab.getRange(1, 1, seoLvTab.getLastRow(),seoLvTab.getLastColumn()).getValues(); //everything in the seolvsheet(added for text)
+  var headerRange = [];
+  headerRange.push(getHeaderRow(seoLVSheetValues));
+
   //Logger.log(headerRange[0].indexOf('pr_notes')+1);
   var sheetID = sheetKeyPrompt();
   if(sheetID != null) {
-    var verticalAndDomain = seoLvTab.getRange(2,headerRange[0].indexOf('street_address_1')+1,1,3).getValues();
-    var vertical = verticalAndDomain[0][0];
-    var domainType = verticalAndDomain[0][2];
+    var vertical = seoLVSheetValues[1][headerRange[0].indexOf('street_address_1')];
+    var domainType = seoLVSheetValues[1][headerRange[0].indexOf('state')];
     //var redirectValues = getRedirects();
-    var liquidValues = getLiquidValues(vertical,headerRange);
-    var strategies = seoLvTab.getRange(5,headerRange[0].indexOf('strategy')+1,seoLvTab.getLastRow()-4,1).getFormulasR1C1();
-    if(/*redirectValues != null && */liquidValues != null) {
+    var liquidValues = getLiquidValues(seoLVSheetValues,vertical,headerRange);
+    var strategies = seoLvTab.getRange(5,headerRange[0].indexOf('strategy')+1,seoLVSheetValues.length -4,1).getFormulasR1C1();
+    var missStrategies = numOfBlanks(strategies,strategies.length);
+    if(missStrategies > 0) {
+      ui.alert('Looks like some locations are missing strategies. Make sure to enter these before sending to the wireframe');
+    } else {
+      if(/*redirectValues != null && */liquidValues != null) {
       //setRedirects(sheetID, redirectValues);
       setLiquidValues(vertical,liquidValues,sheetID,domainType,strategies);
+      }
     }
   }
 }
