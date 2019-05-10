@@ -57,7 +57,7 @@ function clearHeaders() {
 /**
   Runs a single prompt for client vertical or domain strategy or brand name strategy based on string parameters passed in
   @return returns string response user enters, returns null if user selects cancel button
-*/
+
 function runPrompt(introPrompt, introSpecifics, choice1, choice2, choice3, badEntryResponse) {
   var response = ui.prompt(introPrompt, introSpecifics, ui.ButtonSet.OK_CANCEL);
   if(response.getSelectedButton() == ui.Button.OK) {
@@ -78,11 +78,11 @@ function runPrompt(introPrompt, introSpecifics, choice1, choice2, choice3, badEn
   }  
   return userChoice;
 }
-
+*/
 /**
   Runs 3 prompts for client vertical, domain strategy, and brand name strategy
   @return array of 3 responses to prompts, returns null if user selects cancel button
-*/
+
 function runPrompts() {
   var vertical = null;
   var domainStrategy = null;
@@ -96,7 +96,7 @@ function runPrompts() {
   }
   return [vertical, domainStrategy, chainBranding];
 }
-
+*/
 /**
  * Opens a sidebar. The sidebar structure is described in the Sidebar.html
  * project file.

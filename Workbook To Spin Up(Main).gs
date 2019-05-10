@@ -133,13 +133,10 @@ function getPrintRanges(numLocations,searchString,vertical,result) {
 /*
 //This function runs the workbook >> Csv functionality
 */
-function main() {
-  var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-  var prompt = runPrompts();
-  if(prompt[0] != null && prompt[1] != null && prompt[2] != null) {
-    var vertical = prompt[0];
-    var domainType = prompt[1];
-    var chainBranding = prompt[2];
+function main(vertical,domainType,chainBranding) {
+  var isValid = valid(vertical,domainType,chainBranding);
+  if(isValid != false) {
+    var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
     var propertySheetValues = propertySheet.getRange(2, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); //everything in the propertyInfoSheet(added for text) 
     var headerArrayLength = headerArrayNames.length;
     var flattenColumnval = getColumnOneVal(propertySheetValues);

@@ -22,9 +22,15 @@
    * sidebar text field.
    */
   function onWrkbookClick() {
+
     this.disabled = true;
+    var vertical = $('#select-vertical').val();
+    var domainStrat = $('#select-domain-strat').val();
+    var chainBrand = $('#select-chain').val();
+    
     // Gather any information that needs to be sent to the server here.
     // Send the value to the server and handle the response.
+    
     google.script.run
         .withSuccessHandler(
           function(msg, element) {
@@ -39,7 +45,8 @@
             element.disabled = false;
           })
         .withUserObject(this)
-        .main();
+        .main(vertical,domainStrat,chainBrand);
+     
   }
   
     function liquidValuesToSpinUp() {
@@ -137,5 +144,14 @@
     }
   }
   
+$("select[id='select-vertical']").change( function() {
+    $("select[id='select-domain-strat']").removeAttr("disabled");
+});
+
+$("select[id='select-domain-strat']").change( function() {
+    $("select[id='select-chain']").removeAttr("disabled");
+}); 
+
+
   
 </script>
