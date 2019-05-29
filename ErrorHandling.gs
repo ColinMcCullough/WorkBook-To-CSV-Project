@@ -1,5 +1,5 @@
-var tags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email"];
-var mfTags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","property_feature_1","primary_type","floor_plans"];
+var tags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","negative_keywords"];
+var mfTags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","property_feature_1","primary_type","floor_plans","negative_keywords"];
 /*
  *Checks for errors before running the main function fully
  *Checks for Missing Tags, Missing location names, values to the right of the last location column
@@ -15,6 +15,13 @@ function checkErrors(propertySheetValues,flatColumnArry,domainType,vertical) {
     var missingTagAlert = "You are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date";
     ui.alert("You are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
     return null;
+  }
+  var newPhoneArray = copyLocalToDefaultPhone(flatColumnArry,propertySheetValues); //copies local number to display phone number field if display phone number is blank
+  var numPhoneBlanks = numOfBlanks(newPhoneArray,newPhoneArray.length);
+  if(numPhoneBlanks > 0) {
+    var phoneRowNum = flatColumnArry.indexOf("display_phone_number") + 2; 
+    var missingDefaultPhoneNum = "Error: \nYou have missing values in the required row number" + phoneRowNum + ". Please enter location city area code followed by 555-5555(EX: 541-555-5555) in row " + phoneRowNum;
+    alerts.push(missingDefaultPhoneNum);
   }
   var nameIndex = flatColumnArry.indexOf("name") + 2;
   var nameRangeValues = getRowValByTag(propertySheetValues,"name");
@@ -50,7 +57,40 @@ function checkErrors(propertySheetValues,flatColumnArry,domainType,vertical) {
   } 
   return "good";
 }
-
+/*
+ *Checks for blanks in display_phone_number
+ @return true if blanks exist false if they do not exist
+*/
+function hasPhoneIssues(tagIndexArrayCol,propertySheetValues) {
+      var hasIssues;
+      var requiredPhoneValues = getRowValByTag(propertySheetValues,"display_phone_number");
+      var requiredPhoneBlanks = numOfBlanks(requiredPhoneValues,requiredPhoneValues.length);
+      hasIssues = requiredPhoneBlanks > 0 ? true : false;
+      return hasIssues;
+}
+/*
+  Checks for blanks in display phone number row.
+  Copies values from local phone number to blank display phone number
+  @return array of new display phone number values
+*/
+function copyLocalToDefaultPhone(flatColumnArry,propertySheetValues) {
+  var localPhoneNumVal = getRowValByTag(propertySheetValues,"local_phone_number");
+  var defaultPhoneNumVal = getRowValByTag(propertySheetValues,"display_phone_number");
+  var defaultPhoneRange = propertySheet.getRange(flatColumnArry.indexOf("display_phone_number") + 2,4,1,propertySheetValues[0].length - 3);
+  var newDefPhoneNumArry = [];
+  for(i = 0; i < defaultPhoneNumVal.length; i++) {
+    if(defaultPhoneNumVal[i] != "") {
+      newDefPhoneNumArry.push(defaultPhoneNumVal[i]);
+    }
+    else if(defaultPhoneNumVal[i] == "" && localPhoneNumVal[i] != "") {
+      newDefPhoneNumArry.push(localPhoneNumVal[i]);
+    }
+    else if(defaultPhoneNumVal[i] == "" && localPhoneNumVal[i] == "")
+      newDefPhoneNumArry.push("");
+  }
+  defaultPhoneRange.setValues([newDefPhoneNumArry]);
+  return newDefPhoneNumArry;
+}
 
 function checkForBathValues(floorPlansValues,arrylen) {
   for(i = 0;  i < arrylen; i++) {
@@ -107,6 +147,7 @@ function valid(vertVal,domainStrat,ChainBran) {
   }
   return true;
 }
+
 
 
 

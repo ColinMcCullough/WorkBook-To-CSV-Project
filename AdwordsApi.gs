@@ -36,8 +36,18 @@ function onEdit(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var s = ss.getActiveSheet();
   if(s.getName()=='API Call') {
-  var cell = s.getActiveCell();
-  if( cell.getA1Notation() == 'B1' )
-    s.getRange('b2').clearContent();
+    var cell = s.getActiveCell();
+    if( cell.getA1Notation() == 'B1' )
+      s.getRange('b2').clearContent();
   }
-};
+  if(s.getSheetName() == "Redirects Tool" && s.getActiveRange().getColumn() == 5)  {   
+    var activeCell = s.getActiveCell();
+    var activeCellValue = activeCell.getValue();
+    var offSetCell = activeCell.offset(0, -1);
+    var offSetCellValue = activeCell.offset(0, -1).getValue();
+    if(activeCellValue == "Yes" && offSetCellValue.substr(-1) == "$") {
+      offSetCell.setValue(offSetCellValue.slice(0,-1));
+    } else if(activeCellValue == "No" && offSetCellValue.substr(-1) != "$")
+      offSetCell.setValue(offSetCellValue + "$");
+  }
+}

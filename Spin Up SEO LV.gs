@@ -185,6 +185,7 @@ function printDefaultNotes(numLocations,propertySheetValues,tabToFormat,vertical
   currentWebsites.push(getRowValByTag(propertySheetValues,"current_website"));
   var negativeKeywords = []; 
   negativeKeywords.push(getRowValByTag(propertySheetValues,"negative_keywords")); 
+  Logger.log(negativeKeywords);
   var primaryType = []; 
   primaryType.push(getRowValByTag(propertySheetValues,"primary_type")); 
   fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords,primaryType);

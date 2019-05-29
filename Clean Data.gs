@@ -74,14 +74,28 @@ function createCustomSlug(domainType, chainBranding, y) {
 }
 
 function cleanSocialLinks(y) {
-  if(y.indexOf("?") != -1) {
-    y = y.substr(0, y.indexOf("?"));
+  if(checkForSocialString(y)) {
+    if(y.indexOf("?") != -1) {
+      y = y.substr(0, y.indexOf("?"));
+    }
+    if(y.substr(y.length - 1) == "/") { //checks if last character in url is trailing slash
+      y = y.substr(0, y.length - 1);
+    }
+    y = y.split("/").pop();
+  } else {
+    y = "";
   }
-  if(y.substr(y.length - 1) == "/") { //checks if last character in url is trailing slash
-    y = y.substr(0, y.length - 1);
-  }
-  y = y.split("/").pop();
   return y;
+}
+//checks that the text in the social link cell is actually a social link
+function checkForSocialString(y) {
+  var socialStrings = ["yelp","facebook","twitter","pinterest","instagram","youtube","linkedin"];
+  for(i = 0; i < socialStrings.length; i++) {
+    if(y.indexOf(socialStrings[i]) >= 0) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function cleanPhoneNumber(val) {

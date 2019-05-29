@@ -1,81 +1,101 @@
 /*
-1. Deletes duplicate rows in active spreadsheet 
-2. Deletes image files
-3. Formats urls for CMS
-*/
-               
+* Deletes duplicate rows in active spreadsheet 
+* Deletes image files
+* Formats urls for CMS in column D if its a same domain redirect
+*/              
 function cleanUpAndFormatUrls() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
-  var rows = sheet.getLastRow();
-  var firstColumn = sheet.getRange(1, 3, rows, 1).getValues();
-  firstColumn = firstColumn.map(function (e) {return e[0]})
-  for (var i = rows; i >0; i--) {
-    if (firstColumn.indexOf(firstColumn[i-1]) != i-1) {
-      sheet.deleteRow(i);
+  removeGarbageRedirect(sheet); //removed duplicates in column C
+  var redirectSetRange = sheet.getRange(2, 4, sheet.getLastRow() - 1, 1);
+  var redirectValues = sheet.getRange(2, 2, sheet.getLastRow() - 1, 2).getValues();
+  var flatRedirectValues =  [].concat.apply([], redirectValues);
+  var hasBlanks = flatRedirectValues.indexOf("");
+  if(hasBlanks > -1) {
+    ui.alert("You need to fill in all Redirect Strategies to continue");
+  }
+  else {
+    formatRedirects(redirectSetRange, redirectValues);
+  }
+}
+/*
+  Loops through a 2D arry of urls calling formatRedirectStrings and passing returned string in new Array
+  Sets new array in the param setRange
+  @param [][] 2D Array Range
+  @param values 2D array of column values
+*/
+function formatRedirects(setRange, values) {
+  var newRedirectsArry = [];
+  for(i = 0;i < values.length; i++) {
+    if(values[i][0] == "Same Domain") {
+      var newStr = formatRedirectStrings(values[i][1].toString());     
+    } else {
+      var newStr = "";
+    }
+    newRedirectsArry.push([newStr]);
+  }  
+  setRange.setValues(newRedirectsArry);
+}
+/*
+  Formats a url for cloud redirect manager
+  @param String
+  @return String
+*/
+function formatRedirectStrings(str) {
+    str = str.split(/\.com\/|\.net\/|\.org\/|\.co\//)[1]     //strips everthing left of the TLD (ex: www.myapartments.com/units -> units)
+            .split(/\.html|[?]/)[0];                            //strips everything to the right of .html or ? 
+    if(str.substr(-1) === '/')  {
+        str = str.slice(0, -1);                                 //pops last slash in url
+    }   
+    str = str.replace(/%20|\s/g,'\\s')
+            .replace(/[[\]{}()*+?.%,^$|#]/g, '\\$&')            //escapes special characters with \
+            .replace(/\/\//g,'/+')                               //replaces // with /+
+            .replace(/5B|5b/g,'\\[')                                   
+            .replace(/5D|5d/g,'\\]');
+    return str + '$';
+}
+
+/**
+ * Removes rows with duplicate data in column C from the current sheet.
+ * Removes rows with ulrs containing values we do not want to redirect(.jpg,.pdf,etc)
+ * @param sheet object
+ */
+function removeGarbageRedirect(sheet) {
+  var data = sheet.getDataRange().getValues();
+  var newData = [];
+  for (var i in data) {
+    var row = data[i];
+    var duplicate = false;
+    for (var j in newData) {
+      if(row[2] == newData[j][2] || indexMatch(data[i][2])) {
+        duplicate = true;
+       }
+    }
+    if (!duplicate) {
+      newData.push(row);
     }
   }
-
-// Deletes rows in the active spreadsheet that contain 'word' in column C
-
- var rows = sheet.getDataRange();
- var numRows = rows.getNumRows();
- var values = rows.getValues();
-
- var rowsDeleted = 0;
- for (var i = 0; i <= numRows - 1; i++) {
-
- var row = values[i];
-
- if (row[2].indexOf(".jpg") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- if (row[2].indexOf(".js") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- if (row[2].indexOf(".gif") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- if (row[2].indexOf(".JPG") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- if (row[2].indexOf(".css") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
-  if (row[2].indexOf(".pdf") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- if (row[2].indexOf(".json") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- if (row[2].indexOf(".jpeg") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- if (row[2].indexOf(".png") > -1) {
- sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
- rowsDeleted++;
- }
- }
-
-//Fills Column F  (Cleaned URL for Cloud Input)FindReplaceReplace allDone
-
-
- var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  ss.getRange("D2").setFormula('IF(B2="Cross Domain","", IF(B2="Secure - Cross Domain","", IF(B2="No Redirects","",IFERROR(IF(RegExMatch(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(IF(ISNUMBER(SEARCH(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),"")))),"com/",""),"net/",""),"org/",""),"ca/",""),".html",""),"]",char(92)&"]"),"[",char(92)&"["),"%5b",char(92)&"["),"%5B",char(92)&"["),"%5d",char(92)&"]"),"%5D",char(92)&"]"),".php",char(92)&".php"),".aspx",char(92)&".aspx"),"%20",char(92)&"s"),"%",char(92)&"%"),"//","/+"),".pdf",char(92)&".pdf"),"/?"),LEFT(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(IF(ISNUMBER(SEARCH(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),"")))),"com/",""),"net/",""),"org/",""),"ca/",""),".html",""),"]",char(92)&"]"),"[",char(92)&"["),"%5b",char(92)&"["),"%5B",char(92)&"["),"%5d",char(92)&"]"),"%5D",char(92)&"]"),".php",char(92)&".php"),".aspx",char(92)&".aspx"),"%20",char(92)&"s"),"%",char(92)&"%"),"//","/+"),".pdf",char(92)&".pdf"),FIND("?",SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(IF(ISNUMBER(SEARCH(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),"")))),"com/",""),"net/",""),"org/",""),"ca/",""),".html",""),"]",char(92)&"]"),"[",char(92)&"["),"%5b",char(92)&"["),"%5B",char(92)&"["),"%5d",char(92)&"]"),"%5D",char(92)&"]"),".php",char(92)&".php"),".aspx",char(92)&".aspx"),"%20",char(92)&"s"),"%",char(92)&"%"),"//","/+"),".pdf",char(92)&".pdf"))-1), SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(IF(ISNUMBER(SEARCH(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),"")))),"com/",""),"net/",""),"org/",""),"ca/",""),".html",""),"]",char(92)&"]"),"[",char(92)&"["),"%5b",char(92)&"["),"%5B",char(92)&"["),"%5d",char(92)&"]"),"%5D",char(92)&"]"),".php",char(92)&".php"),".aspx",char(92)&".aspx"),"%20",char(92)&"s"),"%",char(92)&"%"),"//","/+"),".pdf",char(92)&".pdf")), SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(IF(ISNUMBER(SEARCH(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".com/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".net/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".ca/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),IF(ISNUMBER(SEARCH(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),RIGHT(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2),LEN(IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))-FIND(".org/",IF(RIGHT(c2,(LEN(c2)-(LEN(c2)-1)))="/",LEFT(c2,(LEN(c2)-1)), c2))),"")))),"com/",""),"net/",""),"org/",""),"ca/",""),".html",""),"]",char(92)&"]"),"[",char(92)&"["),"%5b",char(92)&"["),"%5B",char(92)&"["),"%5d",char(92)&"]"),"%5D",char(92)&"]"),".php",char(92)&".php"),".aspx",char(92)&".aspx"),"%20",char(92)&"s"),"%",char(92)&"%"),"//","/+"),".pdf",char(92)&".pdf")&if(and(E2<>"yes",c2<>""),"$","")))))');
-  var lr = ss.getLastRow();
-  var fillDownRange = ss.getRange(2, 4, lr-1);
-  ss.getRange("D2").copyTo(fillDownRange);  
-
+  sheet.clearContents();
+  sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
 }
 
 
+/**
+ * Deletes rows with ulrs containing values we do not want to redirect
+ * @param string to match against array in function of file types we do not want
+ * @return boolean returns true if string has value from array, false if it does not
+ */
+function indexMatch(string) {
+  if(string == null || string == "") {
+    return false;
+  }
+  var arryOfBadVal = [".jpg",".js",".gif",".JPG",".css",".pdf",".json",".jpeg",".jpeg",".png"];
+  for(i = 0; i < arryOfBadVal.length; i++) {
+    if(string.indexOf(arryOfBadVal[i]) != -1) {
+      return true;
+    }    
+  }
+  return false;
+}
 
 function statuscode(url, user, pwd) {
     try {
@@ -92,6 +112,7 @@ function statuscode(url, user, pwd) {
         return "";
     }
 }
+
 
 function location(url, user, pwd) {
     try {
@@ -128,11 +149,11 @@ function testRedirects () {
 //Fills Column G (Redirecting To URL)
   var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
     ss.getRange("G3:G").setFormula('=If(C3:C="","",if(OR(F3:F=302,F3:F=301),location(C3:C),"Is not redirecting"))');
-};
+}
 
 
 function clearData() {
   var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
   ss.getRange('a2:G').clearContent();
-};
+}
                
