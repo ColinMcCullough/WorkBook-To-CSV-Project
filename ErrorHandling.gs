@@ -12,25 +12,17 @@ function checkErrors(propertySheetValues,flatColumnArry,domainType,vertical) {
   var alerts = [];
   (vertical == "mf") ? missingTags = mfTags.diff(flatColumnArry) : missingTags = tags.diff(flatColumnArry);
   if(missingTags.length > 0) {
-    var missingTagAlert = "You are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date";
-    ui.alert("You are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
+    ui.alert("Error: \nYou are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
     return null;
-  }
-  var newPhoneArray = copyLocalToDefaultPhone(flatColumnArry,propertySheetValues); //copies local number to display phone number field if display phone number is blank
-  var numPhoneBlanks = numOfBlanks(newPhoneArray,newPhoneArray.length);
-  if(numPhoneBlanks > 0) {
-    var phoneRowNum = flatColumnArry.indexOf("display_phone_number") + 2; 
-    var missingDefaultPhoneNum = "Error: \nYou have missing values in the required row number" + phoneRowNum + ". Please enter location city area code followed by 555-5555(EX: 541-555-5555) in row " + phoneRowNum;
-    alerts.push(missingDefaultPhoneNum);
   }
   var nameIndex = flatColumnArry.indexOf("name") + 2;
   var nameRangeValues = getRowValByTag(propertySheetValues,"name");
   var nameArrylen = nameRangeValues.length;
   var numNameBlanks = numOfBlanks(nameRangeValues,nameArrylen);
   if(numNameBlanks > 0) {
-    var missingNameOrLongLen = "Error: \nYou either have values in a property info tab past the last locations column or are missing brand names in row" + nameIndex + 
-                               "\nAdd brand names to all locations in row " + nameIndex + " and clear all columns past the last location column in use.";
-    alerts.push(missingNameOrLongLen);
+    ui.alert("Error: \nYou either have values in a property info tab past the last locations column or are missing brand names in row" + nameIndex + 
+                    "\nAdd brand names to all locations in row " + nameIndex + " and clear all columns past the last location column in use.");
+    return null;
   } 
   if(domainType == "multi") {    
     var domainIndex = flatColumnArry.indexOf("naked_domain") + 2;  
@@ -41,6 +33,13 @@ function checkErrors(propertySheetValues,flatColumnArry,domainType,vertical) {
       var missingDomain = "Error: \nAll multi domain locations need their domain field filled out." + "\nAdd domains to all locations in row " + domainIndex;
        alerts.push(missingDomain);
     }
+  }
+  var newPhoneArray = copyLocalToDefaultPhone(flatColumnArry,propertySheetValues); //copies local number to display phone number field if display phone number is blank
+  var numPhoneBlanks = numOfBlanks(newPhoneArray,newPhoneArray.length);
+  if(numPhoneBlanks > 0) {
+    var phoneRowNum = flatColumnArry.indexOf("display_phone_number") + 2; 
+    var missingDefaultPhoneNum = "Error: \nYou have missing values in the required row number " + phoneRowNum + ". Please enter location city area code followed by 555-5555(EX: 541-555-5555) in row " + phoneRowNum;
+    alerts.push(missingDefaultPhoneNum);
   }
   if(flatColumnArry.indexOf("floor_plans") != -1) {
     var floorPlansIndex = flatColumnArry.indexOf("floor_plans") + 2;  
@@ -79,13 +78,15 @@ function copyLocalToDefaultPhone(flatColumnArry,propertySheetValues) {
   var defaultPhoneRange = propertySheet.getRange(flatColumnArry.indexOf("display_phone_number") + 2,4,1,propertySheetValues[0].length - 3);
   var newDefPhoneNumArry = [];
   for(i = 0; i < defaultPhoneNumVal.length; i++) {
-    if(defaultPhoneNumVal[i] != "") {
-      newDefPhoneNumArry.push(defaultPhoneNumVal[i]);
+    var cleanedDefaultNum = cleanPhoneNumber(defaultPhoneNumVal[i]);
+    var cleanedLocalNum = cleanPhoneNumber(localPhoneNumVal[i]);
+    if(cleanedDefaultNum != "") { //checks if number is not blank after running it through the clean phone num method
+      newDefPhoneNumArry.push(cleanedDefaultNum);
     }
-    else if(defaultPhoneNumVal[i] == "" && localPhoneNumVal[i] != "") {
-      newDefPhoneNumArry.push(localPhoneNumVal[i]);
+    else if(cleanedDefaultNum == "" && cleanedLocalNum != "") {
+      newDefPhoneNumArry.push(cleanedLocalNum);
     }
-    else if(defaultPhoneNumVal[i] == "" && localPhoneNumVal[i] == "")
+    else if(cleanedDefaultNum == "" && cleanedLocalNum == "")
       newDefPhoneNumArry.push("");
   }
   defaultPhoneRange.setValues([newDefPhoneNumArry]);

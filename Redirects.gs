@@ -47,10 +47,14 @@ function formatRedirectStrings(str) {
         str = str.slice(0, -1);                                 //pops last slash in url
     }   
     str = str.replace(/%20|\s/g,'\\s')
-            .replace(/[[\]{}()*+?.%,^$|#]/g, '\\$&')            //escapes special characters with \
+            .replace(/[[\]{}()*+?.,^$|#]/g, '\\$&')            //escapes special characters with \
             .replace(/\/\//g,'/+')                               //replaces // with /+
-            .replace(/5B|5b/g,'\\[')                                   
-            .replace(/5D|5d/g,'\\]');
+            .replace(/%5B|%5b/g,'\\[')                                   
+            .replace(/%5D|%5d/g,'\\]')
+            .replace(/%7C/g,'\\|');
+    if(str.length == 1) {
+      str = "[" + str + "]";
+    }
     return str + '$';
 }
 
@@ -66,6 +70,9 @@ function removeGarbageRedirect(sheet) {
     var row = data[i];
     var duplicate = false;
     for (var j in newData) {
+      var val1 = row[2];
+      var val2 = newData[j][2];
+      var val3 = data[i][2];
       if(row[2] == newData[j][2] || indexMatch(data[i][2])) {
         duplicate = true;
        }

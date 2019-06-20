@@ -6,127 +6,74 @@
    */
   $(function() {
     // Assign handler functions to sidebar elements here, if needed.
-    $('#sidebar-run-main').click(onWrkbookClick);
+    $('#sidebar-run-main').click(spinUpCSV);
     $('#sidebar-run-lv-spin-up').click(liquidValuesToSpinUp);
     $('#sidebar-run-lv-to-wf').click(sendLiquidValuesToWF);
     $('#sidebar-run-clear-redirects').click(clearRedirectsTab);
     $('#sidebar-run-format-redirects').click(formatURLs);
-    
-
-    // Call the server here to retrieve any information needed to build
-    // the dialog, if necessary.
   });
-  /**
-   * Calls the server to retrieve information from the sheet.
-   * Gets the value in the active cell, which is then placed in the
-   * sidebar text field.
-   */
-  function onWrkbookClick() {
+  
+  function success(msg, element) {
+    // Respond to success conditions here.
+    showStatus('No Errors.');
+    element.disabled = false;
+  }
+  function failure(msg, element) {
+    // Respond to failure conditions here.
+    showStatus(msg, 'error');
+    element.disabled = false;
+  }
 
+  function spinUpCSV() {
     this.disabled = true;
     var vertical = $('#select-vertical').val();
     var domainStrat = $('#select-domain-strat').val();
-    var chainBrand = $('#select-chain').val();
-    
-    // Gather any information that needs to be sent to the server here.
-    // Send the value to the server and handle the response.
-    
+    var chainBrand = $('#select-chain').val();  
     google.script.run
-        .withSuccessHandler(
-          function(msg, element) {
-            // Respond to success conditions here.
-            showStatus('No Errors.');
-            element.disabled = false;
-          })
-        .withFailureHandler(
-          function(msg, element) {
-            // Respond to failure conditions here.
-            showStatus(msg, 'error');
-            element.disabled = false;
-          })
-        .withUserObject(this)
-        .main(vertical,domainStrat,chainBrand);
-     
-  }
+      .withSuccessHandler(success)
+      .withFailureHandler(failure)
+      .withUserObject(this)
+      .main(vertical,domainStrat,chainBrand);    
+}
   
-    function liquidValuesToSpinUp() {
+  function liquidValuesToSpinUp() {
     this.disabled = true;
     // Gather any information that needs to be sent to the server here.
     // Send the value to the server and handle the response.
     google.script.run
-        .withSuccessHandler(
-          function(msg, element) {
-            // Respond to success conditions here.
-            showStatus('No Errors.');
-            element.disabled = false;
-          })
-        .withFailureHandler(
-          function(msg, element) {
-            // Respond to failure conditions here.
-            showStatus(msg, 'error');
-            element.disabled = false;
-          })
+        .withSuccessHandler(success)
+        .withFailureHandler(failure)
         .withUserObject(this)
         .liquidToSpinUp();
   }
   
-    function sendLiquidValuesToWF() {
+  function sendLiquidValuesToWF() {
     this.disabled = true;
     // Gather any information that needs to be sent to the server here.
     // Send the value to the server and handle the response.
     google.script.run
-        .withSuccessHandler(
-          function(msg, element) {
-            // Respond to success conditions here.
-            showStatus('No Errors.');
-            element.disabled = false;
-          })
-        .withFailureHandler(
-          function(msg, element) {
-            // Respond to failure conditions here.
-            showStatus(msg, 'error');
-            element.disabled = false;
-          })
+        .withSuccessHandler(success)
+        .withFailureHandler(failure)
         .withUserObject(this)
         .sendRedirectsAndLiquidValues();
   }
-    function clearRedirectsTab() {
+  function clearRedirectsTab() {
     this.disabled = true;
     // Gather any information that needs to be sent to the server here.
     // Send the value to the server and handle the response.
     google.script.run
-        .withSuccessHandler(
-          function(msg, element) {
-            // Respond to success conditions here.
-            showStatus('No Errors.');
-            element.disabled = false;
-          })
-        .withFailureHandler(
-          function(msg, element) {
-            // Respond to failure conditions here.
-            showStatus(msg, 'error');
-            element.disabled = false;
-          })
+        .withSuccessHandler(success)
+        .withFailureHandler(failure)
         .withUserObject(this)
         .clearData();
   }  
-   function formatURLs() {
+  function formatURLs() {
     this.disabled = true;
     // Gather any information that needs to be sent to the server here.
     // Send the value to the server and handle the response.
     google.script.run
-        .withSuccessHandler(
-          function(msg, element) {
-            // Respond to success conditions here.
-            showStatus('No Errors.');
-            element.disabled = false;
-          })
-        .withFailureHandler(
-          function(msg, element) {
-            // Respond to failure conditions here.
-            showStatus(msg, 'error');
-            element.disabled = false;
-          })
+        .withSuccessHandler(success)
+        .withFailureHandler(failure)
         .withUserObject(this)
         .cleanUpAndFormatUrls();
   }  

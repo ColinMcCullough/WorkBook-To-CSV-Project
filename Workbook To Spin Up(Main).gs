@@ -1,5 +1,6 @@
 //Global Variables  
-var headerArrayNames = ["name","internal_branded_name","corporate","street_address_1","city","state","postal_code","country","neighborhood",
+var headerArrayNames = [
+                        "name","internal_branded_name","corporate","street_address_1","city","state","postal_code","country","neighborhood",
                         "neighborhood_2","email","office_hours_note","status","status_note","no_deploy","secure_domain","custom_slug",
                         "twitter_username","facebook_username","yelp_username","pinterest_username","instagram_username","youtube_username",
                         "google_cid","linkedin_username","local_phone_number","display_phone_number","gtm_codes","spinup_web_theme",
@@ -11,10 +12,6 @@ var headerArrayNames = ["name","internal_branded_name","corporate","street_addre
                         "care_level_3","care_level_4","care_level_5","care_level_6","nearby_healthcare_1","nearby_roadway_1","nearby_roadway_2",
                         "nearby_gasoline","property_feature_1","property_feature_2","property_feature_3","property_feature_4"
                        ];
-
-var headerNames = [
-                     ["name","internal_branded_name","corporate","street_address_1","city","state","postal_code","country","neighborhood","neighborhood_2","email","office_hours_note","status","status_note","no_deploy","secure_domain","custom_slug","twitter_username","facebook_username","yelp_username","pinterest_username","instagram_username","youtube_username","google_cid","linkedin_username","local_phone_number","display_phone_number","gtm_codes","spinup_web_theme","spinup_strategy","naked_domain","off_platform_link","business_description","location_listing_category_id","secondary_listing_categories","pay_online_url","license_number","nearby_schools","nearby_school_1","nearby_school_2","nearby_employers","nearby_employer_1","nearby_employer_2","nearby_employer_3","apartment_amenity_1","apartment_amenity_2","apartment_amenity_3","nearby_restaurants","nearby_shopping","landmark_1_name","landmark_2_name","landmark_3_name","floor_plans","community_amenity_1","community_amenity_2","community_amenity_3","care_level_1","care_level_2","care_level_3","care_level_4","care_level_5","care_level_6","nearby_healthcare_1","nearby_roadway_1","nearby_roadway_2","nearby_gasoline","property_feature_1","property_feature_2","property_feature_3","property_feature_4"]
-                  ];
 
 var spinUpTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('spinUpFile');
 var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
@@ -29,7 +26,7 @@ var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("**Past
 function printHeaders(vertical,domainType) {
   var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
   var headerRange = spinUpTab.getRange(1,1,1,headerArrayNames.length);
-  headerRange.setValues(headerNames);
+  headerRange.setValues([headerArrayNames]); //updated this from header names
   if (vertical == "mf") {
     var lvheaderRange = seoLvTab.getRange(1,1,4,mfHeaderArrayValues[0].length);
     lvheaderRange.setValues(mfHeaderArrayValues);
@@ -100,16 +97,7 @@ function transposeArray(propertySheetValues,searchStrings, vertical, domainType,
   var result;
   
   if (rowValue != null) { //ensures there are values to transpose
-    result = rowValue[0].map(function(elem) {return [elem];});
-    
-    /*  
-    for (var col = 0; col < rowValue[0].length; col++) { // Loop over array cols
-      result[col] = [];
-      for (var row = 0; row < rowValue.length; row++) { // Loop over array rows
-        result[col][row] = rowValue[row][col]; // Rotate
-      }
-    }
-    */
+    result = rowValue[0].map(function(elem) {return [elem];});    
     
   } else {
     result = null; 
@@ -144,15 +132,16 @@ function main(vertical,domainType,chainBranding) {
     if(errors != null) {
       clearHeaders();
       printHeaders(vertical,domainType);
-      var numLocations = getRowValByTag(propertySheetValues,"name").length;
+      var newPSValues = propertySheet.getRange(2, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); //everything in the propertyInfoSheet(added for text) 
+      var numLocations = getRowValByTag(newPSValues,"name").length;
       for(var i = 0; i <= headerArrayLength - 1; i++) {
         var searchStrings = headerArrayNames[i];
-        var result = transposeArray(propertySheetValues,searchStrings, vertical, domainType, flattenColumnval, chainBranding);
+        var result = transposeArray(newPSValues,searchStrings, vertical, domainType, flattenColumnval, chainBranding);
         getPrintRanges(numLocations, searchStrings,vertical, result);
       }
       spinUpTab.getRange(2, 1, numLocations, headerArrayNames.length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
       seoLvTab.getRange(5, 1, numLocations, mfHeaderArrayValues[0].length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      setSeoLvTabData(propertySheetValues,numLocations,vertical,seoLvTab);
+      setSeoLvTabData(newPSValues,numLocations,vertical,seoLvTab);
     }
   }
 }
