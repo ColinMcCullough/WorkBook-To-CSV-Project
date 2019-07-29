@@ -199,28 +199,27 @@ function hasLineBreakComma(y) {
 }
 
 function defaultValuePrint(numLocations,search, vertical, domainType) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static
-  var printColumnIndex = headerArrayNames.indexOf(search) + 1;
+  var printColumnIndex = spinUpFileHeaders.indexOf(search) + 1;
   var fillColumnArray = spinUpTab.getRange(2, printColumnIndex, numLocations, 1);
-  if (search == "corporate") {
-    var fillDefaultArrayValues = fillArray("false", numLocations);  
-    fillColumnArray.setValues(fillDefaultArrayValues);
+  var fillDefaultArrayValues;
+  if (search === "corporate") {
+    fillDefaultArrayValues = fillArray("false", numLocations);  
   }
-  else if (search == "status") {
-    var fillDefaultArrayValues = fillArray("Pending", numLocations);  
-    fillColumnArray.setValues(fillDefaultArrayValues);
+  else if (search === "status") {
+    fillDefaultArrayValues = fillArray("Pending", numLocations);  
   }
-  else if (search == "no_deploy") {
-    var fillDefaultArrayValues = fillArray("false", numLocations);  
-    fillColumnArray.setValues(fillDefaultArrayValues);
+  else if (search === "no_deploy") {
+    fillDefaultArrayValues = fillArray("false", numLocations);  
   }
-  else if (search == "secure_domain" && domainType == "multi") {
-    var fillDefaultArrayValues = fillArray("true", numLocations);  
-    fillColumnArray.setValues(fillDefaultArrayValues);
+  else if (search === "secure_domain" && domainType === "multi") {
+    fillDefaultArrayValues = fillArray("true", numLocations);  
   }
-  else if (search == "spinup_web_theme") {
-    var fillDefaultArrayValues = fillArray("default", numLocations);  
-    fillColumnArray.setValues(fillDefaultArrayValues);
+  else if (search === "spinup_web_theme") {
+    fillDefaultArrayValues = fillArray("default", numLocations);      
   }
+  if(fillDefaultArrayValues != null) {
+    fillColumnArray.setValues(fillDefaultArrayValues);
+  }  
 }
 
 function fillArray(value, len) {  //this function works the defaultValuePrint function to fill an array full of default values to be printed in a range

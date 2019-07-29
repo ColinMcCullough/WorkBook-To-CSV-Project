@@ -1,104 +1,171 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-    <!-- Use a templated HTML printing scriptlet to import common stylesheet -->
-    <?!= HtmlService.createHtmlOutputFromFile('Stylesheet').getContent(); ?>
-  </head>
-  <body>
-    <!-- Below is the HTML code that defines the sidebar element structure. -->
-    <cursor></cursor><div class="sidebar branding-below">
-      <img alt="Add-on logo" class="logo" width="35"
-          src="https://gdurl.com/o1_G">  
-      <p>The below scripts are designed to be run in order during the Checklist Review Process. </p>    
+
+<head>
+  <base target="_top">
+  <!-- Use a templated HTML printing scriptlet to import common stylesheet -->
+  <?!= HtmlService.createHtmlOutputFromFile('Stylesheet').getContent(); ?>
+</head>
+
+<body>
+  <!-- Below is the HTML code that defines the sidebar element structure. -->
+  <cursor></cursor>
+  <div class="sidebar branding-below">
+    <img alt="Add-on logo" class="logo" width="35" src="https://gdurl.com/o1_G">
+    <p>The below scripts are designed to be run in order during the Checklist Review Process. </p>
+    <div class="container">
+      <section class="left">
+        <div class="block form-group">
+          <label for="select">Client<br>Vertical</label>
+        </div>
+      </section>
+      <section class="center">
+        <div class="block form-group">
+          <label for="select">Domain<br>Strategy</label>
+        </div>
+      </section>
+      <section class="right">
+        <div class="block form-group">
+          <label for="select">Chain<br>Branding?</label>
+        </div>
+      </section>
+      <section class="left2">
+        <div class="block form-group">
+          <select id="select-vertical">
+            <option value="Select" selected>Select</option>
+            <option value="mf">MF</option>
+            <option value="ss">SS</option>
+            <option value="sl">SL</option>
+          </select>
+        </div>
+      </section>
+      <section class="center2">
+        <div class="block form-group">
+          <select id="select-domain-strat" disabled>
+            <option value="Select" selected>Select</option>
+            <option value="multi">Multi</option>
+            <option value="single">Single</option>
+          </select>
+        </div>
+      </section>
+      <section class="right2">
+        <div class="block form-group">
+          <select id="select-chain" disabled>
+            <option value="Select" selected>Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </section>
+    </div>
+    <button class="accordion" id="accordion-five">Keyword Research Accelerator</button>
+    <div class="panel" id="panel1">
+      <div class="container1">
+        <section class="generate-location-section">
+            <div class="block form-group" id="sidebar-value-block-5">
+               <div class="block">
+                   <button id="sidebar-run-generate-loc">Generate Locations</button>
+               </div>
+            </div>
+        </section>
+        <section class="select-location-section">
+          <div class="block form-group">
+            <select id="select-location">
+              <option value="" selected>Select Location</option>
+            </select>
+          </div>
+        </section>
+        <section class="location-info-table">
+          <table class="loc-table">
+            <tr>
+              <td>Address <button id="get-address"></button></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>City</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>State</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Zip</td>
+              <td></td>
+            </tr>
+          </table>
+        </section>        
+        <section class="get-kewords-section">
+          <div class="block form-group">
+            <div class="block" id="sidebar-button-bar">
+              <button id="sidebar-run-get-kewords">Get Yo Keywords</button>
+            </div>
+          </div>
+        </section>
+        <section class="get-phrases-section">
+          <div class="block form-group">
+            <div class="block" id="sidebar-button-bar">
+              <button id="sidebar-run-get-phrases">Get Yo Phrases</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <button class="accordion" id="accordion-one">Send WorkBook to Spin Up Tab:</button>
+    <div class="panel">
       <div class="block form-group" id="sidebar-value-block">
-        <label for="sidebar-value">Send WorkBook to Spin Up Tab:</label>
         <p> Sends data from the '**Paste Property Info**' tab to the 'spinUpFile' and 'SEO Liquid Values' tabs</p>
-        <div class="container">
-          <section class="left">
-            <div class="block form-group">
-              <label for="select">Client<br>Vertical</label>
-            </div>
-          </section>
-            <section class="center">
-            <div class="block form-group">
-              <label for="select">Domain<br>Strategy</label>
-            </div>
-          </section>
-            <section class="right">
-            <div class="block form-group">
-              <label for="select">Chain<br>Branding?</label>
-            </div>
-          </section>
-            <section class="left2">
-            <div class="block form-group">
-              <select id="select-vertical">
-                <option value = "Select" selected>Select</option>
-                <option value = "mf" >MF</option>
-                <option value = "ss" >SS</option>
-                <option value = "sl" >SL</option>
-              </select>
-            </div>
-          </section>
-            <section class="center2">
-            <div class="block form-group" >
-              <select id="select-domain-strat" disabled>
-                <option value = "Select" selected>Select</option>
-                <option value = "multi" >Multi</option>
-                <option value = "single" >Single</option>
-              </select>
-            </div>
-          </section>
-            <section class="right2">
-            <div class="block form-group">
-              <select id="select-chain" disabled>
-                <option value = "Select" selected>Select</option>
-                <option value = "yes">Yes</option>
-                <option value = "no" >No</option>
-              </select>
-            </div>
-          </section>
-        </div>      
+
         <div class="block" id="sidebar-button-bar">
           <button id="sidebar-run-main">Property Info >> Spin Up File</button>
         </div>
       </div>
+    </div>
+    <button class="accordion" id="accordion-two">Insert Liquid Values to Spin Up Tab:</button>
+    <div class="panel">
       <div class="block form-group" id="sidebar-value-block-2">
-        <label for="sidebar-value">Insert Liquid Values to Spin Up Tab:</label>
         <p> Sends liquid values from 'SEO Liquid Values' tab to the 'spinUpFile' tab. </p>
         <div class="block" id="sidebar-button-bar">
           <button id="sidebar-run-lv-spin-up">Liquid Values >> Spin Up File</button>
         </div>
       </div>
+    </div>
+    <button class="accordion" id="accordion-three">Send Liquid Values to Client's Wireframe:</button>
+    <div class="panel">
       <div class="block form-group" id="sidebar-value-block-3">
-        <label for="sidebar-value">Send Liquid Values to Client's Wireframe:</label>
         <p> Sends values from 'SEO Liquid Values' tab to wireframe.</p>
         <div class="block" id="sidebar-button-bar">
           <button id="sidebar-run-lv-to-wf">Liquid Values >> Wireframe</button>
         </div>
       </div>
+    </div>
+    <button class="accordion" id="accordion-four">Redirect Functions:</button>
+    <div class="panel">
       <div class="block form-group" id="sidebar-value-block-4">
-        <label for="sidebar-value">Redirect Functions:</label>
-        <p> Clears values in the 'Redirects Tool' tab</p>
         <div class="block" id="sidebar-button-bar">
           <button id="sidebar-run-clear-redirects">Clear Redirects</button>
         </div>
-        <p> Removes Duplicates / Formats URLs</p>
         <div class="block" id="sidebar-button-bar">
           <button id="sidebar-run-format-redirects">Clean Up and Format URLs</button>
         </div>
+        <div class="block" id="sidebar-button-bar">
+          <button id="sidebar-run-get-status-follow-redirects">Get Statuses / Redirect Paths</button>
+        </div>
       </div>
-      <div id="sidebar-status"></div>   
     </div>
-    <!-- Sidebar bottom-branding below. -->
-    <div class="sidebar bottom">
-      <span class="gray branding-text">Spreadsheet Add-on by Colin McCullough
-        <br>
-        <a href="https://sites.google.com/getg5.com/g5wiki/professional-services/seo-implementation/seo-checklist-review" target="_blank">G Sites Help</a>
-        &nbsp; | &nbsp;<a href="https://forms.gle/hJrekqf89US9FLot9" target="_blank">Submit Feedback</a>
-      </span>
-    </div>
-    <!-- Use a templated HTML printing scriptlet to import JavaScript. -->
-    <?!= HtmlService.createHtmlOutputFromFile('SidebarJavaScript').getContent(); ?>
-  </body>
+    <div id="sidebar-status"></div>
+  </div>
+  <!-- Sidebar bottom-branding below. -->
+  <div class="sidebar bottom">
+    <span class="gray branding-text">Spreadsheet Add-on by Colin McCullough
+      <br>
+      <a href="https://sites.google.com/getg5.com/g5wiki/professional-services/seo-implementation/seo-checklist-review"
+        target="_blank">G Sites Help</a>
+      &nbsp; | &nbsp;<a href="https://forms.gle/hJrekqf89US9FLot9" target="_blank">Submit Feedback</a>
+    </span>
+  </div>
+  <!-- Use a templated HTML printing scriptlet to import JavaScript. -->
+  <?!= HtmlService.createHtmlOutputFromFile('SidebarJavaScript').getContent(); ?>
+</body>
+
 </html>

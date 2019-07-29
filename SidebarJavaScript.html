@@ -1,6 +1,8 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
+  var STANDARD_TABLE_LEN = 4;
+  var MF_TABLE_LEN = 7;
   /**
    * Run initializations on sidebar load.
    */
@@ -11,17 +13,105 @@
     $('#sidebar-run-lv-to-wf').click(sendLiquidValuesToWF);
     $('#sidebar-run-clear-redirects').click(clearRedirectsTab);
     $('#sidebar-run-format-redirects').click(formatURLs);
+    $('#sidebar-run-generate-loc').click(genLocations);
+    $('#select-location').change(popLocationInfo);
+    $('#sidebar-run-get-kewords').click(runGetKeyWords);
+    $('#sidebar-run-get-phrases').click(runGetPhrases);
+    $('#get-address').click(runGetAddress);    
+    $('#sidebar-run-get-status-follow-redirects').click(runStatusAndRedirectPaths);
   });
   
+  function runGetAddress() {
+    var tableInfo = [];
+    var vertical = $('#select-vertical').val();
+    var tablelen = (vertical === "mf") ? MF_TABLE_LEN : STANDARD_TABLE_LEN;
+    //pushes text from column 2 cells into an array
+    for(var i = 0; i < tablelen; i++) {
+        tableInfo.push($(".loc-table").children().find("tr:eq("+ i +") td:eq(1)").text());
+    }
+    var address = tableInfo[0] + " " + tableInfo[1] + " " + tableInfo[2] + " " + tableInfo[3];
+    textToClipboard(address);
+  }
+  
+  function textToClipboard(text) {
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
+  
+  
+  function runGetPhrases() {
+    this.disabled = true;
+    var tableInfo = [];
+    var vertical = $('#select-vertical').val();    
+    var tablelen = (vertical === "mf") ? MF_TABLE_LEN : STANDARD_TABLE_LEN;
+    //pushes text from column 2 cells into an array
+    for(var i = 0; i < tablelen; i++) {
+        tableInfo.push($(".loc-table").children().find("tr:eq("+ i +") td:eq(1)").text());
+    }
+    // Send the value to the server and handle the response.
+    google.script.run
+        .withSuccessHandler(success)
+        .withFailureHandler(failure)
+        .withUserObject(this)
+        .generatePhrases(vertical,tableInfo)    
+  }  
+
+  function runGetKeyWords() {
+    this.disabled = true;
+    var tableInfo = [];
+    var vertical = $('#select-vertical').val();    
+    var tablelen = (vertical === "mf") ? MF_TABLE_LEN : STANDARD_TABLE_LEN;
+    //pushes text from column 2 cells into an array
+    for(var i = 0; i < tablelen; i++) {
+        tableInfo.push($(".loc-table").children().find("tr:eq("+ i +") td:eq(1)").text());
+    }
+    // Send the value to the server and handle the response.
+    google.script.run
+        .withSuccessHandler(success)
+        .withFailureHandler(failure)
+        .withUserObject(this)
+        .getKeywords(tableInfo,vertical);    
+  }
+  
+  // Respond to success conditions here.
   function success(msg, element) {
-    // Respond to success conditions here.
     showStatus('No Errors.');
     element.disabled = false;
   }
+  
+  // Respond to failure conditions here.
   function failure(msg, element) {
-    // Respond to failure conditions here.
     showStatus(msg, 'error');
     element.disabled = false;
+  }
+  //function to populate location info when drop down selection changes
+  function popLocationInfo() {
+     var vertical = $('#select-vertical').val();
+     var chainBrand = $('#select-chain').val(); 
+     var locationName = $('#select-location :selected').text();
+     if(locationName != "Select Location") {
+         google.script.run
+            .withSuccessHandler(successGettingLocationInfo)
+            .withFailureHandler(failure)
+            .withUserObject(this)
+            .getLocationInformation(locationName,vertical,chainBrand);
+     } else {
+         removeTableChildren();
+     }
+  }
+  //sucess handler for popLocationInfo function
+  function successGettingLocationInfo(locationInfoArry, element) {
+      var tablechildren = $(".loc-table").children();
+      //removes previous location info from table before adding new info
+      removeTableChildren();
+      //adds locations info to the table
+      for(var i = 0; i < locationInfoArry.length; i++) {
+        tablechildren.find("tr:eq("+ i +") td:eq(1)").text(locationInfoArry[i]);
+      }
   }
 
   function spinUpCSV() {
@@ -34,7 +124,7 @@
       .withFailureHandler(failure)
       .withUserObject(this)
       .main(vertical,domainStrat,chainBrand);    
-}
+  }
   
   function liquidValuesToSpinUp() {
     this.disabled = true;
@@ -76,7 +166,92 @@
         .withFailureHandler(failure)
         .withUserObject(this)
         .cleanUpAndFormatUrls();
-  }  
+  }
+  function runStatusAndRedirectPaths() {
+    this.disabled = true;
+    // Gather any information that needs to be sent to the server here.
+    // Send the value to the server and handle the response.
+    google.script.run
+        .withSuccessHandler(success)
+        .withFailureHandler(failure)
+        .withUserObject(this)
+        .getStatusCodes();
+  }
+  //removed column 1 text in table
+  function removeTableChildren() {
+      var tablechildren = $(".loc-table").children();
+      var numRows = $(".loc-table tr").length;
+      //removes previous location info from table before adding new info
+      for(var i = 0; i < numRows; i++) {
+        tablechildren.find("tr:eq("+ i +") td:eq(1)").text("");
+      }
+  }
+  
+  //functoin called when generate locations button is pressed
+  function genLocations() {
+    var vertical = $('#select-vertical').val();
+    var domainStrat = $('#select-domain-strat').val();
+    var chainBrand = $('#select-chain').val(); 
+    this.disabled = true;
+    removeTableChildren();
+    //removes list before creating a new list
+    var childrenLen = $("#select-location").children().length;
+    if(childrenLen > 1) {
+        for(var i = childrenLen; i > 1; i--) {
+          $("#select-location option:nth-child(" + i +")").remove();
+        }    
+    }
+    // Send the value to the server and handle the response.
+    google.script.run
+        .withSuccessHandler(successLocationsGrab)
+        .withFailureHandler(failure)
+        .withUserObject(this)
+        .generateLocations(vertical,domainStrat,chainBrand); 
+  }
+  //success handler for genLocation function
+  function successLocationsGrab(locationArray, element) {
+      var vertical = $('#select-vertical').val();
+      
+      // Respond to success conditions here.
+      if(locationArray != null) {
+        var parentList = $("#select-location");
+        //created new location list
+        for(var i = 0; i < locationArray.length; i++) {
+          parentList.append('<option value=' + +locationArray[i]+ '>'+locationArray[i]+'</option>');
+        }   
+        showStatus('No Errors.');
+        parentList.children().first().attr("selected");
+        if(vertical === "mf") {
+           if($("tbody").children().length === STANDARD_TABLE_LEN) {
+             createMultiFamailyRows();
+           }
+        } else {
+          removeMultiFamailyRows();
+        }
+      }
+      element.disabled = false;
+  }
+  //adds remainig multifamily rows in
+  function createMultiFamailyRows() {   
+    var colOneData = ["Floor Plans","Class","Unit Type"];
+    var newRowIndex = 4;
+      //removes previous location info from table before adding new info
+      for(var i = 0; i < colOneData.length; i++) {
+        var tablechildren = $(".loc-table").children();
+        tablechildren.append("<tr></tr>");
+        $(".loc-table").children().find("tr:eq("+ newRowIndex +")").append("<td>"+ colOneData[i] +"</td>");
+        $(".loc-table").children().find("tr:eq("+ newRowIndex +")").append("<td></td>");
+        newRowIndex++;
+      }
+  }
+  //removes all rows in table except address
+  function removeMultiFamailyRows() {
+    var numTableRows = $("tbody").children().length;
+    while(numTableRows > STANDARD_TABLE_LEN) {
+      $(".loc-table").children().find("tr:eq("+ (numTableRows - 1) +")").remove();
+        numTableRows--;
+    }
+  }
   /**
    * Displays the given status message in the sidebar.
    *
@@ -90,7 +265,9 @@
       $('#sidebar-status').addClass(classId);
     }
   }
-  
+/*
+Enable drop downs upon selection for workbook to spinup section
+*/  
 $("select[id='select-vertical']").change( function() {
     $("select[id='select-domain-strat']").removeAttr("disabled");
 });
@@ -99,6 +276,30 @@ $("select[id='select-domain-strat']").change( function() {
     $("select[id='select-chain']").removeAttr("disabled");
 }); 
 
-
-  
+/*
+Open and close event for accordian
+*/
+var acc = document.getElementsByClassName("accordion");
+var i;
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+  /* Toggle between hiding and showing the active panel */
+  var panel = this.nextElementSibling;
+  if (panel.style.display === "block") {
+      panel.style.display = "none";
+      for(j = 0; j < acc.length; j++) {
+        acc[j].nextElementSibling.style.display = "none";
+      }              
+    } 
+    else {
+      for(j = 0; j < acc.length; j++) {
+        if(acc[j].nextElementSibling.style.display === "block") {
+          acc[j].nextElementSibling.style.display = "none";
+        }
+      panel.style.display = "block";  
+      } 
+    }
+  });
+}
+    
 </script>

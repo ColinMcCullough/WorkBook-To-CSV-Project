@@ -6,15 +6,19 @@
 function cleanUpAndFormatUrls() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
   removeGarbageRedirect(sheet); //removed duplicates in column C
-  var redirectSetRange = sheet.getRange(2, 4, sheet.getLastRow() - 1, 1);
-  var redirectValues = sheet.getRange(2, 2, sheet.getLastRow() - 1, 2).getValues();
-  var flatRedirectValues =  [].concat.apply([], redirectValues);
-  var hasBlanks = flatRedirectValues.indexOf("");
-  if(hasBlanks > -1) {
-    ui.alert("You need to fill in all Redirect Strategies to continue");
-  }
-  else {
-    formatRedirects(redirectSetRange, redirectValues);
+  try {
+    var redirectSetRange = sheet.getRange(2, 4, sheet.getLastRow() - 1, 1);
+    var redirectValues = sheet.getRange(2, 2, sheet.getLastRow() - 1, 2).getValues();
+    var flatRedirectValues =  [].concat.apply([], redirectValues);
+    var hasBlanks = flatRedirectValues.indexOf("");
+    if(hasBlanks > -1) {
+      ui.alert("You need to fill in all Redirect Strategies to continue");
+    }
+    else {
+      formatRedirects(redirectSetRange, redirectValues);
+    }
+  } catch(e) {
+    ui.alert("There are no redirects to format");
   }
 }
 /*
@@ -25,11 +29,10 @@ function cleanUpAndFormatUrls() {
 */
 function formatRedirects(setRange, values) {
   var newRedirectsArry = [];
+  var newStr = "";
   for(i = 0;i < values.length; i++) {
     if(values[i][0] == "Same Domain") {
-      var newStr = formatRedirectStrings(values[i][1].toString());     
-    } else {
-      var newStr = "";
+      newStr = formatRedirectStrings(values[i][1].toString());     
     }
     newRedirectsArry.push([newStr]);
   }  
@@ -42,7 +45,7 @@ function formatRedirects(setRange, values) {
 */
 function formatRedirectStrings(str) {
     str = str.split(/\.com\/|\.net\/|\.org\/|\.co\//)[1]     //strips everthing left of the TLD (ex: www.myapartments.com/units -> units)
-            .split(/\.html|[?]/)[0];                            //strips everything to the right of .html or ? 
+             .split(/\.html|[?]/)[0];                            //strips everything to the right of .html or ? 
     if(str.substr(-1) === '/')  {
         str = str.slice(0, -1);                                 //pops last slash in url
     }   
@@ -70,9 +73,6 @@ function removeGarbageRedirect(sheet) {
     var row = data[i];
     var duplicate = false;
     for (var j in newData) {
-      var val1 = row[2];
-      var val2 = newData[j][2];
-      var val3 = data[i][2];
       if(row[2] == newData[j][2] || indexMatch(data[i][2])) {
         duplicate = true;
        }
@@ -85,7 +85,6 @@ function removeGarbageRedirect(sheet) {
   sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
 }
 
-
 /**
  * Deletes rows with ulrs containing values we do not want to redirect
  * @param string to match against array in function of file types we do not want
@@ -95,7 +94,7 @@ function indexMatch(string) {
   if(string == null || string == "") {
     return false;
   }
-  var arryOfBadVal = [".jpg",".js",".gif",".JPG",".css",".pdf",".json",".jpeg",".jpeg",".png"];
+  var arryOfBadVal = [".jpg",".js",".gif",".JPG",".css",".pdf",".json",".jpeg",".jpeg",".png",".svg","sitemap.xml"];
   for(i = 0; i < arryOfBadVal.length; i++) {
     if(string.indexOf(arryOfBadVal[i]) != -1) {
       return true;
@@ -104,21 +103,63 @@ function indexMatch(string) {
   return false;
 }
 
-function statuscode(url, user, pwd) {
+/*
+Function tests redirects for column C in Redirects Tool tab,
+Gathers status codes and redirect endpoints for 301/302s and
+Sets Values in appropriate columns
+*/
+function getStatusCodes() {
+  var redirectsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');  
+  try {
+    var redirectValues = redirectsSheet.getRange(2, 3, redirectsSheet.getLastRow() - 1, 1).getValues();
+    var flatRedirectArry = redirectValues.map(function(v){ return v[0] }).filter(Boolean);
+    var statusRequest = []; var statusCodes = [];
+    redirectsSheet.getRange(2,6,redirectValues.length,2).clearContent();
+    //builds array of objects to fetch with
+    flatRedirectArry.forEach(function(e) { 
+      var request = {
+        url: e,
+        muteHttpExceptions: true,
+        followRedirects: false
+      };
+      statusRequest.push(request);
+    });  
+    //fetches all statuses and 301 end points
+    Logger.log(statusRequest);
+    UrlFetchApp.fetchAll(statusRequest).forEach(function(e) {
+      var statusResponse = e.getResponseCode();  
+      if(statusResponse === 301 || statusResponse === 302) {
+        var header = e.getHeaders();
+        var location = header['Location'];
+        statusCodes.push([statusResponse,location]);
+      } else {
+        statusCodes.push([statusResponse,"Not Redirecting"]);
+      }
+    });
+    redirectsSheet.getRange(2,6,statusCodes.length,statusCodes[0].length).setValues(statusCodes);
+  } 
+  catch(e) {
+    ui.alert('Error: Check your to ensure you have no invalid URLs entered or empty rows');
+  }   
+}
+
+
+
+function statuscode(urls, user, pwd) {
     try {
-        var response = UrlFetchApp.fetch(url, {
-            muteHttpExceptions: true,
-            followRedirects: false,
-            headers: {
-                'Authorization': 'Basic ' + Utilities.base64Encode(user+':'+pwd)
-            }
-        });
-        return response.getResponseCode();
-    } catch (error) {
-        
+      var response = UrlFetchApp.fetch(url, {
+        muteHttpExceptions: true,
+        followRedirects: false,
+        headers: {
+          'Authorization': 'Basic ' + Utilities.base64Encode(user+':'+pwd)
+        }
+      });
+      return response.getResponseCode();
+    } catch (error) {        
         return "";
     }
 }
+
 
 
 function location(url, user, pwd) {
@@ -136,6 +177,11 @@ function location(url, user, pwd) {
     } catch (error) {
         return "Error";
     }
+}
+
+function testForward() {
+ var forwardingTo = location('https://www.55westaptsorlando.com/photos');
+  Logger.log(forwardingTo);
 }
 
 

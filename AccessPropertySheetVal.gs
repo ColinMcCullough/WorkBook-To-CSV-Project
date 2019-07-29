@@ -1,18 +1,75 @@
+function testClass() {
+  var propSheet = new PropertyInfo();
+  var values = propSheet.propertyValues;
+  var tags = propSheet.propertyTagsArry();
+  var rowIndex = propSheet.getRowIndexByTag('floor_plans');
+  var floorPlansRow = propSheet.getRowValByTag('floor_plans');
+  propertySheet.getRange(2,1,1,10).clear();
+  values = propSheet.getNewPropertyValues();
+  Logger.log(propSheet.propertyValues);
+}
+/*
+ This class provides methods to access data in the property sheet tab
+*/
+function PropertyInfo() {
+  //constructor functions
+  this.propertyValues = (function getPropertySheetValues() {
+    return propertySheet.getRange(1, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); 
+  }());
+  
+  //class methods
+  this.getNewPropertyValues = function() {
+    this.propertyValues = propertySheet.getRange(1, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); 
+    return this.propertyValues;
+  }
+  
+  this.nameRowIndex = function() {
+    return this.getRowIndexByTag('name');
+  }
+  
+  this.propertyTagsArry = function() {
+    return this.propertyValues.map(function(v){ return v[0] });
+  }
+  
+  this.getRowIndexByTag = function(tag) {
+    return this.propertyTagsArry().indexOf(tag);
+  }
+  
+  this.getRowValByTag = function(tag) {
+    var result = [];
+    var rowIndx = this.getRowIndexByTag(tag);
+    var nameIndx = this.nameRowIndex();
+    for(var i = 3; i < this.propertyValues[nameIndx].length; i++){
+      result.push(this.propertyValues[rowIndx][i]);
+    }
+    return result;
+  }
+}
+
+
+
+/* 
+Gets all values in **Paste Property Info** sheet
+//@return {[][]} 2D array of all rows and columns in Property Info Tab
+*/
+function getPropertySheetValues() {
+  return propertySheet.getRange(2, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); //everything in the propertyInfoSheet(added for text) 
+}
 
 /* 
 //@param proerty workbook values
 //@param tag to find row values of
-//@return row values in workbook relevant to tag
+//@return row values in workbook relevant to tagpropertySheet.getRange(2, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues();
 */
 function getRowValByTag(propertySheetValues,tag) {
-    var firstColumn = getColumnOneVal(propertySheetValues);
-    var rowIndex = getARowIndex(firstColumn,tag);
-    if(rowIndex > 0) {
-      var rowValue = getARow(propertySheetValues,rowIndex);
-      return rowValue;
-    } else {
-      return null;
-    }  
+  var firstColumn = getColumnOneVal(propertySheetValues);
+  var rowIndex = getARowIndex(firstColumn,tag);
+  if(rowIndex > 0) {
+    var rowValue = getARow(propertySheetValues,rowIndex);
+    return rowValue;
+  } else {
+    return null;
+  }  
 }
 
 /*
@@ -33,8 +90,6 @@ function getColumnOneVal(propertySheetValues) {
   return propertySheetValues.map(function(v){ return v[0] });
 }
 
-
-
 /*
 //@param entire workbook values
 //@param index(not row number) of tag in first column.
@@ -47,15 +102,13 @@ function getARow(propertySheetValues,rowIndex) {
   }
   return result;
 }
+
 /* 
 //@param seo lv tab values
 //@param tag to find col values of
 //@return col values in seo lv tag relevant to tage
 */
-
-
 function getColValByTag(seoLVSheetValues,tag) {
-  //var seoLVSheetValues = seoLvTab.getRange(1, 1, seoLvTab.getLastRow(),seoLvTab.getLastColumn()).getValues(); //everything in the seolvsheet(added for text)
   var headerRow = getHeaderRow(seoLVSheetValues);
   var colIndex = getColIndex(headerRow,tag);
   if(colIndex > -1) {

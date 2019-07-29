@@ -1,19 +1,18 @@
 //Global Variables  
 var domainType = seoLvTab.getRange("G2").getValue();
 var vertical = seoLvTab.getRange("E2").getValue();
-
-var streetAdressColumn = headerArrayNames.indexOf("street_address_1") + 1;
-var cityColumn = headerArrayNames.indexOf("city") + 1;
-var stateColumn = headerArrayNames.indexOf("state") + 1;
-var postalColumn = headerArrayNames.indexOf("postal_code") + 1;
-var neighborhoodColumn = headerArrayNames.indexOf("neighborhood") + 1;
-var neighborhood2Column = headerArrayNames.indexOf("neighborhood_2") + 1;
-var landmarkColumn = headerArrayNames.indexOf("landmark_1_name") + 1;
-var customSlugColumn = headerArrayNames.indexOf("custom_slug") + 1;
-var floorPlansColumn = headerArrayNames.indexOf("floor_plans") + 1;
-var propertyFeatureColumn = headerArrayNames.indexOf("property_feature_1") + 1;
-var primaryApartentAmenityColumn = headerArrayNames.indexOf("apartment_amenity_1") + 1;
-var primaryCommunityAmenityColumn = headerArrayNames.indexOf("community_amenity_1") + 1;
+var streetAdressColumn = spinUpFileHeaders.indexOf("street_address_1") + 1;
+var cityColumn = spinUpFileHeaders.indexOf("city") + 1;
+var stateColumn = spinUpFileHeaders.indexOf("state") + 1;
+var postalColumn = spinUpFileHeaders.indexOf("postal_code") + 1;
+var neighborhoodColumn = spinUpFileHeaders.indexOf("neighborhood") + 1;
+var neighborhood2Column = spinUpFileHeaders.indexOf("neighborhood_2") + 1;
+var landmarkColumn = spinUpFileHeaders.indexOf("landmark_1_name") + 1;
+var customSlugColumn = spinUpFileHeaders.indexOf("custom_slug") + 1;
+var floorPlansColumn = spinUpFileHeaders.indexOf("floor_plans") + 1;
+var propertyFeatureColumn = spinUpFileHeaders.indexOf("property_feature_1") + 1;
+var primaryApartentAmenityColumn = spinUpFileHeaders.indexOf("apartment_amenity_1") + 1;
+var primaryCommunityAmenityColumn = spinUpFileHeaders.indexOf("community_amenity_1") + 1;
 
 
 
