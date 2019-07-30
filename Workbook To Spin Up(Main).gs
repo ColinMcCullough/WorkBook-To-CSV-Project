@@ -123,7 +123,7 @@ function printResults(numLocations,searchString,vertical,result) {
 }
 
 function testMain() {
-  main("mf","single","yes");
+  main("mf","multi","yes");
 }
 
 function getClientProp(vert,domType,branding) {
@@ -142,10 +142,13 @@ function main(vertical,domainType,chainBranding) {
   var isValid = valid(vertical,domainType,chainBranding);
   if(isValid) {
     var clientProperties = getClientProp(vertical,domainType,chainBranding);
-    var propertySheetValues = getPropertySheetValues(); 
+    var propSheetObj = new PropertyInfo();//
+    var propertySheetValues = getPropertySheetValues();
+    var propertySheetValues1 = propSheetObj.propertyValues;//
     var headerArrayLength = spinUpFileHeaders.length;
     var propertySheetTags = getColumnOneVal(propertySheetValues);
-    var noErrors = checkErrors(propertySheetValues,propertySheetTags,clientProperties);
+    var propertySheetTagsNew = propSheetObj.propertyTagsArry();//
+    var noErrors = checkErrors(propSheetObj,clientProperties);
     if(noErrors) {
       clearSpinUpAndLVTab();
       printHeaders(clientProperties);

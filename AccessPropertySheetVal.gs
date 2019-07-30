@@ -3,10 +3,9 @@ function testClass() {
   var values = propSheet.propertyValues;
   var tags = propSheet.propertyTagsArry();
   var rowIndex = propSheet.getRowIndexByTag('floor_plans');
-  var floorPlansRow = propSheet.getRowValByTag('floor_plans');
-  propertySheet.getRange(2,1,1,10).clear();
-  values = propSheet.getNewPropertyValues();
-  Logger.log(propSheet.propertyValues);
+  var floorPlansRow = propSheet.getARowValByTag('floor_plans');
+  var numLoc = propSheet.numOfLoc();
+  Logger.log(numLoc);
 }
 /*
  This class provides methods to access data in the property sheet tab
@@ -17,11 +16,17 @@ function PropertyInfo() {
     return propertySheet.getRange(1, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); 
   }());
   
+  
+  
   //class methods
   this.getNewPropertyValues = function() {
     this.propertyValues = propertySheet.getRange(1, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); 
     return this.propertyValues;
   }
+  
+  this.numOfLoc = function() {
+    return this.getRowValByTag('name').length;
+  };
   
   this.nameRowIndex = function() {
     return this.getRowIndexByTag('name');
@@ -34,6 +39,7 @@ function PropertyInfo() {
   this.getRowIndexByTag = function(tag) {
     return this.propertyTagsArry().indexOf(tag);
   }
+  
   
   this.getRowValByTag = function(tag) {
     var result = [];
@@ -139,4 +145,28 @@ function getColumnVal(seoLVSheetValues,colIndex) {
   }
   return result;
 }
+
+var stateModule = (function () {
+  var state; // Private Variable
+  
+  var pub = {};// public object - returned at end of module
+  
+  pub.changeState = function (newstate) {
+    state = newstate;
+  };
+  
+  pub.getState = function() {
+    return state;
+  }
+  return pub; // expose externally
+}());
+
+
+var getState = stateModule.changeState('used');
+function update() {
+  Logger.log(stateModule.getState());
+}
+
+
+
 
