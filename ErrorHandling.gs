@@ -1,71 +1,23 @@
-var tags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","negative_keywords"];
-var mfTags = ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","property_feature_1","primary_type","floor_plans","negative_keywords"];
-/*
- *Checks for errors before running the main function fully
- *Checks for Missing Tags, Missing location names, values to the right of the last location column
- @param Flattened Array list of tags in workbook
- @param Domain type for the project (multi or single)
- @return Returns null if there are errors and "good" if there are no errors
-*/ 
-function checkErrors(propSheetObj,clientProperties) {
-  var propertySheetValues = propSheetObj.propertyValues;
-  var propTagArry = propSheetObj.propertyTagsArry();
-  var alerts = [];
-  var missingTags = (clientProperties.vertical === "mf") ? mfTags.diff(propTagArry) : tags.diff(propTagArry);
-  if(missingTags.length > 0) {
-    ui.alert("Error: \nYou are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
-    return null;
-  }
-  var nameRowNum = propTagArry.indexOf("name") + 1; 
-  var nameRangeValues = propSheetObj.getRowValByTag('name');
-  var numNameBlanks = numOfBlanks(nameRangeValues,nameRangeValues.length);
-  if(numNameBlanks > 0) {
-    ui.alert("Error: \nYou either have values in a property info tab past the last locations column or are missing brand names in row " + nameRowNum + 
-                    "\nAdd brand names to all locations in row " + nameRowNum + " and clear all columns past the last location column in use.");
-    return null;
-  } 
-  if(clientProperties.domainType == "multi") {    
-    var domainIndex = propTagArry.indexOf("naked_domain") + 1;  
-    var rowRangeValues = propSheetObj.getRowValByTag("naked_domain");
-    var domainArrylen = nameRangeValues.length;
-    var numDomainBlanks = numOfBlanks(rowRangeValues,domainArrylen);
-    if(numDomainBlanks > 0) {
-      var missingDomain = "Error: \nAll multi domain locations need their domain field filled out." + "\nAdd domains to all locations in row " + domainIndex;
-      alerts.push(missingDomain);
-    }
-  }
-  var newPhoneArray = copyLocalToDefaultPhone(propSheetObj); //copies local number to display phone number field if display phone number is blank
-  var numPhoneBlanks = numOfBlanks(newPhoneArray,newPhoneArray.length);
-  if(numPhoneBlanks > 0) {
-    var phoneRowNum = propTagArry.indexOf("display_phone_number") + 1; 
-    var missingDefaultPhoneNum = "Error: \nYou have missing values in the required row number " + phoneRowNum + ". Please enter location city area code followed by 555-5555(EX: 541-555-5555) in row " + phoneRowNum;
-    alerts.push(missingDefaultPhoneNum);
-  }
-  if(propTagArry.indexOf("floor_plans") != -1) {
-    var floorPlansIndex = propTagArry.indexOf("floor_plans") + 1;  
-    var rowRangeValues = propSheetObj.getRowValByTag("floor_plans");
-    var hasBathroomData = checkForBathValues(rowRangeValues,rowRangeValues.length);
-    if(hasBathroomData == true) {
-       var bathroomValuesError = "Error: \nLooks like some floor plans cells are using bathroom numbers" + "\nDelete all bathroom numbers and references to bathroom from floor plans cells in row " + floorPlansIndex;
-       alerts.push(bathroomValuesError);
-    }
-  }
-  if(alerts.length > 0) {
-    ui.alert(alerts.join("\n"));
-    return null;
-  } 
-  return true;
+var tags = {
+  standard: ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","negative_keywords"],
+  mfTags: ["current_website","naked_domain","name","street_address_1","city","state","postal_code","country","local_phone_number","display_phone_number","email","property_feature_1","primary_type","floor_plans","negative_keywords"]
 }
 /*
- *Checks for blanks in display_phone_number
- @return true if blanks exist false if they do not exist
+ Checks for errors in the property info tab that need to be fixed prior to spinning up csv
 */
-function hasPhoneIssues(tagIndexArrayCol,propertySheetValues) {
-      var hasIssues;
-      var requiredPhoneValues = getRowValByTag(propertySheetValues,"display_phone_number");
-      var requiredPhoneBlanks = numOfBlanks(requiredPhoneValues,requiredPhoneValues.length);
-      hasIssues = requiredPhoneBlanks > 0 ? true : false;
-      return hasIssues;
+function checkErrors(propSheetObj,clientProperties) {
+  var errorObj = new PropertySheetErrors();
+  var tierOneErrors = errorObj.checkTierOneErrors(propSheetObj,clientProperties);
+  if(tierOneErrors) {
+    return true;
+  }
+  var tierTwoErrors = errorObj.checkTierTwoErrors(propSheetObj,clientProperties);
+  if(tierTwoErrors) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 /*
   Checks for blanks in display phone number row.
@@ -140,6 +92,101 @@ function valid(vertVal,domainStrat,chainBran) {
     }
   }
   return true;
+}
+/*
+  This class offers methods to check property info sheet errors to ensure an appropriate state
+*/
+function PropertySheetErrors() {
+  
+  this.checkTierOneErrors = function(propSheetObj,clientProperties) {
+    var propTagArry = propSheetObj.propertyTagsArry();
+    if(this.checkMissingTags(clientProperties,propTagArry) || this.checkMissingNames(propTagArry,propSheetObj) || this.checkMissingAddress(propSheetObj)) {
+      return true;
+    } 
+  }
+  
+  this.checkTierTwoErrors = function(propSheetObj,clientProperties) {
+    var alerts = [];
+    var propTagArry = propSheetObj.propertyTagsArry();
+    var missingDomains = this.checkMissingDomains(clientProperties,propTagArry,propSheetObj);
+    var phoneIssues = this.checkPhoneIssues(propTagArry,propSheetObj);
+    var floorPlanIssues = this.checkFloorPlans(propTagArry,propSheetObj);
+    alerts.push(missingDomains,phoneIssues,floorPlanIssues);
+    alerts = alerts.filter(Boolean);
+    if(alerts.length > 0) {
+      ui.alert(alerts.join("\n"));
+      return true;
+    } 
+  }
+  
+  this.checkMissingTags = function(clientProperties,propTagArry) {
+    var missingTags = (clientProperties.vertical === "mf") ? tags.mfTags.diff(propTagArry) : tags.standard.diff(propTagArry);
+    if(missingTags.length > 0) {
+      ui.alert("Error: \nYou are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
+      return true;
+    }
+  }
+  
+  this.checkMissingNames = function(propTagArry,propSheetObj) {
+    var nameRowNum = propTagArry.indexOf("name") + 1; 
+    var nameRangeValues = propSheetObj.getRowValByTag('name');
+    var numNameBlanks = numOfBlanks(nameRangeValues,nameRangeValues.length);
+    if(numNameBlanks > 0) {
+      ui.alert("Error: \nYou either have values in a property info tab past the last locations column or are missing brand names in row " + nameRowNum + 
+               "\nAdd brand names to all locations in row " + nameRowNum + " and clear all columns past the last location column in use.");
+      return true;
+    } 
+  }
+  
+  this.checkMissingAddress = function(propSheetObj) {
+    var addressIndexes = propSheetObj.getLocAddressProp();
+    var keys = ["street_address_1","city","state","postal_code"];
+    for(var i = 0; i < keys.length; i++) {
+      var getRowVal = propSheetObj.getRowValByTag(keys[i]);
+      var numBlank = numOfBlanks(getRowVal, getRowVal.length);
+      if(numBlank > 0) {
+        ui.alert("Error: All locations address, city, state and zip cells must be filled out in the projects workbook. \n" +
+               "\nAddress Rows: " + addressIndexes.streetAddIndx + " - " + addressIndexes.postalCodeIndx);
+      return true;
+      }
+    }
+  }
+  
+  this.checkMissingDomains = function(clientProperties,propTagArry,propSheetObj) {
+    if(clientProperties.domainType == "multi") {    
+      var domainIndex = propTagArry.indexOf("naked_domain") + 1;  
+      var rowRangeValues = propSheetObj.getRowValByTag("naked_domain");
+      var domainArrylen = propSheetObj.numOfLoc();
+      var numDomainBlanks = numOfBlanks(rowRangeValues,domainArrylen);
+      if(numDomainBlanks > 0) {
+        var missingDomain = "Error: \nAll multi domain locations need their domain field filled out." + "\nAdd domains to all locations in row " + domainIndex;
+        return missingDomain;
+      }
+    }
+  }
+  
+  this.checkPhoneIssues = function(propTagArry,propSheetObj) {
+    var newPhoneArray = copyLocalToDefaultPhone(propSheetObj); //copies local number to display phone number field if display phone number is blank
+    var numPhoneBlanks = numOfBlanks(newPhoneArray,newPhoneArray.length);
+    if(numPhoneBlanks > 0) {
+      var phoneRowNum = propTagArry.indexOf("display_phone_number") + 1; 
+      var missingDefaultPhoneNum = "Error: \nYour missing phone number values in row " + phoneRowNum + ". Please enter the locations city area code followed by 555-5555(EX: 541-555-5555) in row " + phoneRowNum;
+      return missingDefaultPhoneNum;
+    }
+  }
+  
+  this.checkFloorPlans = function(propTagArry,propSheetObj) {
+    if(propTagArry.indexOf("floor_plans") != -1) {
+      var floorPlansIndex = propTagArry.indexOf("floor_plans") + 1;  
+      var rowRangeValues = propSheetObj.getRowValByTag("floor_plans");
+      var hasBathroomData = checkForBathValues(rowRangeValues,rowRangeValues.length);
+      if(hasBathroomData == true) {
+        var bathroomValuesError = "Error: \nLooks like some floor plans cells are using bathroom numbers" + "\nDelete all bathroom numbers and references to bathroom from floor plans cells in row " + floorPlansIndex;
+        return bathroomValuesError;
+      }
+    }
+  }
+  
 }
 
 

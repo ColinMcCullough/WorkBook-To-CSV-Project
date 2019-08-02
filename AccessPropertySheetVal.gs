@@ -1,12 +1,3 @@
-function testClass() {
-  var propSheet = new PropertyInfo();
-  var values = propSheet.propertyValues;
-  var tags = propSheet.propertyTagsArry();
-  var rowIndex = propSheet.getRowIndexByTag('floor_plans');
-  var floorPlansRow = propSheet.getARowValByTag('floor_plans');
-  var numLoc = propSheet.numOfLoc();
-  Logger.log(numLoc);
-}
 /*
  This class provides methods to access data in the property sheet tab
 */
@@ -15,8 +6,6 @@ function PropertyInfo() {
   this.propertyValues = (function getPropertySheetValues() {
     return propertySheet.getRange(1, 1, propertySheet.getLastRow(),propertySheet.getLastColumn()).getValues(); 
   }());
-  
-  
   
   //class methods
   this.getNewPropertyValues = function() {
@@ -40,6 +29,15 @@ function PropertyInfo() {
     return this.propertyTagsArry().indexOf(tag);
   }
   
+  this.getAFullRowByTag = function(tag) {
+    var result = [];
+    var rowIndx = this.getRowIndexByTag(tag);
+    var nameIndx = this.nameRowIndex();
+    for(var i = 0; i < this.propertyValues[nameIndx].length; i++){
+      result.push(this.propertyValues[rowIndx][i]);
+    }
+    return result;
+  }
   
   this.getRowValByTag = function(tag) {
     var result = [];
@@ -50,11 +48,31 @@ function PropertyInfo() {
     }
     return result;
   }
+  
+  this.getLocAddressProp = function() {
+    var flatColumnArry = this.propertyTagsArry();
+    var locInfoAttr = {
+      streetAddIndx: flatColumnArry.indexOf("street_address_1") + 1,
+      cityIndx: flatColumnArry.indexOf("city") + 1,    
+      stateIndx: flatColumnArry.indexOf("state") + 1,
+      postalCodeIndx: flatColumnArry.indexOf("postal_code") + 1
+    }
+    return locInfoAttr;
+  }
+}
+
+function testPropertyInfoClass() {
+  var propSheet = new PropertyInfo();
+  var values = propSheet.propertyValues;
+  var tags = propSheet.propertyTagsArry();
+  var rowIndex = propSheet.getRowIndexByTag('floor_plans');
+  var addressProp = propSheet.getLocAddressProp();
+  Logger.log(addressProp);
 }
 
 
-
 /* 
+
 Gets all values in **Paste Property Info** sheet
 //@return {[][]} 2D array of all rows and columns in Property Info Tab
 */
@@ -109,6 +127,10 @@ function getARow(propertySheetValues,rowIndex) {
   return result;
 }
 
+
+
+
+
 /* 
 //@param seo lv tab values
 //@param tag to find col values of
@@ -145,28 +167,5 @@ function getColumnVal(seoLVSheetValues,colIndex) {
   }
   return result;
 }
-
-var stateModule = (function () {
-  var state; // Private Variable
-  
-  var pub = {};// public object - returned at end of module
-  
-  pub.changeState = function (newstate) {
-    state = newstate;
-  };
-  
-  pub.getState = function() {
-    return state;
-  }
-  return pub; // expose externally
-}());
-
-
-var getState = stateModule.changeState('used');
-function update() {
-  Logger.log(stateModule.getState());
-}
-
-
 
 

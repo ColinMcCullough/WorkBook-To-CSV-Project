@@ -31,62 +31,65 @@ function printHeaders(clientProp) {
   var headerRange = spinUpTab.getRange(1,1,1,spinUpFileHeaders.length);
   headerRange.setValues([spinUpFileHeaders]); //updated this from header names
   if (clientProp.vertical == "mf") {
-    var lvheaderRange = seoLvTab.getRange(1,1,NUM_LV_HEADER_ROWS,mfHeaderArrayValues[0].length);
-    lvheaderRange.setValues(mfHeaderArrayValues);
+    var lvheaderRange = seoLvTab.getRange(1,1,NUM_LV_HEADER_ROWS,seoLiquidValueTabHeaders.mf[0].length);
+    lvheaderRange.setValues(seoLiquidValueTabHeaders.mf);
   }
   else if (clientProp.vertical == "ss" || clientProp.vertical == "sl") {
-    var lvheaderRange = seoLvTab.getRange(1,1,NUM_LV_HEADER_ROWS,ssSlHeaderArrayValues[0].length);
-    lvheaderRange.setValues(ssSlHeaderArrayValues);
+    var lvheaderRange = seoLvTab.getRange(1,1,NUM_LV_HEADER_ROWS,seoLiquidValueTabHeaders.ssSl[0].length);
+    lvheaderRange.setValues(seoLiquidValueTabHeaders.ssSl);
   }
   setLVHeaderFormatting(clientProp.vertical,clientProp.domainType,seoLvTab);
 }
 
+function excludedValueMatch(value,clientProp) {
+  if(excludedMFSEOValues.indexOf(value) != -1 && clientProp.vertical === 'mf' || excludedSSSLSEOValues.indexOf(value) != -1) {
+    return true;
+  }
+}
+
 /*
   finds range of brand names in project workbook
-  @return Returns array of row values matching search value tag
+  @return Returns array of row values matching search value tag   //propSheetObj
+  propSheetObj, tagToSearch, clientProp
 */
-function collectTagResults(propertySheetValues, propertySheetTags, tagToSearch, clientProp)  {
+function collectTagResults(propSheetObj, tagToSearch, clientProp)  {
   var rowValues;
   //does nothing if tags are values seo will fill out
-  if(excludedMFSEOValues.indexOf(tagToSearch) != -1 && clientProp.vertical === 'mf' || excludedSSSLSEOValues.indexOf(tagToSearch) != -1) { 
+  if(excludedValueMatch(tagToSearch,clientProp)) { 
     rowValues = null;
   } //sets default value if searchString matches defaultPrintTags array value
   else if(defaultPrintTags.indexOf(tagToSearch) != -1) { //default values
-    var numDefaultVal = getRowValByTag(propertySheetValues,"name").length;
-    defaultValuePrint(numDefaultVal, tagToSearch, clientProp.vertical, clientProp.domainType);
+    defaultValuePrint(propSheetObj.numOfLoc(), tagToSearch, clientProp.vertical, clientProp.domainType);
     rowValues = null;
   }
   else {
-    rowValues = getRowValues(propertySheetValues, propertySheetTags, tagToSearch, clientProp);
+    rowValues = getRowValues(propSheetObj, tagToSearch, clientProp);
   return rowValues;
   }
 }
 
 //helper method for collectTagResults to get values of rows not using default values or rows that should be skipped
-function getRowValues(propertySheetValues,flatColumnValues, searchString, clientProp) {
-  var searchResult = flatColumnValues.indexOf(searchString); //Row Index - 2
-  var rowValues;
+function getRowValues(propSheetObj, searchString, clientProp) {
+  var searchResult = propSheetObj.getRowIndexByTag(searchString); //Row Number - 1
+  var rowValues = null;
+  var columnRangeValues = [];
   if (searchResult != -1) {
-    //searchResult + 2 is row index.
-    searchResult = searchResult + 2;     
-    var rowRangeValues = [];
-    rowRangeValues.push(getRowValByTag(propertySheetValues,searchString));
-    rowValues = cleanData(rowRangeValues,searchString,clientProp.chainBranding,clientProp.domainType);
-  }
-  else if(searchString == "custom_slug" && clientProp.domainType == "single" && clientProp.chainBranding == "yes") { //this will pass in the address range and values to clean for a slug    
-    var columnRangeValues = [];
-    columnRangeValues.push(getRowValByTag(propertySheetValues,"street_address_1"));
+    //searchResult + 1 is row number.
+    searchResult = searchResult + 1;         
+    columnRangeValues.push(propSheetObj.getRowValByTag(searchString));
+    rowValues = cleanData(columnRangeValues,searchString,clientProp.chainBranding,clientProp.domainType);
+  }  
+  else if(searchString == "custom_slug" && clientProp.domainType == "single") {
+    var slugSearchStr; 
+    if(clientProp.chainBranding == "yes") {
+      slugSearchStr = "street_address_1";
+    } 
+    else {
+      slugSearchStr = "name";
+    }
+    columnRangeValues.push(propSheetObj.getRowValByTag(slugSearchStr));
     var result = columnRangeValues[0].map(function(elem) {return [elem];})
     rowValues = cleanData(result,searchString,clientProp.chainBranding,clientProp.domainType);
-  }
-  else if(searchString == "custom_slug" && clientProp.domainType == "single" && clientProp.chainBranding == "no") { // this will pass in the brand name to clean for a slug
-    var columnRangeValues = [];
-    columnRangeValues.push(getRowValByTag(propertySheetValues,"name"));
-    var result = columnRangeValues[0].map(function(elem) {return [elem];})
-    rowValues = cleanData(result,searchString,clientProp.chainBranding,clientProp.domainType);
-  }
-  else {
-    rowValues = null;
   }
   return rowValues;
 }
@@ -95,17 +98,12 @@ function getRowValues(propertySheetValues,flatColumnValues, searchString, client
 /*
   function takes a row array and transposes it to a column array
 */
-function collectAndFormatResults(propSheetValues, propertySheetTags, tagToSearch, clientProp) {
-
-  var rowValue = collectTagResults(propSheetValues, propertySheetTags, tagToSearch, clientProp);
-  var result;
-  
+function collectAndFormatResults(propSheetObj, tagToSearch, clientProp) {
+  var rowValue = collectTagResults(propSheetObj, tagToSearch, clientProp);
+  var result = null;  
   if (rowValue) { //ensures there are values to transpose
-    result = rowValue[0].map(function(elem) {return [elem];});    
-    
-  } else {
-    result = null; 
-  }
+    result = rowValue[0].map(function(elem) {return [elem];});        
+  } 
   return result;
 }
 
@@ -142,26 +140,22 @@ function main(vertical,domainType,chainBranding) {
   var isValid = valid(vertical,domainType,chainBranding);
   if(isValid) {
     var clientProperties = getClientProp(vertical,domainType,chainBranding);
-    var propSheetObj = new PropertyInfo();//
-    var propertySheetValues = getPropertySheetValues();
-    var propertySheetValues1 = propSheetObj.propertyValues;//
+    var propSheetObj = new PropertyInfo();
     var headerArrayLength = spinUpFileHeaders.length;
-    var propertySheetTags = getColumnOneVal(propertySheetValues);
-    var propertySheetTagsNew = propSheetObj.propertyTagsArry();//
-    var noErrors = checkErrors(propSheetObj,clientProperties);
-    if(noErrors) {
+    var hasErrors = checkErrors(propSheetObj,clientProperties);
+    if(!hasErrors) {
       clearSpinUpAndLVTab();
       printHeaders(clientProperties);
-      var newPSValues = getPropertySheetValues();  
-      var numLocations = getRowValByTag(newPSValues,"name").length;
+      propSheetObj.getNewPropertyValues();  
+      var numLocations = propSheetObj.numOfLoc();
       for(var i = 0; i <= headerArrayLength - 1; i++) {
         var headerTag = spinUpFileHeaders[i];
-        var result = collectAndFormatResults(newPSValues,propertySheetTags, headerTag, clientProperties);
+        var result = collectAndFormatResults(propSheetObj,headerTag, clientProperties);
         printResults(numLocations, headerTag,vertical, result);
       }
       spinUpTab.getRange(2, 1, numLocations, spinUpFileHeaders.length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      seoLvTab.getRange(5, 1, numLocations, mfHeaderArrayValues[0].length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      setSeoLvTabData(newPSValues,numLocations,vertical,seoLvTab);
+      seoLvTab.getRange(5, 1, numLocations, seoLiquidValueTabHeaders.mf[0].length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
+      setSeoLvTabData(propSheetObj,numLocations,vertical,seoLvTab);
     }
   }
 }

@@ -7,15 +7,15 @@ This function is called by the Generate Locations button
 */
 function generateLocations(vertical,domainType,chainBranding) {
   var locationList;
+  var clientProperties = getClientProp(vertical,domainType,chainBranding);
   var isValid = valid(vertical,domainType,chainBranding);
   //checks that drop downs are selected
   if(isValid) {
-    var propertySheetValues = getPropertySheetValues();
-    var flattenColumnval = getColumnOneVal(propertySheetValues);
-    var errors = checkPropertySheetErrors(propertySheetValues,flattenColumnval);
+    var propSheetObj = new PropertyInfo();
+    var errors = checkErrors(propSheetObj,clientProperties);
     //checks workbook is in a ok state
-    if(errors != null) {
-      var newPSValues = getPropertySheetValues();
+    if(!errors) {
+      var newPSValues = propSheetObj.getNewPropertyValues();
       if(chainBranding === 'no') {
         locationList = getRowValByTag(newPSValues,"name");
         return locationList;
@@ -96,22 +96,24 @@ function Location(locationName,chainBrand){
 
 
 //checks to make sure no crucial tags are missing or values are missing needed for the keyword tools functionality
-function checkPropertySheetErrors(propertySheetValues,flatColumnArry) {
-  var missingTags = tags.diff(flatColumnArry);
+function checkPropertySheetErrors(propSheetObj,clientProperties) {
+  checkErrors(propSheetObj,clientProperties);
+  var checkErrors = new PropertySheetErrors()
+  var missingTags = tags.standard.diff(flatColumnArry);
   if(missingTags.length > 0) {
     ui.alert("Error: \nYou are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
     return null;
   }
   var locInfoAttr = {
-    nameIndx: flatColumnArry.indexOf("name") + 2,
-    streetAddIndx: flatColumnArry.indexOf("street_address_1") + 2,
-    cityIndx: flatColumnArry.indexOf("city") + 2,    
-    stateIndx: flatColumnArry.indexOf("state") + 2,
-    postalCodeIndx: flatColumnArry.indexOf("postal_code") + 2
+    nameIndx: flatColumnArry.indexOf("name") + 1,
+    streetAddIndx: flatColumnArry.indexOf("street_address_1") + 1,
+    cityIndx: flatColumnArry.indexOf("city") + 1,    
+    stateIndx: flatColumnArry.indexOf("state") + 1,
+    postalCodeIndx: flatColumnArry.indexOf("postal_code") + 1
   }
   var keys = ["name","street_address_1","city","state","postal_code"];
   for(var i = 0; i < keys.length; i++) {
-    var getRowVal = getRowValByTag(propertySheetValues,keys[i]);
+    var getRowVal = propSheetObj.getRowValByTag(keys[i]);
     var numBlank = numOfBlanks(getRowVal, getRowVal.length);
     if(numBlank > 0) {
       ui.alert("Error: All locations name, address, city, state and zip cells must be filled out in the projects workbook. \n" +

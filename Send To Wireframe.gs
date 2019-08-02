@@ -3,12 +3,12 @@ function generateWFLiquidValueHeaders(vertical,sheetID,domainType) {
   var wireframeLVTab = SpreadsheetApp.openById(sheetID).getSheetByName("SEO Liquid Values(v1)");
   var lvheaderRange;
   if (vertical == "mf") {
-    lvheaderRange = wireframeLVTab.getRange(1,1,4,mfHeaderArrayValues[0].length);
-    lvheaderRange.setValues(mfHeaderArrayValues);
+    lvheaderRange = wireframeLVTab.getRange(1,1,4,seoLiquidValueTabHeaders.mf[0].length);
+    lvheaderRange.setValues(seoLiquidValueTabHeaders.mf);
   }
   else if (vertical == "ss" || vertical == "sl") {
-    lvheaderRange = wireframeLVTab.getRange(1,1,4,ssSlHeaderArrayValues[0].length);
-    lvheaderRange.setValues(ssSlHeaderArrayValues);
+    lvheaderRange = wireframeLVTab.getRange(1,1,4,seoLiquidValueTabHeaders.ssSl[0].length);
+    lvheaderRange.setValues(seoLiquidValueTabHeaders.ssSl);
   }
     setLVHeaderFormatting(vertical,domainType,wireframeLVTab);
     var protection = lvheaderRange.protect().setDescription('SEO Liquid Values Headers'); // creates protected range

@@ -1,5 +1,5 @@
 function testGetKeywords() {
-  getKeywords(['4085 Hilyard St','Eugene','Oregon','97405','','Class B','Apartments & Townhomes'],'mf');
+  getKeywords(['2500 NE Neff Rd','Bend','Oregon','97702','1, 2 & 3','Class B','Apartments & Townhomes'],'mf');
 }
 
 function clearDashboardContent() {
@@ -93,7 +93,7 @@ function structureResults(data,city) {
     var row = data[i];
     var duplicate = false;
     for (var j in newData) {
-      row = row[1] != null ? [row[0],removeDiacritics(row[1]).replace(/[^a-zA-Z0-9\s+\-']/g,'').replace(/\-/g,' ').replace(/\s+/g,' ')] : row;
+      row = row[1] != null ? [row[0],removeDiacritics(row[1]).replace(/[^a-zA-Z0-9\s+\-']|Helipad 1|Helipad 2|Helipad|Heliport/g,'').replace(/\-/g,' ').replace(/\s+/g,' ')] : row;
       if(row[1] === newData[j][1] || row[1] === city) {
         duplicate = true
         break;
@@ -177,111 +177,90 @@ function pushLocationNames(latAndLong,typesBus, printHowMany, wholeArry,typeSet)
 
 ////////////////////////////////////////////////////////////////////////////////
 var mfClassAMap = {
-  "airport" : "10", 
-  "amusement_park" : "10", 
-  "art_gallery" : "5", 
-  "casino" : "5", 
-  "convenience_store" : "5", 
-  "courthouse" : "5", 
-  "department_store" : "10", 
-  "embassy" : "5", 
-  "gym" : "10", 
-  "hardware_store" : "5", 
-  "hospital" : "10", 
-  "laundry" : "5", 
+  "airport" : "10",
+  "amusement_park" : "5",
+  "bank" : "5",
+  "cafe" : "5",
+  "casino" : "5",
+  "convenience_store" : "10",
+  "department_store" : "10",
+  "gym" : "10",
+  "hardware_store" : "5",
+  "hospital" : "10",
+  "laundry" : "5",
   "library" : "10",
-  "movie_theater" : "10", 
-  "museum" : "5", 
-  "night_club" : "5", 
-  "park" : "20", 
-  "pet_store" : "10", 
-  "restaurant" : "10", 
-  "school" : "30", 
-  "shopping_mall" : "10", 
-  "stadium" : "10", 
-  "subway_station" : "10", 
-  "train_station" : "5", 
-  "zoo" : "5"
+  "museum" : "5",
+  "park" : "20",
+  "restaurant" : "10",
+  "school" : "15",
+  "shopping_mall" : "10",
+  "stadium" : "10",
+  "storage" : "5",
+  "transit_station" : "5",
+  "zoo" : "10"
 };
 var mfClassBMap = {
   "airport" : "10",
-  "amusement_park" : "10", 
-  "art_gallery" : "5", 
-  "bank" : "5", 
-  "bus_station" : "5", 
-  "cafe" : "5", 
-  "casino" : "5", 
-  "convenience_store" : "10", 
-  "courthouse" : "5", 
-  "department_store" : "10", 
-  "embassy" : "5", 
-  "gym" : "10", 
-  "hardware_store" : "10", 
-  "hospital" : "10", 
-  "laundry" : "10", 
-  "library" : "10", 
-  "movie_theater" : "10",
-  "museum" : "5", 
-  "night_club" : "10", 
-  "park" : "20", 
-  "pet_store" : "10", 
-  "restaurant" : "10", 
-  "school" : "20", 
-  "shopping_mall" : "10", 
-  "stadium" : "10", 
-  "storage" : "10", 
-  "subway_station" : "10", 
-  "train_station" : "10", 
+  "amusement_park" : "5",
+  "bank" : "5",
+  "cafe" : "5",
+  "casino" : "5",
+  "convenience_store" : "10",
+  "department_store" : "10",
+  "gym" : "10",
+  "hardware_store" : "5",
+  "hospital" : "10",
+  "laundry" : "10",
+  "library" : "10",
+  "museum" : "5",
+  "park" : "20",
+  "restaurant" : "10",
+  "school" : "15",
+  "shopping_mall" : "10",
+  "stadium" : "10",
+  "storage" : "10",
+  "transit_station" : "5",
   "zoo" : "5"
 };
 var mfClassCMap = {
-  "airport" : "10", 
-  "amusement_park" : "10", 
-  "art_gallery" : "5", 
-  "bank" : "5", 
-  "bus_station" : "5", 
-  "casino" : "5", 
-  "convenience_store" : "20", 
-  "courthouse" : "5", 
-  "department_store" : "10", 
-  "embassy" : "5", 
-  "gym" : "10", 
-  "hardware_store" : "10", 
-  "hospital" : "10", 
-  "laundry" : "20", 
-  "library" : "5", 
-  "movie_theater" : "10", 
-  "museum" : "5", 
-  "night_club" : "20", 
-  "park" : "20", 
-  "pet_store" : "5", 
-  "restaurant" : "10", 
-  "school" : "20", 
-  "shopping_mall" : "10", 
-  "stadium" : "10", 
-  "storage" : "20", 
-  "subway_station" : "10", 
-  "train_station" : "10", 
+  "airport" : "10",
+  "amusement_park" : "5",
+  "bank" : "5",
+  "cafe" : "5",
+  "casino" : "5",
+  "convenience_store" : "20",
+  "department_store" : "10",
+  "gym" : "10",
+  "hardware_store" : "5",
+  "hospital" : "10",
+  "laundry" : "10",
+  "library" : "5",
+  "museum" : "5",
+  "park" : "20",
+  "restaurant" : "10",
+  "school" : "15",
+  "shopping_mall" : "10",
+  "stadium" : "10",
+  "storage" : "20",
+  "transit_station" : "5",
   "zoo" : "5"
 };
 var ssMap = { 
   "airport" : "20", 
-  "hospital" : "20", 
-  "school" : "20" 
+  "stadium" : "10", 
+  "school" : "15",
+  "shopping_mall" : "10"
 };
 var slMap = { 
-  "airport" : "20", 
-  "art_gallery" : "20", 
-  "bank" : "20", 
-  "cafe" : "10", 
-  "casino" : "10", 
-  "hospital" : "20", 
-  "movie_theater" : "10", 
-  "museum" : "10", 
-  "park" : "20", 
-  "pet_store" : "10", 
-  "pharmacy" : "10", 
-  "shopping_mall" : "20"
+  "airport" : "15",
+  "bank" : "15",
+  "cafe" : "10",
+  "casino" : "10",
+  "hospital" : "15",
+  "museum" : "10",
+  "park" : "15",
+  "pharmacy" : "5",
+  "shopping_mall" : "15"
 };
 var neighborhoodMap = {
   "administrative_area_level_2" : "4", 
@@ -402,8 +381,7 @@ function Type(typeSet ,vertical, class){
        else if(vertical === "sl") {typeMap = slMap;}
        else{typeMap = mfClassBMap;}
        return typeMap;
-     }
-     
+     }     
    }   
   this.typeMap = this.setTypeMap(typeSet,vertical, class);
   this.keys = Object.keys(typeMap);
