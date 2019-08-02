@@ -109,13 +109,14 @@ function sendRedirectsAndLiquidValues() {
     //var redirectValues = getRedirects();
     var liquidValues = getLiquidValues(seoLVSheetValues,vertical,headerRange);
     var strategies = seoLvTab.getRange(5,headerRange[0].indexOf('strategy')+1,seoLVSheetValues.length -4,1).getFormulasR1C1();
-    var missStrategies = numOfBlanks(strategies,strategies.length);
+    var singleStratArry = [].concat.apply([], strategies)
+    var missStrategies = numOfBlanks(singleStratArry,singleStratArry.length);
     if(missStrategies > 0) {
       ui.alert('Looks like some locations are missing strategies. Make sure to enter these before sending to the wireframe');
     } else {
       if(/*redirectValues != null && */liquidValues != null) {
-      //setRedirects(sheetID, redirectValues);
-      setLiquidValues(vertical,liquidValues,sheetID,domainType,strategies);
+        //setRedirects(sheetID, redirectValues);
+        setLiquidValues(vertical,liquidValues,sheetID,domainType,strategies);
       }
     }
   }

@@ -129,6 +129,52 @@ function getARow(propertySheetValues,rowIndex) {
 
 
 
+/*
+  SEO Liquid Values Tab class
+  Useful methods to get data from tab
+*/ 
+function SEOLVTab() {
+  
+  this.numHeaderRows = 4; 
+  this.domainType = seoLvTab.getRange("G2").getValue(); 
+  this.vertical = seoLvTab.getRange("E2").getValue();
+  
+  //constructor functions
+  
+  this.seoLVSheetVal = (function getSEOSheetValues() {
+    return seoLvTab.getRange(1, 1, seoLvTab.getLastRow(),seoLvTab.getLastColumn()).getValues(); 
+  }());
+  
+  //class methods
+  this.getNewSeoLVSheetVal = function() {
+    this.seoLVSheetVal = seoLvTab.getRange(1, 1, seoLvTab.getLastRow(),seoLvTab.getLastColumn()).getValues(); 
+    return this.seoLVSheetVal;
+  }
+  
+  this.headerRowVal = function() {
+    var result = [];
+    for(var i = 0; i < this.seoLVSheetVal[0].length; i++){
+      result.push(this.seoLVSheetVal[0][i]);
+    }
+    return result;
+  }
+  
+  this.getAColValByTag = function(tag) {
+    var colIndex = this.colNumberByTag(tag);
+    var result = null;
+    if(colIndex > -1) {
+      result = [];
+      for(var i = this.numHeaderRows; i < this.seoLVSheetVal.length; i++){
+        result.push(this.seoLVSheetVal[i][colIndex]);
+      }     
+    }
+    return result;
+  }
+  
+  this.colNumberByTag = function(tag) {
+    return this.headerRowVal().indexOf(tag)
+  }
+}
 
 
 /* 
@@ -166,6 +212,13 @@ function getColumnVal(seoLVSheetValues,colIndex) {
     result.push(seoLVSheetValues[i][colIndex]);
   }
   return result;
+}
+
+function testSEOOBJ() {
+  var seoObj = new SEOLVTab();
+  Logger.log(seoObj.domainType);
+  Logger.log(seoObj.headerRowVal());
+  Logger.log(seoObj.getAColValByTag('street_address_1'));
 }
 
 

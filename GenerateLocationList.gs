@@ -15,13 +15,12 @@ function generateLocations(vertical,domainType,chainBranding) {
     var errors = checkErrors(propSheetObj,clientProperties);
     //checks workbook is in a ok state
     if(!errors) {
-      var newPSValues = propSheetObj.getNewPropertyValues();
       if(chainBranding === 'no') {
-        locationList = getRowValByTag(newPSValues,"name");
+        locationList = propSheetObj.getRowValByTag("name");
         return locationList;
       } 
       else {
-        locationList = buildNameAddressLocationList(newPSValues);        
+        locationList = buildNameAddressLocationList(propSheetObj);        
         return locationList;
       }
     }
@@ -29,10 +28,10 @@ function generateLocations(vertical,domainType,chainBranding) {
 }
 
 //builds a string concatenating names and addresses
-function buildNameAddressLocationList(newPSValues) {
+function buildNameAddressLocationList(propSheetObj) {
   var namePlusAdd = [];
-  var names = getRowValByTag(newPSValues,"name");
-  var addresses = getRowValByTag(newPSValues,"street_address_1");
+  var names = propSheetObj.getRowValByTag("name");
+  var addresses = propSheetObj.getRowValByTag("street_address_1");
   for(var i = 0; i < names.length; i++) {
     namePlusAdd.push(names[i] + " - " + addresses[i].replace(/[^A-Za-z0-9|" "]/g, '').substr(addresses[i].indexOf(' ')+1).toString().toLowerCase().trim());
   }
@@ -91,35 +90,3 @@ function Location(locationName,chainBrand){
   this.class = (classRow === null) ? "none" : classRow[locationNameIndex]; 
   this.unitType = (unitTypeRow === null) ? "none" : unitTypeRow[locationNameIndex];  
 } 
-
-
-
-
-//checks to make sure no crucial tags are missing or values are missing needed for the keyword tools functionality
-function checkPropertySheetErrors(propSheetObj,clientProperties) {
-  checkErrors(propSheetObj,clientProperties);
-  var checkErrors = new PropertySheetErrors()
-  var missingTags = tags.standard.diff(flatColumnArry);
-  if(missingTags.length > 0) {
-    ui.alert("Error: \nYou are missing the following required tags in the workbook:\nMissing Tags: " + missingTags + "\nCheck to ensure the workbook is up to date");
-    return null;
-  }
-  var locInfoAttr = {
-    nameIndx: flatColumnArry.indexOf("name") + 1,
-    streetAddIndx: flatColumnArry.indexOf("street_address_1") + 1,
-    cityIndx: flatColumnArry.indexOf("city") + 1,    
-    stateIndx: flatColumnArry.indexOf("state") + 1,
-    postalCodeIndx: flatColumnArry.indexOf("postal_code") + 1
-  }
-  var keys = ["name","street_address_1","city","state","postal_code"];
-  for(var i = 0; i < keys.length; i++) {
-    var getRowVal = propSheetObj.getRowValByTag(keys[i]);
-    var numBlank = numOfBlanks(getRowVal, getRowVal.length);
-    if(numBlank > 0) {
-      ui.alert("Error: All locations name, address, city, state and zip cells must be filled out in the projects workbook. \n" +
-               "Name Row: " + locInfoAttr.nameIndx + "\nAddress Rows: " + locInfoAttr.streetAddIndx + " - " + locInfoAttr.postalCodeIndx);
-      return null;
-    }
-  }
-  return "good";
-}
