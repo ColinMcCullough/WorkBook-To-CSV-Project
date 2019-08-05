@@ -28,6 +28,7 @@ function generatePhrases(vertical,locationTable) {
       //2D Array Holding Apartment Amenities in 1st Arry, Comm Amenities in 2nd Arry
       amenitiesArray = getAmenitiesArray(propSheet,locationTable); 
     }
+    
     var allPhrases = getPhrases(vertical,apiKeywords,amenitiesArray,locationInfo);
     if(allPhrases[0].length > 0) {
       dashboardSheet.getRange(3, 5, allPhrases[0].length, 1).setValues(allPhrases[0]); // sets neighborhood phrases
@@ -51,6 +52,7 @@ function generatePhrases(vertical,locationTable) {
 function getPhrases(vertical,keywords,amenities,locationInfo) {
   var aptAmenitiesPhrases;
   var commAmenitiesPhrases;
+  
   var neighborhoodKeywords = {
     keywordList: keywords[0],
     keywordType: 'neighborhood'
@@ -73,7 +75,7 @@ function getPhrases(vertical,keywords,amenities,locationInfo) {
     aptAmenitiesPhrases = fillPhrasesWithKeywords(apartmentAmenities,vertical,locationInfo); 
     commAmenitiesPhrases = fillPhrasesWithKeywords(communityAmenities,vertical,locationInfo); 
   } 
-  return [neighborhoodPhrases,landmarkPhrases,aptAmenitiesPhrases,commAmenitiesPhrases]
+  return [neighborhoodPhrases,landmarkPhrases,aptAmenitiesPhrases,commAmenitiesPhrases];
 }
 
 function fillPhrasesWithKeywords(keywords,vertical,locationInfo) { 
@@ -212,7 +214,7 @@ function getAmentiesData(propertySheet,tag,locationColIndex) {
 */
 function getFullRowValByTag(propertySheetValues,tag) {
     var firstColumn = getColumnOneVal(propertySheetValues);
-    var rowIndex = getARowIndex(firstColumn,tag);
+    var rowIndex = firstColumn.indexOf(tag);
     if(rowIndex > 0) {
       var rowValue = function(propertySheetValues,rowIndex) {
         var result = [];

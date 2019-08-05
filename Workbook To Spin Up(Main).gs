@@ -1,3 +1,7 @@
+function testthis() {
+  var clientProp = getClientProp('ss','mulit','no');
+  Logger.log(seoLiquidValueTabHeaders[clientProp.vertical][0].length);
+}
 //Global Variables  
 var spinUpFileHeaders = [
                         "name","internal_branded_name","corporate","street_address_1","city","state","postal_code","country","neighborhood",
@@ -21,6 +25,7 @@ var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid 
 var propertySheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("**Paste Property Info**");
 var dashboardSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Keyword Research Accelerator');
 var NUM_LV_HEADER_ROWS = 4;
+
 /*
   Prints all headers used for every vertical as well as headers for SEO Liquid Values Tab
   @param vertical Users entry from UI ("mf", "ss", or "sl")
@@ -28,16 +33,9 @@ var NUM_LV_HEADER_ROWS = 4;
 */
 function printHeaders(clientProp) {
   var seoLvTab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SEO Liquid Values');
-  var headerRange = spinUpTab.getRange(1,1,1,spinUpFileHeaders.length);
-  headerRange.setValues([spinUpFileHeaders]); //updated this from header names
-  if (clientProp.vertical == "mf") {
-    var lvheaderRange = seoLvTab.getRange(1,1,NUM_LV_HEADER_ROWS,seoLiquidValueTabHeaders.mf[0].length);
-    lvheaderRange.setValues(seoLiquidValueTabHeaders.mf);
-  }
-  else if (clientProp.vertical == "ss" || clientProp.vertical == "sl") {
-    var lvheaderRange = seoLvTab.getRange(1,1,NUM_LV_HEADER_ROWS,seoLiquidValueTabHeaders.ssSl[0].length);
-    lvheaderRange.setValues(seoLiquidValueTabHeaders.ssSl);
-  }
+  var headerRange = spinUpTab.getRange(1,1,1,spinUpFileHeaders.length).setValues([spinUpFileHeaders]);
+  var lvheaderRange = seoLvTab.getRange(1,1,NUM_LV_HEADER_ROWS,seoLiquidValueTabHeaders[clientProp.vertical][0].length);
+  lvheaderRange.setValues(seoLiquidValueTabHeaders[clientProp.vertical]);
   setLVHeaderFormatting(clientProp.vertical,clientProp.domainType,seoLvTab);
 }
 
@@ -80,13 +78,7 @@ function getRowValues(propSheetObj, searchString, clientProp) {
     rowValues = cleanData(columnRangeValues,searchString,clientProp.chainBranding,clientProp.domainType);
   }  
   else if(searchString == "custom_slug" && clientProp.domainType == "single") {
-    var slugSearchStr; 
-    if(clientProp.chainBranding == "yes") {
-      slugSearchStr = "street_address_1";
-    } 
-    else {
-      slugSearchStr = "name";
-    }
+    var slugSearchStr = clientProp.chainBranding == "yes" ? "street_address_1" : "name";
     columnRangeValues.push(propSheetObj.getRowValByTag(slugSearchStr));
     var result = columnRangeValues[0].map(function(elem) {return [elem];})
     rowValues = cleanData(result,searchString,clientProp.chainBranding,clientProp.domainType);
@@ -121,7 +113,7 @@ function printResults(numLocations,searchString,vertical,result) {
 }
 
 function testMain() {
-  main("mf","multi","yes");
+  main("ss","multi","yes");
 }
 
 function getClientProp(vert,domType,branding) {
@@ -141,14 +133,13 @@ function main(vertical,domainType,chainBranding) {
   if(isValid) {
     var clientProperties = getClientProp(vertical,domainType,chainBranding);
     var propSheetObj = new PropertyInfo();
-    var headerArrayLength = spinUpFileHeaders.length;
     var hasErrors = checkErrors(propSheetObj,clientProperties);
     if(!hasErrors) {
       clearSpinUpAndLVTab();
       printHeaders(clientProperties);
-      propSheetObj.getNewPropertyValues();  
+      propSheetObj.getNewPropertyValues();
       var numLocations = propSheetObj.numOfLoc();
-      for(var i = 0; i <= headerArrayLength - 1; i++) {
+      for(var i = 0; i <= spinUpFileHeaders.length - 1; i++) {
         var headerTag = spinUpFileHeaders[i];
         var result = collectAndFormatResults(propSheetObj,headerTag, clientProperties);
         printResults(numLocations, headerTag,vertical, result);

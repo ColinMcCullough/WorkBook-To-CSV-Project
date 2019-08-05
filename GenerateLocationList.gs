@@ -65,21 +65,21 @@ function getLocationInformation(location,vertical,chainBrand) {
 //location object with name, address, class fields
 function Location(locationName,chainBrand){  
   var locationNameIndex; var streetAddress; var city; var state; var postalCode; var floorPlansRow; var classRow; var unitTypeRow;
-  var newPSValues = getPropertySheetValues();
+  var propSheetObj = new PropertyInfo();
   if(chainBrand === 'yes') {
-    var namePlusAdd = buildNameAddressLocationList(newPSValues);
-    locationNameIndex = namePlusAdd.indexOf(locationName);
+    var namePlusAddress = buildNameAddressLocationList(propSheetObj);
+    locationNameIndex = namePlusAddress.indexOf(locationName);
   }
-  if(chainBrand === 'no') {
-    locationNameIndex = getRowValByTag(newPSValues,"name").indexOf(locationName);    
+  else {
+    locationNameIndex = propSheetObj.getRowValByTag("name").indexOf(locationName);    
   }
-  streetAddress = getRowValByTag(newPSValues,"street_address_1")[locationNameIndex];
-  city = getRowValByTag(newPSValues,"city")[locationNameIndex];
-  state = getRowValByTag(newPSValues,"state")[locationNameIndex];
-  postalCode = getRowValByTag(newPSValues,"postal_code")[locationNameIndex];  
-  floorPlansRow = getRowValByTag(newPSValues,"floor_plans");
-  classRow = getRowValByTag(newPSValues,"class");
-  unitTypeRow = getRowValByTag(newPSValues,"primary_type");
+  streetAddress = propSheetObj.getRowValByTag("street_address_1")[locationNameIndex];
+  city = propSheetObj.getRowValByTag("city")[locationNameIndex];
+  state = propSheetObj.getRowValByTag("state")[locationNameIndex];
+  postalCode = propSheetObj.getRowValByTag("postal_code")[locationNameIndex];  
+  floorPlansRow = propSheetObj.getRowValByTag("floor_plans");
+  classRow = propSheetObj.getRowValByTag("class");
+  unitTypeRow = propSheetObj.getRowValByTag("primary_type");
   this.locationName = locationName;
   this.address = streetAddress + " " + city + " " + state + " " + postalCode;
   this.streetAddress = streetAddress;
@@ -90,3 +90,9 @@ function Location(locationName,chainBrand){
   this.class = (classRow === null) ? "none" : classRow[locationNameIndex]; 
   this.unitType = (unitTypeRow === null) ? "none" : unitTypeRow[locationNameIndex];  
 } 
+
+function newLoc() {
+  var x = new Location('Dummy - kepler st','yes');
+}
+
+

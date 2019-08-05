@@ -13,7 +13,7 @@ var tagsToCopy = {
   sl: {
     single: ['street_address_1','city','state','postal_code','neighborhood','neighborhood_2','landmark_1_name','custom_slug'],
     multi: ['street_address_1','city','state','postal_code','neighborhood','neighborhood_2','landmark_1_name']
-  }  
+  }
 }
 
 //gets values in ranges that need to be copied from seo liquid values tab to spinup file tab

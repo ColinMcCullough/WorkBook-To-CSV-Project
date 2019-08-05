@@ -1,5 +1,12 @@
 var seoLiquidValueTabHeaders = {
-  ssSl: 
+  sl: 
+  [
+    ["name","rec_brand_name", "acc_rej", "usps", "street_address_1", "city", "state","postal_code", "neighborhood", "neighborhood_2",  "landmark_1_name", "custom_slug", "population", "strategy", "gmb", "ga", "redirects", "notes", "pr", "pr_notes", "", "", "", "", "", ""],
+    ["V1.0", "SEO Liquid Values", "", "", "", "", "", "","", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit","MF Community A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1798205500","Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1581508741","55+ Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=320995540","SS Facility A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=649440825","SL Community A")',""],
+    ["Locations", "Recommended Branded Name", "Accepted/Rejected", "USPS Verified", "Address", "City", "State","Zip", "Neighborhood", "Neighborhood_2", "Landmark Required for MF", "Custom Slug (if single domain)", "City Population", "Strategy to Implement", "GMB", "GA", "Redirects", "Notes", "Peer Review Status", "Peer Review Notes", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=205657231","MF Community B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=780478088", "Apartments & Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=2023923072", "Senior Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=286369603", "SS Facility A (Landmark Only)")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1742592240", "SL Community B")',""],
+    ["", "", "", "", "", "", "","", "comes before City", "comes after City needs near in etc.", "comes after near", "", "", "", "", "", "", "Provide screenshots of search volume and note discrepencies in brand name or address", "", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1615577095", "MF Community C")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1HiTnlOI1LdJbZgMKKUkA16kHfA3IfKZODdGJgitYy84/edit#gid=2128876466", "MF Mobile Homes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1242508099", "Student Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1478939980", "SS Facility B")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1248672502", "SL Community C")',""]
+  ],
+  ss: 
   [
     ["name","rec_brand_name", "acc_rej", "usps", "street_address_1", "city", "state","postal_code", "neighborhood", "neighborhood_2",  "landmark_1_name", "custom_slug", "population", "strategy", "gmb", "ga", "redirects", "notes", "pr", "pr_notes", "", "", "", "", "", ""],
     ["V1.0", "SEO Liquid Values", "", "", "", "", "", "","", "", "", "", "", "", "", "", "", "", "Links to Strategies", "", '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit","MF Community A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1798205500","Townhomes")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=1581508741","55+ Apartments")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=320995540","SS Facility A")', '=HYPERLINK("https://docs.google.com/spreadsheets/d/1QR7EH32NxyeGOqARCIt0qYtDX1WpzKMR2BcBqgqz0jY/edit#gid=649440825","SL Community A")',""],
@@ -77,20 +84,12 @@ function setLVHeaderFormatting(vertical,domainType,tabToFormat) {
   SS/SL Print: Name, address, city, state, zip,  custom slug
 */
 function printSeoLiquidValues(numLocations,searchString, result, vertical) {
-  var seoColumnIndex = 0;
-  if(vertical == "mf") {
-    var seoColumnIndex = seoLiquidValueTabHeaders.mf[0].indexOf(searchString) + 1; //test
-  } else {
-    var seoColumnIndex = seoLiquidValueTabHeaders.ssSl[0].indexOf(searchString) + 1; //test
+  var seoColumnIndex = seoLiquidValueTabHeaders[vertical][0].indexOf(searchString) + 1; //test
+  if(seoColumnIndex < 1) {
+    var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, numLocations, 1);
+    if(searchString != "postal_code") {seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);}
+    seoValuesRange.setValues(result);
   }
-  if(seoColumnIndex != 0) {
-      var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, numLocations, 1);
-      if(searchString != "postal_code") {
-          seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      }
-      //var seoValuesRangeFormatted = seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      seoValuesRange.setValues(result);
-   }
 }
 
 /*
@@ -170,20 +169,16 @@ function defineConditionalFormatting(acceptedRejectValRange,uspsValRange,gmbValR
 function printDefaultNotes(numLocations,propSheetObj,tabToFormat,vertical) {
   var notesColumn;
   var prColumn;
-  if(vertical == "mf") {
-    notesColumn = seoLiquidValueTabHeaders.mf[0].indexOf("notes") + 1; //test
-    prColumn = seoLiquidValueTabHeaders.mf[0].indexOf("pr") + 1; //test
-  } else {
-    notesColumn = seoLiquidValueTabHeaders.ssSl[0].indexOf("notes") + 1; //test
-    prColumn = seoLiquidValueTabHeaders.ssSl[0].indexOf("pr") + 1; //test
-  }
   var notesArry = [];
   var prArry = [];
-  var currentWebsites = []; 
-  currentWebsites.push(propSheetObj.getRowValByTag("current_website"));
+  var currentWebsites = [];
   var negativeKeywords = []; 
-  negativeKeywords.push(propSheetObj.getRowValByTag("negative_keywords")); 
-  var primaryType = []; 
+  var primaryType = [];
+  
+  notesColumn = seoLiquidValueTabHeaders[vertical][0].indexOf("notes") + 1; //test
+  prColumn = seoLiquidValueTabHeaders[vertical][0].indexOf("pr") + 1; //test 
+  currentWebsites.push(propSheetObj.getRowValByTag("current_website"));
+  negativeKeywords.push(propSheetObj.getRowValByTag("negative_keywords"));   
   primaryType.push(propSheetObj.getRowValByTag("primary_type")); 
   fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords,primaryType);
   seoLvTab.getRange(5,notesColumn,numLocations,1).setValues(notesArry);
@@ -204,19 +199,5 @@ function fillNotesCol(currentWebsites,notesArry,prArry,vertical,negativeKeywords
     prArry.push(["Incomplete"]);
   } 
 }
-/*
-//helper function to get values from workbook used in notes column
-function getNotesDataArray(val) {
-  var columnValues = propertySheet.getRange(2, 1, propertySheet.getLastRow()).getValues();
-  var flatColVal = [].concat.apply([], columnValues);
-  var searchResult = flatColVal.indexOf(val);
-  if(searchResult != -1) {
-    searchResult += 2;
-    var numofItems = seoLvTab.getLastRow() - 4;
-    var currentWebsiteArray = propertySheet.getRange(searchResult, 4, 1, numofItems).getValues();
 
-    return currentWebsiteArray;
-  }
-}
-*/
 

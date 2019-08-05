@@ -56,10 +56,10 @@ function hasAddressVal(addressTable) {
 }
 
 function getClientKeywords(locationTable) {
-  var newPSValues = getPropertySheetValues();
-  var addresses = getRowValByTag(newPSValues,"street_address_1");
-  var neighborhoodTerms = getRowValByTag(newPSValues,"neighborhood");
-  var landmarkTerms = getRowValByTag(newPSValues,"landmark_1_name");
+  var propSheetObj = new PropertyInfo();
+  var addresses = propSheetObj.getRowValByTag("street_address_1");
+  var neighborhoodTerms = propSheetObj.getRowValByTag("neighborhood");
+  var landmarkTerms = propSheetObj.getRowValByTag("landmark_1_name");
   var addressIndex = addresses.indexOf(locationTable[0]);
   var locNeighborhoodTermsArry = neighborhoodTerms[addressIndex].replace(/\s+/g,' ').split(',').map(Function.prototype.call, String.prototype.trim); //splits on comma,trims whitespace
   var locLandmarkTermsArr = landmarkTerms[addressIndex].replace(/\s+/g,' ').split(',').map(Function.prototype.call, String.prototype.trim);//splits on comma,trims whitespace
