@@ -85,7 +85,7 @@ function setLVHeaderFormatting(vertical,domainType,tabToFormat) {
 */
 function printSeoLiquidValues(numLocations,searchString, result, vertical) {
   var seoColumnIndex = seoLiquidValueTabHeaders[vertical][0].indexOf(searchString) + 1; //test
-  if(seoColumnIndex < 1) {
+  if(seoColumnIndex > 0) {
     var seoValuesRange = seoLvTab.getRange(5, seoColumnIndex, numLocations, 1);
     if(searchString != "postal_code") {seoValuesRange.setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);}
     seoValuesRange.setValues(result);
