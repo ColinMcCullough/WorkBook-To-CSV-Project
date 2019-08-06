@@ -97,9 +97,10 @@ function hasNewLiquidValuesTab(sheetID) {
 }
 
 function sendRedirectsAndLiquidValues() {
-  var seoLVSheetValues = seoLvTab.getRange(1, 1, seoLvTab.getLastRow(),seoLvTab.getLastColumn()).getValues(); //everything in the seolvsheet(added for text)
+  var seoSheetObj = new SEOLVTab(); 
+  var seoLVSheetValues = seoSheetObj.seoLVSheetVal;
   var headerRange = [];
-  headerRange.push(getHeaderRow(seoLVSheetValues));
+  headerRange.push(seoSheetObj.headerRowVal());
 
   //Logger.log(headerRange[0].indexOf('pr_notes')+1);
   var sheetID = sheetKeyPrompt();

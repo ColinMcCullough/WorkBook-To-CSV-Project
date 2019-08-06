@@ -8,10 +8,11 @@ This function is called by the Generate Locations button
 function generateLocations(vertical,domainType,chainBranding) {
   var locationList;
   var clientProperties = getClientProp(vertical,domainType,chainBranding);
-  var isValid = valid(vertical,domainType,chainBranding);
+  var dropDownsSelected = valid(vertical,domainType,chainBranding);
+  var propSheetObj = new PropertyInfo();
+  var numLocations = propSheetObj.numOfLoc();
   //checks that drop downs are selected
-  if(isValid) {
-    var propSheetObj = new PropertyInfo();
+  if(dropDownsSelected && numLocations > 0) {
     var errors = checkErrors(propSheetObj,clientProperties);
     //checks workbook is in a ok state
     if(!errors) {

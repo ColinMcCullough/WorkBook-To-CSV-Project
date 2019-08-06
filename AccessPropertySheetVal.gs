@@ -138,22 +138,7 @@ function SEOLVTab() {
 }
 
 
-/* 
-//@param seo lv tab values
-//@param tag to find col values of
-//@return col values in seo lv tag relevant to tage
-*/
-function getColValByTag(seoLVSheetValues,tag) {
-  var headerRow = getHeaderRow(seoLVSheetValues);
-  var colIndex = getColIndex(headerRow,tag);
-  if(colIndex > -1) {
-      var colValue = getColumnVal(seoLVSheetValues,colIndex);
-      var result = colValue.map(function(elem) {return [elem];});
-      return result;
-    } else {
-      return null;
-    }     
-}
+
 
 function getHeaderRow(seoLVSheetValues) {
   var result = [];

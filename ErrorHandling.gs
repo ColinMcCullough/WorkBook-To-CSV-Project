@@ -6,7 +6,7 @@ var tags = {
  Checks for errors in the property info tab that need to be fixed prior to spinning up csv
 */
 function checkErrors(propSheetObj,clientProperties) {
-  var errorObj = new PropertySheetErrors();
+  var errorObj = new PropertySheetErrors(clientProperties);
   var tierOneErrors = errorObj.checkTierOneErrors(propSheetObj,clientProperties);
   if(tierOneErrors) {
     return true;
@@ -19,44 +19,7 @@ function checkErrors(propSheetObj,clientProperties) {
     return false;
   }
 }
-/*
-  Checks for blanks in display phone number row.
-  Copies values from local phone number to blank display phone number
-  @return array of new display phone number values
-*/
-function copyLocalToDefaultPhone(propSheetObj) {
-  var localPhoneNumVal = propSheetObj.getRowValByTag("local_phone_number");
-  var defaultPhoneNumVal = propSheetObj.getRowValByTag("display_phone_number");
-  var defaultPhoneRange = propertySheet.getRange(propSheetObj.getRowIndexByTag("display_phone_number") + 1,4,1,propSheetObj.numOfLoc());
-  var newDefPhoneNumArry = [];
-  for(i = 0; i < defaultPhoneNumVal.length; i++) {
-    var cleanedDefaultNum = cleanPhoneNumber(defaultPhoneNumVal[i]);
-    var cleanedLocalNum = cleanPhoneNumber(localPhoneNumVal[i]);
-    if(cleanedDefaultNum != "") { //checks if number is not blank after running it through the clean phone num method
-      newDefPhoneNumArry.push(cleanedDefaultNum);
-    }
-    else if(cleanedDefaultNum == "" && cleanedLocalNum != "") {
-      newDefPhoneNumArry.push(cleanedLocalNum);
-    }
-    else if(cleanedDefaultNum == "" && cleanedLocalNum == "")
-      newDefPhoneNumArry.push("");
-  }
-  defaultPhoneRange.setValues([newDefPhoneNumArry]);
-  return newDefPhoneNumArry;
-}
 
-function checkForBathValues(floorPlansValues,arrylen) {
-  for(i = 0;  i < arrylen; i++) {
-    var value = floorPlansValues[i].toString().toLowerCase().search(/bath/);
-    var numVal = floorPlansValues[i].toString();
-    numVal = numVal.replace(/\../g,"");
-    numVal = numVal.replace(/[^0-9]+/g,"").toString().trim();
-    if(value >= 0 || howManyRepeated(numVal) > 0) {
-      return true;
-    }
-  }
-  return false;
-}
 
 /*
  *Checks for the number of blanks in an array list
@@ -79,8 +42,12 @@ Array.prototype.diff = function(a) {
 };
 
 function howManyRepeated(str){
-   try{ return str.toLowerCase().split("").sort().join("").match(/(.)\1+/g).length; }
-   catch(e){ return 0; } // if TypeError
+  str = str.toString().split("").sort().join("").match(/(.)\1+/g);
+  if(str) {
+    return str.length;
+  } else {
+    return 0;
+  }
 }
 
 function valid(vertVal,domainStrat,chainBran) {
@@ -96,19 +63,22 @@ function valid(vertVal,domainStrat,chainBran) {
 /*
   This class offers methods to check property info sheet errors to ensure an appropriate state
 */
-function PropertySheetErrors() {
+function PropertySheetErrors(clientProperties) {
+  this.clientProperties = clientProperties;
   
-  this.checkTierOneErrors = function(propSheetObj,clientProperties) {
+  
+  this.checkTierOneErrors = function(propSheetObj) {
+    
     var propTagArry = propSheetObj.propertyTagsArry();
-    if(this.checkMissingTags(clientProperties,propTagArry) || this.checkMissingNames(propTagArry,propSheetObj) || this.checkMissingAddress(propSheetObj)) {
+    if(this.checkMissingTags(this.clientProperties,propTagArry) || this.checkMissingNames(propTagArry,propSheetObj) || this.checkMissingAddress(propSheetObj)) {
       return true;
     } 
   }
   
-  this.checkTierTwoErrors = function(propSheetObj,clientProperties) {
+  this.checkTierTwoErrors = function(propSheetObj) {
     var alerts = [];
     var propTagArry = propSheetObj.propertyTagsArry();
-    var missingDomains = this.checkMissingDomains(clientProperties,propTagArry,propSheetObj);
+    var missingDomains = this.checkMissingDomains(this.clientProperties,propTagArry,propSheetObj);
     var phoneIssues = this.checkPhoneIssues(propTagArry,propSheetObj);
     var floorPlanIssues = this.checkFloorPlans(propTagArry,propSheetObj);
     alerts.push(missingDomains,phoneIssues,floorPlanIssues);
@@ -166,7 +136,7 @@ function PropertySheetErrors() {
   }
   
   this.checkPhoneIssues = function(propTagArry,propSheetObj) {
-    var newPhoneArray = copyLocalToDefaultPhone(propSheetObj); //copies local number to display phone number field if display phone number is blank
+    var newPhoneArray = this.copyLocalToDefaultPhone(propSheetObj); //copies local number to display phone number field if display phone number is blank
     var numPhoneBlanks = numOfBlanks(newPhoneArray,newPhoneArray.length);
     if(numPhoneBlanks > 0) {
       var phoneRowNum = propTagArry.indexOf("display_phone_number") + 1; 
@@ -179,7 +149,7 @@ function PropertySheetErrors() {
     if(propTagArry.indexOf("floor_plans") != -1) {
       var floorPlansIndex = propTagArry.indexOf("floor_plans") + 1;  
       var rowRangeValues = propSheetObj.getRowValByTag("floor_plans");
-      var hasBathroomData = checkForBathValues(rowRangeValues,rowRangeValues.length);
+      var hasBathroomData = this.checkForBathValues(rowRangeValues,rowRangeValues.length);
       if(hasBathroomData == true) {
         var bathroomValuesError = "Error: \nLooks like some floor plans cells are using bathroom numbers" + "\nDelete all bathroom numbers and references to bathroom from floor plans cells in row " + floorPlansIndex;
         return bathroomValuesError;
@@ -187,6 +157,47 @@ function PropertySheetErrors() {
     }
   }
   
+  this.checkForBathValues = function(floorPlansValues,arrylen) {
+    for(i = 0;  i < arrylen; i++) {
+      var value = floorPlansValues[i].toString().toLowerCase().search(/bath/);
+      var numVal = floorPlansValues[i].toString();
+      numVal = numVal.replace(/\../g,"");
+      numVal = numVal.replace(/[^0-9]+/g,"").toString().trim();
+      if(value >= 0 || howManyRepeated(numVal) > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+
+  /*
+  Checks for blanks in display phone number row.
+  Copies values from local phone number to blank display phone number
+  @return array of new display phone number values
+  */
+  this.copyLocalToDefaultPhone = function(propSheetObj) {
+    var localPhoneNumVal = propSheetObj.getRowValByTag("local_phone_number");
+    var defaultPhoneNumVal = propSheetObj.getRowValByTag("display_phone_number");
+    var defaultPhoneRange = propertySheet.getRange(propSheetObj.getRowIndexByTag("display_phone_number") + 1,4,1,propSheetObj.numOfLoc());
+    var dataValObj = new DataVal(this.clientProperties);
+    var newDefPhoneNumArry = [];
+    for(i = 0; i < defaultPhoneNumVal.length; i++) {
+      var cleanedDefaultNum = dataValObj.valPhoneNum(defaultPhoneNumVal[i]);
+      var cleanedLocalNum = dataValObj.valPhoneNum(localPhoneNumVal[i]);
+      if(cleanedDefaultNum != "") { //checks if number is not blank after running it through the clean phone num method
+        newDefPhoneNumArry.push(cleanedDefaultNum);
+      }
+      else if(cleanedLocalNum != "") {
+        newDefPhoneNumArry.push(cleanedLocalNum);
+      }
+      else {
+        newDefPhoneNumArry.push("");
+      }
+    }
+    defaultPhoneRange.setValues([newDefPhoneNumArry]);
+    return newDefPhoneNumArry;
+  }
 }
 
 

@@ -50,7 +50,7 @@ function excludedValueMatch(value,clientProp) {
   @return Returns array of row values matching search value tag   //propSheetObj
   propSheetObj, tagToSearch, clientProp
 */
-function collectTagResults(propSheetObj, tagToSearch, clientProp)  {
+function collectTagResults(propSheetObj, tagToSearch, clientProp,dataValObj)  {
   var rowValues;
   //does nothing if tags are values seo will fill out
   if(excludedValueMatch(tagToSearch,clientProp)) { 
@@ -61,27 +61,24 @@ function collectTagResults(propSheetObj, tagToSearch, clientProp)  {
     rowValues = null;
   }
   else {
-    rowValues = getRowValues(propSheetObj, tagToSearch, clientProp);
+    rowValues = getRowValues(propSheetObj, tagToSearch, clientProp,dataValObj);
   return rowValues;
   }
 }
 
 //helper method for collectTagResults to get values of rows not using default values or rows that should be skipped
-function getRowValues(propSheetObj, searchString, clientProp) {
+function getRowValues(propSheetObj, searchString, clientProp, dataValObj) {
   var searchResult = propSheetObj.getRowIndexByTag(searchString); //Row Number - 1
   var rowValues = null;
   var columnRangeValues = [];
-  if (searchResult != -1) {
-    //searchResult + 1 is row number.
-    searchResult = searchResult + 1;         
-    columnRangeValues.push(propSheetObj.getRowValByTag(searchString));
-    rowValues = cleanData(columnRangeValues,searchString,clientProp.chainBranding,clientProp.domainType);
+  if (searchResult != -1 ) {
+    var dataByTag = propSheetObj.getRowValByTag(searchString);
+    rowValues = dataValObj.runDataVal(searchString,dataByTag);
   }  
   else if(searchString == "custom_slug" && clientProp.domainType == "single") {
     var slugSearchStr = clientProp.chainBranding == "yes" ? "street_address_1" : "name";
-    columnRangeValues.push(propSheetObj.getRowValByTag(slugSearchStr));
-    var result = columnRangeValues[0].map(function(elem) {return [elem];})
-    rowValues = cleanData(result,searchString,clientProp.chainBranding,clientProp.domainType);
+    var dataByTag = propSheetObj.getRowValByTag(slugSearchStr);
+    rowValues = dataValObj.runDataVal(searchString,dataByTag);
   }
   return rowValues;
 }
@@ -90,8 +87,8 @@ function getRowValues(propSheetObj, searchString, clientProp) {
 /*
   function takes a row array and transposes it to a column array
 */
-function collectAndFormatResults(propSheetObj, tagToSearch, clientProp) {
-  var rowValue = collectTagResults(propSheetObj, tagToSearch, clientProp);
+function collectAndFormatResults(propSheetObj, tagToSearch, clientProp,dataValObj) {
+  var rowValue = collectTagResults(propSheetObj, tagToSearch, clientProp,dataValObj);
   var result = null;  
   if (rowValue) { //ensures there are values to transpose
     result = rowValue[0].map(function(elem) {return [elem];});        
@@ -113,7 +110,7 @@ function printResults(numLocations,searchString,vertical,result) {
 }
 
 function testMain() {
-  main("ss","multi","yes");
+  main("mf","single","no");
 }
 
 function getClientProp(vert,domType,branding) {
@@ -139,9 +136,10 @@ function main(vertical,domainType,chainBranding) {
       printHeaders(clientProperties);
       propSheetObj.getNewPropertyValues();
       var numLocations = propSheetObj.numOfLoc();
+      var dataValObj = new DataVal(clientProperties);
       for(var i = 0; i <= spinUpFileHeaders.length - 1; i++) {
         var headerTag = spinUpFileHeaders[i];
-        var result = collectAndFormatResults(propSheetObj,headerTag, clientProperties);
+        var result = collectAndFormatResults(propSheetObj,headerTag, clientProperties,dataValObj);
         printResults(numLocations, headerTag,vertical, result);
       }
       spinUpTab.getRange(2, 1, numLocations, spinUpFileHeaders.length).setNumberFormat("@").setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);

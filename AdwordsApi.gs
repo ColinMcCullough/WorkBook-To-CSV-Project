@@ -1,5 +1,5 @@
 function testGetKeywords() {
-  getKeywords(['2500 NE Neff Rd','Bend','Oregon','97702','1, 2 & 3','Class B','Apartments & Townhomes'],'mf');
+  getKeywords(['3950 W Chandler Blvd','Chandler','Arizona','85226','Studio, 1, 2 & 3','Class A','Apartments'],'mf');
 }
 
 function clearDashboardContent() {
@@ -38,6 +38,7 @@ function getKeywords(tableLocationInfoArry,locVert) {
     }
     
     var cleanedArry = structureResults(wholeArry,locationInfo.city);
+    
     dashboardSheet.getRange(3, 1, cleanedArry.length,2).setValues(cleanedArry);
     var clientKeywords = getClientKeywords(tableLocationInfoArry);
     dashboardSheet.getRange(3, 3, clientKeywords.length,2).setValues(clientKeywords);
@@ -58,11 +59,18 @@ function hasAddressVal(addressTable) {
 function getClientKeywords(locationTable) {
   var propSheetObj = new PropertyInfo();
   var addresses = propSheetObj.getRowValByTag("street_address_1");
-  var neighborhoodTerms = propSheetObj.getRowValByTag("neighborhood");
-  var landmarkTerms = propSheetObj.getRowValByTag("landmark_1_name");
   var addressIndex = addresses.indexOf(locationTable[0]);
+  var neighborhoodTerms = propSheetObj.getRowValByTag("neighborhood");
+  var landmarkTags = ["landmark_1_name","nearby_employers","nearby_schools","nearby_restaurants","nearby_shopping","entertainment"];
+  var clientLandmarkTerms = [];
+  landmarkTags.forEach(function(e) {
+    var terms = propSheetObj.getRowValByTag(e)[addressIndex];
+    if(terms) {
+      clientLandmarkTerms.push(terms);
+    }  
+  });
   var locNeighborhoodTermsArry = neighborhoodTerms[addressIndex].replace(/\s+/g,' ').split(',').map(Function.prototype.call, String.prototype.trim); //splits on comma,trims whitespace
-  var locLandmarkTermsArr = landmarkTerms[addressIndex].replace(/\s+/g,' ').split(',').map(Function.prototype.call, String.prototype.trim);//splits on comma,trims whitespace
+  var locLandmarkTermsArr = clientLandmarkTerms.join().replace(/\s+/g,' ').split(',').map(Function.prototype.call, String.prototype.trim);//splits on comma,trims whitespace
   var row = [];
   var loopLen = getLoopLen(locNeighborhoodTermsArry,locLandmarkTermsArr);  
   for(var i = 0; i < loopLen; i++) {
