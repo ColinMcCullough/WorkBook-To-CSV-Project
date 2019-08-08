@@ -63,9 +63,11 @@
   function runGetKeyWords() {
     this.disabled = true;
     var tableInfo = [];
-    var vertical = $('#select-vertical').val();    
+    var vertical = $('#select-vertical').val(); 
+    var domainType = $('#select-domain-strat').val();
+    var chainBrand = $('#select-chain').val(); 
     var tablelen = (vertical === "mf") ? MF_TABLE_LEN : STANDARD_TABLE_LEN;
-    //pushes text from column 2 cells into an array
+    //pushes text from column 2 cells inlocationInfoto an array
     for(var i = 0; i < tablelen; i++) {
         tableInfo.push($(".loc-table").children().find("tr:eq("+ i +") td:eq(1)").text());
     }
@@ -74,7 +76,7 @@
         .withSuccessHandler(success)
         .withFailureHandler(failure)
         .withUserObject(this)
-        .getKeywords(tableInfo,vertical);    
+        .getKeywords(tableInfo,vertical,domainType,chainBrand);    
   }
   
   // Respond to success conditions here.

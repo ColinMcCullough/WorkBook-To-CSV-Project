@@ -1,5 +1,5 @@
 function testGetKeywords() {
-  getKeywords(['3950 W Chandler Blvd','Chandler','Arizona','85226','Studio, 1, 2 & 3','Class A','Apartments'],'mf');
+  getKeywords(['3950 W Chandler Blvd','Chandler','Arizona','85226','Studio, 1, 2 & 3','Class A','Apartments'],'mf','single','yes');
 }
 
 function clearDashboardContent() {
@@ -9,7 +9,7 @@ function clearDashboardContent() {
 @param {Array} tableLocationInfoArry is an array of location info in column 2 of the location table
 @param {String} vertical is the vertical selected from the client vertical drop down
 */
-function getKeywords(tableLocationInfoArry,locVert) {
+function getKeywords(tableLocationInfoArry,locVert,domainType,chainBrand) {
   //check to make sure address is available in table for API call
   if(hasAddressVal(tableLocationInfoArry)) {
     clearDashboardContent();
@@ -17,8 +17,11 @@ function getKeywords(tableLocationInfoArry,locVert) {
       addr: tableLocationInfoArry[0] + " " + tableLocationInfoArry[1] + " " + tableLocationInfoArry[2] + " " + tableLocationInfoArry[3],
       city: tableLocationInfoArry[1],
       vertical: locVert,
-      class: tableLocationInfoArry[5]
+      class: tableLocationInfoArry[5],
+      domainStrat: domainType,
+      chainBranding: chainBrand
       };
+    
     //pulls in variables for API call  
     var type2 = new Type("neighborhood", locationInfo.vertical, locationInfo.class);
     var type1 = new Type("landmark", locationInfo.vertical, locationInfo.class);
@@ -40,7 +43,8 @@ function getKeywords(tableLocationInfoArry,locVert) {
     var cleanedArry = structureResults(wholeArry,locationInfo.city);
     
     dashboardSheet.getRange(3, 1, cleanedArry.length,2).setValues(cleanedArry);
-    var clientKeywords = getClientKeywords(tableLocationInfoArry);
+    
+    var clientKeywords = getClientKeywords(tableLocationInfoArry,locationInfo);
     dashboardSheet.getRange(3, 3, clientKeywords.length,2).setValues(clientKeywords);
   }
 }
@@ -56,16 +60,19 @@ function hasAddressVal(addressTable) {
   return true;
 }
 
-function getClientKeywords(locationTable) {
+function getClientKeywords(locationTable,locationInfo) {
   var propSheetObj = new PropertyInfo();
   var addresses = propSheetObj.getRowValByTag("street_address_1");
   var addressIndex = addresses.indexOf(locationTable[0]);
   var neighborhoodTerms = propSheetObj.getRowValByTag("neighborhood");
   var landmarkTags = ["landmark_1_name","nearby_employers","nearby_schools","nearby_restaurants","nearby_shopping","entertainment"];
+  var clientProp = getClientProp(locationInfo.vertical,locationInfo.domainStrat,locationInfo.chainBranding);
+  var dataCleaner = new DataVal(clientProp);
   var clientLandmarkTerms = [];
   landmarkTags.forEach(function(e) {
     var terms = propSheetObj.getRowValByTag(e)[addressIndex];
     if(terms) {
+      terms = dataCleaner.formatCommaSepList(terms)
       clientLandmarkTerms.push(terms);
     }  
   });

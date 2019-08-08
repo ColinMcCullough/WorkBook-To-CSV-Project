@@ -1,10 +1,10 @@
 function testdataval() {
   var clientProp = getClientProp('mf','multi','yes');
   var propSheetObj = new PropertyInfo();
-  var emailData = propSheetObj.getRowValByTag('name');
+  var emailData = propSheetObj.getRowValByTag('nearby_schools');
   var dataValChecker = new DataVal(clientProp);
   //var emailArry = dataValChecker.runDataVal('email');
-  var customSlugs = dataValChecker.runDataVal('name',emailData);
+  var customSlugs = dataValChecker.runDataVal('nearby_schools',emailData);
   Logger.log(customSlugs);
 
 }
@@ -147,18 +147,27 @@ function DataVal(clientProp) {
   }
   
   this.formatCommaSepList = function(val1) {
-    var y = val1.replace(/[^\w\s|\,\;]/gi, '').trim(); 
+    var y = val1.replace(/[^\r\n\w\s|\,\;]/gi, '').trim(); 
     if(y != "") {
       if(!this.hasALineBreakComma(y)) {
-        y = y.replace(/(\r\n|\n|\r)/gm,", ").replace(/\;|,+/g,',').toString().trim();
+        y = y.replace(/(\r\n|\n|\r)/g,', ');
         y = y.replace(/\s\s+/g, ' ');
+        y = y.split(/\n\;|,+/g);
+        var x = [];
+        y.forEach(function(e) {
+          e = e.trim()
+          x.push(e);
+        });
+        y = x.filter(Boolean);
+        y = y.join();
+        y = y.trim();
       }
       else {
         y = y.replace(/(\r\n|\n|\r)/gm," ").replace(/\s\s+/g, ' ').toString().trim();
         y = y.replace(/\s\s+/g, ' ');
       }
     }
-    y = y.replace(/\s\,+/g,',');
+    y = y.replace(/\,+/g,', ');
     return y;
   }
   
@@ -219,40 +228,30 @@ function cleanFloorPlans(val) {
 }
 
 
-
-
-
-
-
-
-function defaultValuePrint(numLocations,search, vertical, domainType) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static
-  var printColumnIndex = spinUpFileHeaders.indexOf(search) + 1;
-  var fillColumnArray = spinUpTab.getRange(2, printColumnIndex, numLocations, 1);
+function defaultValuePrint(numLocations,search, domainType) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static
   var fillDefaultArrayValues;
-  if (search === "corporate") {
-    fillDefaultArrayValues = fillArray("false", numLocations);  
+  var printColumnIndex = spinUpFileHeaders.indexOf(search) + 1;
+  if(search === 'secure_domain' && domainType === 'single') {
+    fillDefaultArrayValues = fillArray('', numLocations);
   }
-  else if (search === "status") {
-    fillDefaultArrayValues = fillArray("Pending", numLocations);  
+  else {
+    fillDefaultArrayValues = fillArray(defaultTagValue[search], numLocations);
   }
-  else if (search === "no_deploy") {
-    fillDefaultArrayValues = fillArray("false", numLocations);  
-  }
-  else if (search === "secure_domain" && domainType === "multi") {
-    fillDefaultArrayValues = fillArray("true", numLocations);  
-  }
-  else if (search === "spinup_web_theme") {
-    fillDefaultArrayValues = fillArray("default", numLocations);      
-  }
-  if(fillDefaultArrayValues != null) {
-    fillColumnArray.setValues(fillDefaultArrayValues);
-  }  
+  return fillDefaultArrayValues;
+}
+
+var defaultTagValue = {
+  'corporate': 'false',
+  'status': 'Pending',
+  'no_deploy': 'false',
+  'spinup_web_theme': 'default', 
+  'secure_domain': 'true' 
 }
 
 function fillArray(value, len) {  //this function works the defaultValuePrint function to fill an array full of default values to be printed in a range
   var arr = [];
   for (var i = 0; i < len; i++) {
-    arr.push([value]);
+    arr.push(value);
   }
-  return arr;
+  return [arr];
 }
