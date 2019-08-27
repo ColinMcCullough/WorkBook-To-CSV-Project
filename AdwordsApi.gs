@@ -1,5 +1,5 @@
 function testGetKeywords() {
-  getKeywords(['3950 W Chandler Blvd','Chandler','Arizona','85226','Studio, 1, 2 & 3','Class A','Apartments'],'mf','single','yes');
+  getKeywords(['1005 Jimmie Dyess Pkwy','Augusta','Georgia','30909'],'ss','multi','no');
 }
 
 function clearDashboardContent() {
@@ -11,6 +11,7 @@ function clearDashboardContent() {
 */
 function getKeywords(tableLocationInfoArry,locVert,domainType,chainBrand) {
   //check to make sure address is available in table for API call
+  
   if(hasAddressVal(tableLocationInfoArry)) {
     clearDashboardContent();
     var locationInfo = {
@@ -21,7 +22,6 @@ function getKeywords(tableLocationInfoArry,locVert,domainType,chainBrand) {
       domainStrat: domainType,
       chainBranding: chainBrand
       };
-    
     //pulls in variables for API call  
     var type2 = new Type("neighborhood", locationInfo.vertical, locationInfo.class);
     var type1 = new Type("landmark", locationInfo.vertical, locationInfo.class);
@@ -43,7 +43,6 @@ function getKeywords(tableLocationInfoArry,locVert,domainType,chainBrand) {
     var cleanedArry = structureResults(wholeArry,locationInfo.city);
     
     dashboardSheet.getRange(3, 1, cleanedArry.length,2).setValues(cleanedArry);
-    
     var clientKeywords = getClientKeywords(tableLocationInfoArry,locationInfo);
     dashboardSheet.getRange(3, 3, clientKeywords.length,2).setValues(clientKeywords);
   }
@@ -62,10 +61,12 @@ function hasAddressVal(addressTable) {
 
 function getClientKeywords(locationTable,locationInfo) {
   var propSheetObj = new PropertyInfo();
+  var landmarkTags = locationInfo.vertical === 'mf' ? ["landmark_1_name","nearby_employers","nearby_schools","nearby_restaurants","nearby_shopping","entertainment"] : 
+                                                      locationInfo.vertical === 'ss' ? ["landmark_1_name","nearby_roadway_1","nearby_roadway_2"] : 
+                                                      ["landmark_1_name","nearby_employers","nearby_restaurants","nearby_shopping","entertainment","nearby_healthcare_1"];
   var addresses = propSheetObj.getRowValByTag("street_address_1");
   var addressIndex = addresses.indexOf(locationTable[0]);
   var neighborhoodTerms = propSheetObj.getRowValByTag("neighborhood");
-  var landmarkTags = ["landmark_1_name","nearby_employers","nearby_schools","nearby_restaurants","nearby_shopping","entertainment"];
   var clientProp = getClientProp(locationInfo.vertical,locationInfo.domainStrat,locationInfo.chainBranding);
   var dataCleaner = new DataVal(clientProp);
   var clientLandmarkTerms = [];

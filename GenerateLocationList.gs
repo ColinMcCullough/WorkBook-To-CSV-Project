@@ -34,13 +34,13 @@ function buildNameAddressLocationList(propSheetObj) {
   var names = propSheetObj.getRowValByTag("name");
   var addresses = propSheetObj.getRowValByTag("street_address_1");
   for(var i = 0; i < names.length; i++) {
-    namePlusAdd.push(names[i] + " - " + addresses[i].replace(/[^A-Za-z0-9|" "]/g, '').substr(addresses[i].indexOf(' ')+1).toString().toLowerCase().trim());
+    namePlusAdd.push(names[i] + " - " + addresses[i]);
   }
   return namePlusAdd;
 }
 
 function test() {
-  var locationList = generateLocations("mf","multi","yes");
+  var locationList = generateLocations("ss","single","yes");
 }
 
 
@@ -54,7 +54,7 @@ This function gets called when a new location is selected
 */
 function getLocationInformation(location,vertical,chainBrand) {
   clearDashboardContent();
-  var locationObj = new Location(location,chainBrand);
+  var locationObj = new Location(location,chainBrand,vertical);
   if(vertical === 'mf') {
     return[locationObj.streetAddress,locationObj.city,locationObj.state,locationObj.postalCode,locationObj.floorPlans,locationObj.class,locationObj.unitType];
   }
@@ -63,8 +63,12 @@ function getLocationInformation(location,vertical,chainBrand) {
   }
 }
 
+function testgetlocinfo() {
+  getLocationInformation('Washington Road Self Storage','ss','no');
+}
+
 //location object with name, address, class fields
-function Location(locationName,chainBrand){  
+function Location(locationName,chainBrand,vertical){  
   var locationNameIndex; var streetAddress; var city; var state; var postalCode; var floorPlansRow; var classRow; var unitTypeRow;
   var propSheetObj = new PropertyInfo();
   if(chainBrand === 'yes') {
@@ -78,18 +82,21 @@ function Location(locationName,chainBrand){
   city = propSheetObj.getRowValByTag("city")[locationNameIndex];
   state = propSheetObj.getRowValByTag("state")[locationNameIndex];
   postalCode = propSheetObj.getRowValByTag("postal_code")[locationNameIndex];  
-  floorPlansRow = propSheetObj.getRowValByTag("floor_plans");
-  classRow = propSheetObj.getRowValByTag("class");
-  unitTypeRow = propSheetObj.getRowValByTag("primary_type");
+  
   this.locationName = locationName;
   this.address = streetAddress + " " + city + " " + state + " " + postalCode;
   this.streetAddress = streetAddress;
   this.city = city;
   this.state = state;
   this.postalCode = postalCode;
-  this.floorPlans = (floorPlansRow === null) ? "none" : cleanFloorPlans(floorPlansRow[locationNameIndex]); 
-  this.class = (classRow === null) ? "none" : classRow[locationNameIndex]; 
-  this.unitType = (unitTypeRow === null) ? "none" : unitTypeRow[locationNameIndex];  
+  if(vertical === 'mf') {
+    floorPlansRow = propSheetObj.getRowValByTag("floor_plans");
+    classRow = propSheetObj.getRowValByTag("class");
+    unitTypeRow = propSheetObj.getRowValByTag("primary_type");
+    this.floorPlans = (floorPlansRow === null) ? "none" : cleanFloorPlans(floorPlansRow[locationNameIndex]); 
+    this.class = (classRow === null) ? "none" : classRow[locationNameIndex]; 
+    this.unitType = (unitTypeRow === null) ? "none" : unitTypeRow[locationNameIndex];  
+  }
 } 
 
 function newLoc() {

@@ -29,8 +29,8 @@ function cleanUpAndFormatUrls() {
 */
 function formatRedirects(setRange, values) {
   var newRedirectsArry = [];
-  var newStr = "";
   for(i = 0;i < values.length; i++) {
+    var newStr = "";
     if(values[i][0] == "Same Domain") {
       newStr = formatRedirectStrings(values[i][1].toString());     
     }

@@ -7,8 +7,9 @@ function generateWFLiquidValueHeaders(vertical,sheetID,domainType) {
     lvheaderRange.setValues(seoLiquidValueTabHeaders.mf);
   }
   else if (vertical == "ss" || vertical == "sl") {
-    lvheaderRange = wireframeLVTab.getRange(1,1,4,seoLiquidValueTabHeaders.ssSl[0].length);
-    lvheaderRange.setValues(seoLiquidValueTabHeaders.ssSl);
+    lvheaderRange = wireframeLVTab.getRange(1,1,4,seoLiquidValueTabHeaders[vertical][0].length);
+    var values = seoLiquidValueTabHeaders[vertical];
+    lvheaderRange.setValues(seoLiquidValueTabHeaders[vertical]);
   }
     setLVHeaderFormatting(vertical,domainType,wireframeLVTab);
     var protection = lvheaderRange.protect().setDescription('SEO Liquid Values Headers'); // creates protected range

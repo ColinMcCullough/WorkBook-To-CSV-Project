@@ -1,10 +1,10 @@
 function testdataval() {
   var clientProp = getClientProp('mf','multi','yes');
   var propSheetObj = new PropertyInfo();
-  var emailData = propSheetObj.getRowValByTag('nearby_schools');
+  var emailData = propSheetObj.getRowValByTag('floor_plans');
   var dataValChecker = new DataVal(clientProp);
   //var emailArry = dataValChecker.runDataVal('email');
-  var customSlugs = dataValChecker.runDataVal('nearby_schools',emailData);
+  var customSlugs = dataValChecker.runDataVal('floor_plans',emailData);
   Logger.log(customSlugs);
 
 }
@@ -125,11 +125,11 @@ function DataVal(clientProp) {
       hasStudio = true;
     }
     str = str.replace(/\../g, "").replace(/[^0-9]+/g, "").toString().trim();
-    if (str.length > 1) {
+    if (str.length > 1 || hasStudio) {
       var x = str.substr(-1);
       str = str.slice(0, -1).split("").join(", ");
-      if (hasStudio == true) {
-        str = "Studio, " + str + " & " + x;
+      if (hasStudio == true ) {
+        str = (str + x).length > 1 ? "Studio, " + str + " & " + x : "Studio & " + x;
       } else {
         str = str + " & " + x;
       }
@@ -201,31 +201,25 @@ var stateMap =  {
 
 
 //does not take into condideration decimal numbers
-function cleanFloorPlans(val) {
-  var y = val;
-  var hasStudio;
-  if(y.indexOf("studio") != -1 || y.indexOf("Studio") != -1) {
+function cleanFloorPlans(str) {
+  var hasStudio = false;
+  if (str.indexOf("studio") != -1 || str.indexOf("Studio") != -1) {
     hasStudio = true;
-  } else {
-    hasStudio = false;
   }
-  y = y.replace(/\../g,"");
-  y = y.replace(/[^0-9]+/g,"").toString().trim();
-  if(y == "") {
-    return y;
-  } else {
-    if(y.length > 1) {
-      var x = y.substr(-1);
-      y = y.slice(0, -1).split("").join(", ");
-      if(hasStudio == true) {
-        y = "Studio, " + y + " & " + x;
-      }  else {
-        y = y + " & " + x;
-      }
+  str = str.replace(/\../g, "").replace(/[^0-9]+/g, "").toString().trim();
+  if (str.length > 1 || hasStudio) {
+    var x = str.substr(-1);
+    str = str.slice(0, -1).split("").join(", ");
+    if (hasStudio == true ) {
+      str = (str + x).length > 1 ? "Studio, " + str + " & " + x : "Studio & " + x;
+    } else {
+      str = str + " & " + x;
     }
   }
-  return y;
+  return str;
 }
+
+
 
 
 function defaultValuePrint(numLocations,search, domainType) { //this function is used in the searchRowIndexArray to print out default values in columns where the values are static

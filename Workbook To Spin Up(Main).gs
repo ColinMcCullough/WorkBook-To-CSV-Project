@@ -118,7 +118,7 @@ function printResults(numLocations,searchString,vertical,result) {
 }
 
 function testMain() {
-  main("mf","single","yes");
+  main("ss","multi","no");
 }
 
 function getClientProp(vert,domType,branding) {

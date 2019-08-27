@@ -51,8 +51,10 @@ function PropertyInfo() {
     var result = [];
     var rowIndx = this.getRowIndexByTag(tag);
     var nameIndx = this.nameRowIndex();
-    for(var i = 3; i < this.propertyValues[nameIndx].length; i++){
+    if(rowIndx !== -1) {
+      for(var i = 3; i < this.propertyValues[nameIndx].length; i++){
       result.push(this.propertyValues[rowIndx][i]);
+      }
     }
     return result;
   }
