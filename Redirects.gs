@@ -9,10 +9,16 @@ function cleanUpAndFormatUrls() {
   try {
     var redirectSetRange = sheet.getRange(2, 4, sheet.getLastRow() - 1, 1);
     var redirectValues = sheet.getRange(2, 2, sheet.getLastRow() - 1, 2).getValues();
-    var flatRedirectValues =  [].concat.apply([], redirectValues);
-    var hasBlanks = flatRedirectValues.indexOf("");
-    if(hasBlanks > -1) {
-      ui.alert("You need to fill in all Redirect Strategies to continue");
+    var err = false;
+    for(var i = 0; i < redirectValues.length; i++) {
+      var row = redirectValues[i];
+      if(row[1] == '' && row[0] !== 'No Redirects') {
+        err =  true
+        break;
+      }
+    }
+    if (err) {
+      ui.alert("Some lines are missing redirects");
     }
     else {
       formatRedirects(redirectSetRange, redirectValues);
@@ -29,7 +35,7 @@ function cleanUpAndFormatUrls() {
 */
 function formatRedirects(setRange, values) {
   var newRedirectsArry = [];
-  for(i = 0;i < values.length; i++) {
+  for(var i = 0; i < values.length; i++) {
     var newStr = "";
     if(values[i][0] == "Same Domain") {
       newStr = formatRedirectStrings(values[i][1].toString());     
@@ -44,7 +50,7 @@ function formatRedirects(setRange, values) {
   @return String
 */
 function formatRedirectStrings(str) {
-    str = str.split(/\.com\/|\.net\/|\.org\/|\.co\//)[1]     //strips everthing left of the TLD (ex: www.myapartments.com/units -> units)
+    str = str.split(/\.com\/|\.com|\.net\/|\.org\/|\.co\//)[1]     //strips everthing left of the TLD (ex: www.myapartments.com/units -> units)
              .split(/\.html|[?]/)[0];                            //strips everything to the right of .html or ? 
     if(str.substr(-1) === '/')  {
         str = str.slice(0, -1);                                 //pops last slash in url
@@ -73,7 +79,7 @@ function removeGarbageRedirect(sheet) {
     var row = data[i];
     var duplicate = false;
     for (var j in newData) {
-      if(row[2] == newData[j][2] || indexMatch(data[i][2])) {
+      if((row[2] == newData[j][2] || indexMatch(data[i][2])) && row[1] !== 'No Redirects') {
         duplicate = true;
        }
     }
@@ -94,7 +100,7 @@ function indexMatch(string) {
   if(string == null || string == "") {
     return false;
   }
-  var arryOfBadVal = [".jpg",".js",".gif",".JPG",".css",".pdf",".json",".jpeg",".jpeg",".png",".svg","sitemap.xml"];
+  var arryOfBadVal = [".jpg",".js",".gif",".JPG",".css",".pdf",".json",".jpeg",".jpeg",".png",".svg","sitemap.xml","sitemap"];
   for(i = 0; i < arryOfBadVal.length; i++) {
     if(string.indexOf(arryOfBadVal[i]) != -1) {
       return true;

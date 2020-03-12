@@ -1,3 +1,5 @@
+
+
 //sets headers in place within newly generated seo liquid values tab of wireframe
 function generateWFLiquidValueHeaders(vertical,sheetID,domainType) {
   var wireframeLVTab = SpreadsheetApp.openById(sheetID).getSheetByName("SEO Liquid Values(v1)");

@@ -1,5 +1,5 @@
 function testGetKeywords() {
-  getKeywords(['1005 Jimmie Dyess Pkwy','Augusta','Georgia','30909'],'ss','multi','no');
+  getKeywords(['\n4540 Snelling Avenue South','Minneapolis','Minnesota','55406'],'mf','multi','no');
 }
 
 function clearDashboardContent() {
@@ -15,7 +15,7 @@ function getKeywords(tableLocationInfoArry,locVert,domainType,chainBrand) {
   if(hasAddressVal(tableLocationInfoArry)) {
     clearDashboardContent();
     var locationInfo = {
-      addr: tableLocationInfoArry[0] + " " + tableLocationInfoArry[1] + " " + tableLocationInfoArry[2] + " " + tableLocationInfoArry[3],
+      addr: tableLocationInfoArry[0].trim() + " " + tableLocationInfoArry[1].trim() + " " + tableLocationInfoArry[2].trim() + " " + tableLocationInfoArry[3].trim(),
       city: tableLocationInfoArry[1],
       vertical: locVert,
       class: tableLocationInfoArry[5],
@@ -28,7 +28,7 @@ function getKeywords(tableLocationInfoArry,locVert,domainType,chainBrand) {
     var latAndLong = getLatLong(locationInfo.addr);
     Logger.log(latAndLong);
     var wholeArry = [];
-  
+    
     for(var k = 0; k < type2.keys.length; k++) {
       var businessType = type2.keys[k];
       var numberToGet = type2.typeMap[type2.keys[k]];
@@ -172,7 +172,7 @@ function pushLocationNames(latAndLong,typesBus, printHowMany, wholeArry,typeSet)
   
   //Post the call
   var response = UrlFetchApp.fetch(url);
-  
+  Logger.log(url)
   //Parse the JSON that was returned
   var data = JSON.parse(response);  
   

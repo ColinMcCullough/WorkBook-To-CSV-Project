@@ -118,7 +118,7 @@ function printResults(numLocations,searchString,vertical,result) {
 }
 
 function testMain() {
-  main("ss","multi","no");
+  main("mf","multi","yes");
 }
 
 function getClientProp(vert,domType,branding) {
@@ -155,4 +155,10 @@ function main(vertical,domainType,chainBranding) {
       setSeoLvTabData(propSheetObj,numLocations,vertical,seoLvTab);
     }
   }
+}
+
+function test1() {
+  var redirects = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Redirects Tool');
+  var redrange = redirects.getRange(1,1,5,3).getValues()
+  Logger.log(redrange)
 }

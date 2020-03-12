@@ -40,7 +40,7 @@ function buildNameAddressLocationList(propSheetObj) {
 }
 
 function test() {
-  var locationList = generateLocations("ss","single","yes");
+  var locationList = generateLocations("mf","multi","no");
 }
 
 
@@ -64,7 +64,7 @@ function getLocationInformation(location,vertical,chainBrand) {
 }
 
 function testgetlocinfo() {
-  getLocationInformation('Washington Road Self Storage','ss','no');
+  getLocationInformation('Magnolia at Stacy Green','mf','no');
 }
 
 //location object with name, address, class fields

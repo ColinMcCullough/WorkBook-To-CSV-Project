@@ -1,10 +1,10 @@
 function testdataval() {
   var clientProp = getClientProp('mf','multi','yes');
   var propSheetObj = new PropertyInfo();
-  var emailData = propSheetObj.getRowValByTag('floor_plans');
+  var phone = propSheetObj.getRowValByTag('local_phone_number');
   var dataValChecker = new DataVal(clientProp);
   //var emailArry = dataValChecker.runDataVal('email');
-  var customSlugs = dataValChecker.runDataVal('floor_plans',emailData);
+  var customSlugs = dataValChecker.runDataVal('local_phone_number',phone);
   Logger.log(customSlugs);
 
 }
@@ -60,13 +60,20 @@ function DataVal(clientProp) {
   }
   
   this.emailVal = function(str) {
-    str = str.indexOf("@") != -1 ? str.toString().match(/\b([^\s]+@[^\s]+)\b/)[0].toString() : "";
-    return str;
+    var result = "";
+    var regexmatch = str.match(/\b([^\s]+@[^\s]+)\b/)
+    if(str.indexOf("@") != -1 && regexmatch !== null) {
+      result = regexmatch[0];
+    }
+    return result;
   }
   
   this.generateSlug = function(str, clientProp) {
+    Logger.log(str)
     if(this.chainBranding == "yes") { //address passed in if chain branding and will be formatted
-      str = str.replace(/[^A-Za-z0-9|" "]/g, '').substr(str.indexOf(' ')+1).toString().toLowerCase().trim().replace(/\s\s+|\s/g, '-');
+      str = str.toString().replace(/[^A-Za-z0-9|" "]/g, '') // replaces all non numeric of alphabetic characters
+      str = str.substr(str.indexOf(' ')+1) // everything after address numbers
+      str = str.toLowerCase().trim().replace(/\s\s+|\s/g, '-')
     }
     else {  // this will pass in the brand name to clean for a slug (not chain branded)
       str = str.toString().toLowerCase().trim().replace(/\s\s+|\s/g, '-');
@@ -101,7 +108,8 @@ function DataVal(clientProp) {
   
   this.valPhoneNum = function(str) {
     var fullNumber = "";
-    str = str.replace(/[^0-9\.]+/g, '').replace(/\./g, '').toString().trim();
+    str = str.toString();
+    str = str.replace(/[^0-9\.]+/g, '').replace(/\./g, '').trim();
     if(str != "" || str.length === 10) {
       var areaCode = str.substr(0, 3);
       var first3 = str.substr(3, 3);
@@ -187,7 +195,7 @@ function DataVal(clientProp) {
 
 var stateMap =  { 
   "Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT",
-  "Delaware":"DE","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA",
+  "Delaware":"DE","District of Columbia":"DC","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA",
   "Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN",
   "Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM",
   "New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI",

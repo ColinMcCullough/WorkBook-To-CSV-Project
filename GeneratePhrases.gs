@@ -5,7 +5,7 @@ function testGetVal() {
 }
 
 function testGeneratePhrases() {
-  generatePhrases("mf",["8520 Sierra Ridge Dr","Indianapolis","Indiana","46239"]);
+  generatePhrases("mf",["535 Willow Pond Boulevard","Mainville","Ohio","45039"]);
 }
 /*
 @param {String} vertical selected in UI
@@ -168,14 +168,16 @@ function getAmenitiesArray(propertySheet,locationTable) {
   var pushTagsValues = function(tagArry,propSheet,locColIndex,amenityArry) {
     for(var i = 0; i < tagArry.length; i++) {
       var amenity = getFullRowValByTag(propSheet,tagArry[i]);
-      if(amenity[locColIndex].indexOf(',') != -1) {
-        var amenities = amenity[locColIndex].split(',').map(Function.prototype.call, String.prototype.trim); //splits on comma,trims whitespace;
-        amenities.forEach(function(e) {
+      if(amenity) {
+        if(amenity[locColIndex].indexOf(',') != -1) {
+          var amenities = amenity[locColIndex].split(',').map(Function.prototype.call, String.prototype.trim); //splits on comma,trims whitespace;
+          amenities.forEach(function(e) {
           amenityArry.push(e);
         });        
-      } else if(amenity[locColIndex]) {
-        amenityArry.push(amenity[locColIndex]);
-      }  
+        } else if(amenity[locColIndex]) {
+          amenityArry.push(amenity[locColIndex]);
+        } 
+      }
     }
   }
   pushTagsValues(primaryApartAmenTags,propertySheet,addressIndex,apartmentAmenitiesArry);
@@ -199,10 +201,12 @@ function getAmentiesData(propertySheet,tag,locationColIndex) {
   var yesorno = propertySheet[firstAmenityIndex][locationColIndex];
   var amenityname = propertySheet[firstAmenityIndex][amenityNameIndex];
   var amenities = [];
-  for(var i = firstAmenityIndex; i <= lastAmenityIndex; i++) {
-    var test = propertySheet[i][locationColIndex];
-    if(propertySheet[i][locationColIndex] === 'Yes') {
-      amenities.push(propertySheet[i][amenityNameIndex]);
+  if(firstAmenityIndex !== -1) {
+    for(var i = firstAmenityIndex; i <= lastAmenityIndex; i++) {
+      var test = propertySheet[i][locationColIndex];
+      if(propertySheet[i][locationColIndex] === 'Yes') {
+        amenities.push(propertySheet[i][amenityNameIndex]);
+      }
     }
   }
   return amenities;
