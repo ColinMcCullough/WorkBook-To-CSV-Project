@@ -1,2 +1,2 @@
 # WorkBook-To-CSV-Project
-This projects purpose is to automate a CSV spin in G5's CMS from a Google Sheet.
+This tool generates CSV spin up with location/s data that can be imported into G5's CMS from a Google Sheet.
