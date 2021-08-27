@@ -1,2 +1,2 @@
 # WorkBook-To-CSV-Project
-This tool generates CSV spin up with location/s data that can be imported into G5's CMS from a Google Sheet.
+Deployed as a Google Sheets Add On, this transforms client collected data into a csv consumable by the G5 Hub.
